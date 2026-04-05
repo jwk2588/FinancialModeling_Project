@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS v8 — Synthesis OS · Klein-Team ADR Beta</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#06080d;--bg1:#0b0f18;--bg2:#0f1520;--bg3:#131b28;
+  --border:#1c2b3a;--border2:#223040;
+  --cyan:#00d4ff;--cyan2:#0099cc;--cyan3:rgba(0,212,255,.10);
+  --green:#5de5a0;--green2:#3cba7a;--green3:rgba(93,229,160,.08);
+  --wolf:#e05c5c;--wolf2:#b33;--wolf3:rgba(224,92,92,.10);
+  --tiger:#f5a623;--tiger2:#c47d10;--tiger3:rgba(245,166,35,.08);
+  --suits:#9b7fe8;--suits2:#7a5cc9;--suits3:rgba(155,127,232,.08);
+  --fetty:#00ffcc;--fetty2:#00cc99;--fetty3:rgba(0,255,204,.06);
+  --policy:#4fc3f7;--policy2:#0288d1;--policy3:rgba(79,195,247,.10);
+  --gov:#ce93d8;--gov2:#ab47bc;--gov3:rgba(206,147,216,.10);
+  --casebook:#80cbc4;--casebook2:#00897b;--casebook3:rgba(128,203,196,.10);
+  --alert:#ff5252;--alert2:#d50000;--alert3:rgba(255,82,82,.10);
+  --gold:#ffd766;--gray:#4a6280;--gray2:#2d4158;
+  --white:#e8f0f8;--dim:#4a6280;
+  --fhead:'Barlow Condensed',sans-serif;
+  --fmono:'IBM Plex Mono',monospace;
+  --fbody:'Barlow',sans-serif;
+  --r:2px;--r2:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--white);font-family:var(--fbody)}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg1)}
+::-webkit-scrollbar-thumb{background:var(--border2)}
+#shell{display:grid;grid-template-rows:42px 1fr;height:100vh}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:var(--bg1);border-bottom:1px solid var(--border);z-index:100;gap:6px}
+.tb-logo{font-family:var(--fhead);font-size:15px;font-weight:900;letter-spacing:4px;color:var(--cyan);white-space:nowrap}
+.tb-logo span{color:var(--fetty);font-size:9px;font-family:var(--fmono);letter-spacing:2px;margin-left:6px;vertical-align:middle}
+.tb-status{display:flex;gap:5px;align-items:center;flex-wrap:wrap;flex:1;justify-content:center}
+.tb-pill{font-family:var(--fmono);font-size:9px;font-weight:600;padding:3px 7px;border-radius:20px;letter-spacing:1px;white-space:nowrap;border:1px solid}
+.tp-g{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.tp-c{background:var(--cyan3);color:var(--cyan);border-color:var(--cyan2)}
+.tp-w{background:var(--wolf3);color:var(--wolf);border-color:var(--wolf2)}
+.tp-p{background:var(--policy3);color:var(--policy);border-color:var(--policy2)}
+.tp-gov{background:var(--gov3);color:var(--gov);border-color:var(--gov2)}
+.tp-t{background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)}
+.tb-time{font-family:var(--fmono);font-size:9px;color:var(--dim)}
+#main{display:grid;grid-template-columns:48px 1fr 260px;height:calc(100vh - 42px);overflow:hidden}
+#leftnav{background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px;overflow-y:auto}
+.lb{width:38px;height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--r2);cursor:pointer;transition:all .15s;border:1px solid transparent;gap:2px;flex-shrink:0}
+.lb:hover{background:var(--bg3);border-color:var(--border2)}
+.lb.on{background:var(--cyan3);border-color:var(--cyan2)}
+.lb .i{font-size:13px;line-height:1}
+.lb .l{font-family:var(--fmono);font-size:6px;color:var(--dim);letter-spacing:.5px}
+.lb.on .l{color:var(--cyan)}
+.lsep{width:26px;height:1px;background:var(--border);margin:3px 0;flex-shrink:0}
+.lsec{font-family:var(--fmono);font-size:5.5px;color:var(--gray2);letter-spacing:1px;text-align:center;padding:2px 0}
+#center{display:flex;flex-direction:column;overflow:hidden;background:var(--bg0)}
+.ctabs{display:flex;gap:1px;padding:5px 8px 0;background:var(--bg1);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0}
+.ctab{font-family:var(--fhead);font-size:8.5px;font-weight:700;letter-spacing:1.2px;padding:5px 8px;border-radius:2px 2px 0 0;cursor:pointer;color:var(--dim);white-space:nowrap;border:1px solid transparent;border-bottom:none;transition:all .15s}
+.ctab:hover{color:var(--white);background:var(--bg2)}
+.ctab.on{color:var(--cyan);background:var(--bg0);border-color:var(--border)}
+.ctab.ont{color:var(--policy)}
+.ctab.ong{color:var(--gov)}
+.ctab.ono{color:var(--casebook)}
+.cview{display:none;flex:1;overflow-y:auto}
+.cview.on{display:block}
+#rp{background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.rph{padding:9px 11px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.rpt{font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:2.5px;color:var(--dim)}
+.rpb{flex:1;overflow-y:auto;padding:9px 11px;display:flex;flex-direction:column;gap:7px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px}
+.ct{font-family:var(--fhead);font-size:9.5px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:7px;text-transform:uppercase}
+.row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.lbl{font-size:9.5px;color:var(--dim);font-family:var(--fmono)}
+.val{font-family:var(--fmono);font-size:10px;font-weight:600}
+.sh{padding:9px 13px 7px;border-bottom:1px solid var(--border);background:var(--bg1);position:sticky;top:0;z-index:10}
+.st{font-family:var(--fhead);font-size:15px;font-weight:900;letter-spacing:3px;color:var(--cyan)}
+.ss{font-size:8.5px;color:var(--dim);margin-top:2px;font-family:var(--fmono)}
+.btn{font-family:var(--fhead);font-size:8.5px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:var(--r);cursor:pointer;border:1px solid;transition:all .15s;background:transparent}
+.btn:hover{filter:brightness(1.3)}
+.bc{background:var(--cyan3);color:var(--cyan);border-color:var(--cyan2)}
+.bg2{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.bw{background:var(--wolf3);color:var(--wolf);border-color:var(--wolf2)}
+.bs{background:var(--suits3);color:var(--suits);border-color:var(--suits2)}
+.bp{background:var(--policy3);color:var(--policy);border-color:var(--policy2)}
+.bgov{background:var(--gov3);color:var(--gov);border-color:var(--gov2)}
+.bcb{background:var(--casebook3);color:var(--casebook);border-color:var(--casebook2)}
+.pill{display:inline-block;font-family:var(--fmono);font-size:7.5px;font-weight:600;padding:2px 6px;border-radius:20px;border:1px solid}
+.pg{background:var(--green3);color:var(--green);border:1px solid var(--green2)}
+.pc{background:var(--cyan3);color:var(--cyan);border-color:var(--cyan2)}
+.pw{background:var(--wolf3);color:var(--wolf);border:1px solid var(--wolf2)}
+.pt{background:var(--tiger3);color:var(--tiger);border:1px solid var(--tiger2)}
+.ps{background:var(--suits3);color:var(--suits);border-color:var(--suits2)}
+.pgold{background:rgba(255,215,102,.1);color:var(--gold);border-color:#886600}
+.pgray{background:var(--bg3);color:var(--dim);border:1px solid var(--border2)}
+.pp{background:var(--policy3);color:var(--policy);border-color:var(--policy2)}
+.pgov{background:var(--gov3);color:var(--gov);border-color:var(--gov2)}
+.pcb{background:var(--casebook3);color:var(--casebook);border-color:var(--casebook2)}
+.pal{background:var(--alert3);color:var(--alert);border-color:var(--alert2)}
+.mw{margin-bottom:5px}
+.ml{display:flex;justify-content:space-between;margin-bottom:2px}
+.mlb{font-family:var(--fmono);font-size:8.5px;color:var(--dim)}
+.mlv{font-family:var(--fmono);font-size:8.5px}
+.mt{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.mf{height:100%;border-radius:2px;transition:width .5s}
+.pad{padding:11px 13px}
+.sp{padding-bottom:40px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+@keyframes pw{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px var(--wolf)}}
+@keyframes pa{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.ani{animation:fi .2s ease forwards}
+.pwa{animation:pw 1.5s infinite}
+.paa{animation:pa 1.2s infinite}
+.cring{width:82px;height:82px;border-radius:50%;border:4px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto}
+.crn{font-family:var(--fhead);font-size:20px;font-weight:900;line-height:1}
+.crl{font-size:7px;font-family:var(--fmono);color:var(--dim);letter-spacing:1px}
+.mbadge{display:inline-block;font-family:var(--fhead);font-size:9.5px;font-weight:700;padding:3px 10px;border-radius:var(--r);letter-spacing:1.5px;border:1px solid}
+.mbd{background:var(--cyan3);color:var(--cyan);border-color:var(--cyan2)}
+.mbb{background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)}
+.mbs{background:var(--suits3);color:var(--suits);border-color:var(--suits2)}
+.mbc{background:var(--wolf3);color:var(--wolf);border-color:var(--wolf2)}
+.chg{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:11px 13px}
+.cp{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.cp:hover{border-color:var(--cyan2)}
+.cp.stressed{border-color:var(--tiger);background:var(--tiger3)}
+.cp.critical{border-color:var(--wolf);background:var(--wolf3);animation:pw 1.5s infinite}
+.cp.fallen{opacity:.3}
+.cpg{font-size:18px;margin-bottom:3px}
+.cpn{font-family:var(--fhead);font-size:8px;font-weight:700;color:var(--white)}
+.cph{height:3px;border-radius:2px;margin-top:4px}
+.ti{display:flex;gap:8px;align-items:flex-start;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:7px 9px;cursor:pointer;transition:all .15s;margin-bottom:4px}
+.ti:hover{border-color:var(--cyan2)}
+.ti.on{border-color:var(--cyan);background:var(--cyan3)}
+.ti.done{opacity:.6}
+.tin{font-family:var(--fhead);font-size:13px;font-weight:900;color:var(--cyan);min-width:22px}
+.til{font-family:var(--fhead);font-size:10px;font-weight:700;margin-bottom:2px}
+.tinarr{font-size:9px;color:var(--dim);line-height:1.5}
+.grn{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px;cursor:pointer;transition:all .15s;margin-bottom:5px}
+.grn:hover{border-color:var(--cyan2)}
+.grnh{display:flex;justify-content:space-between;margin-bottom:5px}
+.grnid{font-family:var(--fmono);font-size:9px;color:var(--cyan);font-weight:700;letter-spacing:2px}
+.grnev{font-size:9px;color:var(--dim);line-height:1.5;margin-bottom:6px}
+.grnr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:7px}
+.grnrb{font-size:8px;font-family:var(--fmono);padding:4px 5px;border-radius:2px;border:1px solid;line-height:1.4}
+.rw{background:var(--wolf3);color:var(--wolf);border-color:var(--wolf2)}
+.rt{background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)}
+.rs{background:var(--suits3);color:var(--suits);border-color:var(--suits2)}
+.fwd{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px;margin-bottom:5px}
+.fwt{font-family:var(--fhead);font-size:11px;font-weight:700}
+.fwp{font-family:var(--fmono);font-size:13px;font-weight:700}
+.fwtl{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
+.fwb{font-family:var(--fmono);font-size:7.5px;padding:2px 5px;border-radius:2px;border:1px solid var(--border2);color:var(--dim);cursor:pointer;transition:all .15s}
+.fwb:hover{border-color:var(--cyan2);color:var(--cyan)}
+.fwb.on{background:var(--cyan3);border-color:var(--cyan);color:var(--cyan)}
+.jmg{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:11px 13px}
+.jmc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px}
+.jmcf{grid-column:1/-1}
+.jmt{font-family:var(--fhead);font-size:9.5px;font-weight:700;letter-spacing:2px;color:var(--suits);margin-bottom:7px}
+.jmsr{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.jmsl{font-size:9px;color:var(--dim);font-family:var(--fmono)}
+.jmtb{display:flex;gap:7px;padding:9px 13px;border-bottom:1px solid var(--border);background:var(--bg1);align-items:center}
+.jmsel{flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:9.5px;padding:4px 7px;border-radius:var(--r);outline:none}
+.jmsel:focus{border-color:var(--suits2)}
+.jmmemo{font-size:9.5px;color:var(--white);line-height:1.6;background:var(--bg3);padding:7px 9px;border-radius:var(--r);border-left:2px solid var(--suits)}
+.fap{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:7px 9px;border-radius:var(--r2);border:1px solid;margin-bottom:5px}
+.faact{background:var(--bg2);border-color:var(--border)}
+.fast{background:var(--tiger3);border-color:var(--tiger2)}
+.facr{background:var(--wolf3);border-color:var(--wolf2);animation:pw 2s infinite}
+.fafl{background:var(--bg1);border-color:var(--gray2);opacity:.4}
+.fag{font-size:18px;text-align:center}
+.fan{font-family:var(--fhead);font-size:11px;font-weight:700}
+.fahv{font-family:var(--fmono);font-size:11px;font-weight:700;text-align:right}
+.fahb{height:3px;border-radius:2px;margin-top:3px;width:72px;background:var(--bg3)}
+.fahf{height:100%;border-radius:2px;transition:width .5s}
+.pcr{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;margin-bottom:4px;display:flex;gap:9px;align-items:flex-start}
+.pcrw{border-color:var(--green);background:var(--green3)}
+.pcrs{border-color:var(--wolf2);background:var(--wolf3);opacity:.6}
+.pcra{border-color:var(--tiger);background:var(--tiger3);animation:pw 2s infinite}
+.pcrpri{font-family:var(--fhead);font-size:12px;font-weight:900;min-width:22px;text-align:center}
+.pcrn{font-family:var(--fhead);font-size:10.5px;font-weight:700;color:var(--white)}
+.pcrcls{font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:2px}
+.rbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:11px 13px;margin:0 13px 9px}
+.rbv{font-family:var(--fhead);font-size:13px;font-weight:900;letter-spacing:2px}
+.rreason{font-size:9.5px;color:var(--dim);line-height:1.6;background:var(--bg3);padding:7px 9px;border-radius:var(--r);border-left:2px solid var(--policy)}
+.prf{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.prfr{font-family:var(--fhead);font-size:18px;font-weight:900;color:var(--policy);min-width:28px;text-align:center}
+.prfn{font-family:var(--fhead);font-size:11px;font-weight:700;letter-spacing:1px}
+.prfd{font-size:9px;color:var(--dim);margin-top:2px}
+.over{background:var(--bg2);border:1px solid var(--tiger2);border-radius:var(--r2);padding:7px 11px;margin-bottom:4px}
+.gex{background:var(--bg2);border:1px solid var(--gov2);border-radius:var(--r2);padding:7px 11px;margin-bottom:4px}
+.gexon{border-color:var(--green);background:var(--green3)}
+.csig{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;margin-bottom:4px}
+.csigt{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.csign{font-family:var(--fmono);font-size:9.5px;font-weight:600;color:var(--policy)}
+.csigb{height:5px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.csigf{height:100%;border-radius:2px;transition:width .5s}
+.hring{width:90px;height:90px;border-radius:50%;border:5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 10px}
+.hrscore{font-family:var(--fhead);font-size:24px;font-weight:900;line-height:1}
+.hrlbl{font-size:7.5px;font-family:var(--fmono);color:var(--dim);letter-spacing:1px}
+.hsbadge{display:inline-block;font-family:var(--fhead);font-size:9px;font-weight:700;padding:3px 10px;border-radius:var(--r);letter-spacing:1.5px;border:1px solid}
+.hsh{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.hss{background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)}
+.hsd{background:rgba(255,124,56,.1);color:#ff7c38;border-color:#cc5e22}
+.hsu{background:var(--wolf3);color:var(--wolf);border-color:var(--wolf2);animation:pw 1.5s infinite}
+.obsstrip{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:9px 13px;border-bottom:1px solid var(--border);background:var(--bg1)}
+.obsstat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:7px 9px;text-align:center;cursor:pointer}
+.ossn{font-family:var(--fhead);font-size:18px;font-weight:900;line-height:1}
+.ossl{font-family:var(--fmono);font-size:7px;color:var(--dim);margin-top:2px}
+.obscols{display:grid;grid-template-columns:1fr 1fr 1fr;height:calc(100vh - 186px);overflow:hidden}
+.obscol{border-right:1px solid var(--border);overflow-y:auto;padding:9px 11px}
+.obscol:last-child{border-right:none}
+.obscolt{font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--casebook);padding-bottom:7px;border-bottom:1px solid var(--border);margin-bottom:7px}
+.wfr{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:7px 11px;margin-bottom:4px;cursor:pointer}
+.wfr:hover{border-color:var(--gov2)}
+.wfrh{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.wfrid{font-family:var(--fmono);font-size:8.5px;color:var(--gov);font-weight:600}
+.wfrt{font-size:9.5px;font-family:var(--fhead);font-weight:700}
+.wfrlc{display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-top:5px}
+.wfls{font-family:var(--fmono);font-size:7.5px;padding:2px 4px;border-radius:2px;border:1px solid}
+.wflsd{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.wflo{background:var(--bg3);color:var(--dim);border-color:var(--border2)}
+.wflarr{color:var(--gray);font-size:9px}
+.alc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;margin-bottom:4px}
+.alcrit{border-color:var(--wolf);background:var(--wolf3)}
+.alhigh{border-color:var(--tiger);background:var(--tiger3)}
+.almod{border-color:var(--policy2);background:var(--policy3)}
+.alfiring{animation:pa 1.5s infinite}
+.ach{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.acty{font-family:var(--fhead);font-size:10.5px;font-weight:700}
+.acnd{font-size:9px;color:var(--dim);font-family:var(--fmono);margin-top:2px}
+.acrt{font-size:8.5px;color:var(--policy);font-family:var(--fmono);margin-top:3px}
+.idrop{border:2px dashed var(--border2);border-radius:var(--r2);padding:18px;text-align:center;cursor:pointer;background:var(--bg2)}
+.idrop:hover,.idrop.drag{border-color:var(--cyan);background:var(--cyan3)}
+.iinput{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:6px 8px;border-radius:var(--r);outline:none;resize:vertical;min-height:55px}
+.iinput:focus{border-color:var(--cyan2)}
+.ient{display:grid;grid-template-columns:68px 1fr auto;gap:5px;align-items:center;padding:4px 6px;border-bottom:1px solid var(--bg3);font-family:var(--fmono);font-size:8.5px}
+.iev{color:var(--cyan);font-weight:600}
+.iel{color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ied{color:var(--green);font-size:7.5px}
+.fettycon{background:var(--bg0);border:1px solid var(--fetty2);border-radius:var(--r2);padding:9px 11px;font-family:var(--fmono);font-size:8.5px;max-height:150px;overflow-y:auto;line-height:1.6}
+.fl{color:var(--fetty)}
+.fd{color:var(--dim)}
+.fw2{color:var(--tiger)}
+.fc2{color:var(--wolf)}
+.fe{color:var(--green);font-weight:600}
+.fgov{color:var(--gov)}
+.fpol{color:var(--policy)}
+.sfront{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;margin-bottom:5px}
+.drrow{display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--bg3)}
+.drk{font-family:var(--fmono);font-size:8.5px;color:var(--dim)}
+.drv{font-family:var(--fmono);font-size:8.5px;font-weight:600}
+.dbdg{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dbh{background:var(--green);box-shadow:0 0 5px var(--green)}
+.dbw{background:var(--tiger);box-shadow:0 0 5px var(--tiger)}
+.dbc{background:var(--wolf);box-shadow:0 0 5px var(--wolf);animation:pa 1s infinite}
+.cslbl{font-family:var(--fhead);font-size:9.5px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:5px;margin-top:10px}
+.hsrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:7px 10px}
+.hss2{font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:1px}
+
+.drrow{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bg3)}
+.drk{font-family:var(--fmono);font-size:8.5px;color:var(--dim)}
+.drv{font-family:var(--fmono);font-size:8.5px;font-weight:600}
+.hsrow{display:flex;align-items:center;gap:9px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:7px 10px;margin-bottom:5px}
+.hss2{font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:1px}
+.cslbl{font-family:var(--fhead);font-size:9.5px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:5px;margin-top:8px;text-transform:uppercase}
+
+
+
+/* SimLab sub-views */
+.sl-view{display:none;height:100%;overflow-y:auto}
+.sl-view.on{display:block}
+/* GR Agent Registry */
+.gr-agent-section{margin-bottom:8px}
+.gr-agent-label{font-family:var(--fmono);font-size:7px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}
+.gr-agent-bar{height:3px;border-radius:2px;margin-bottom:6px}
+.gr-node-btn{display:flex;align-items:center;gap:5px;padding:4px 6px;border-radius:var(--r);cursor:pointer;margin-bottom:2px;border:1px solid transparent;transition:all .12s}
+.gr-node-btn:hover{background:var(--bg3);border-color:var(--border2)}
+.gr-node-btn.sel{background:var(--cyan3);border-color:var(--cyan2)}
+/* FettyOrch stack */
+.fo-layer{border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px;margin-bottom:6px;transition:all .2s}
+.fo-layer.active{border-color:var(--fetty2);background:var(--fetty3)}
+.fo-layer.active-wolf{border-color:var(--wolf2);background:var(--wolf3)}
+.fo-layer.done{border-color:var(--green2);opacity:.7}
+.fo-layer-num{font-family:var(--fmono);font-size:9px;color:var(--dim);min-width:22px}
+.fo-layer-name{font-family:var(--fhead);font-size:13px;font-weight:900;letter-spacing:1px}
+.fo-layer-badge{font-family:var(--fmono);font-size:7.5px;padding:2px 7px;border-radius:20px;border:1px solid;margin-left:auto}
+.fo-preset{padding:7px 9px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .12s}
+.fo-preset:hover{background:var(--bg3)}
+.fo-preset.sel{background:var(--tiger3);border-color:var(--tiger2)}
+.fo-preset-title{font-family:var(--fhead);font-size:11px;font-weight:700}
+.fo-preset-sub{font-family:var(--fmono);font-size:8px;color:var(--dim);margin-top:2px}
+/* Settings panel */
+#nexus-settings{display:none;position:fixed;top:42px;right:0;width:280px;height:calc(100vh - 42px);background:var(--bg1);border-left:1px solid var(--border);z-index:200;padding:12px;overflow-y:auto}
+#nexus-settings.on{display:block}
+.api-input{background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:6px 8px;border-radius:var(--r);width:100%;outline:none;margin-top:4px}
+
+@media(max-width:900px){#main{grid-template-columns:0 1fr 0}#leftnav,#rp{display:none}}
+</style>
+</head>
+<body>
+<div id="shell">
+<div id="topbar">
+  <div class="tb-logo">NEXUS <span>v8.0 SYNTHESIS OS</span></div>
+  <div class="tb-status">
+    <div class="tb-pill tp-c" id="pmb">MB v54 · EV-291 · SB-78</div>
+    <div class="tb-pill tp-g" id="pmode">DOMAIN REASONING</div>
+    <div class="tb-pill tp-w" id="pcol">COLLAPSE: 12%</div>
+    <div class="tb-pill tp-p" id="pph">POLICY: HEALTHY 8.4</div>
+    <div class="tb-pill tp-gov" id="pgov">GOV: NORMAL</div>
+  </div>
+  <button class="btn bc" onclick="toggleSettings()" style="padding:3px 8px;font-size:10px;flex-shrink:0" title="Settings &amp; API Key">&#9881;</button>
+    <div class="tb-time" id="clk">──</div>
+</div>
+<div id="main">
+<div id="leftnav">
+  <div class="lsec">ADR</div>
+  <div class="lb" onclick="setLNav(this,'exec')" title="Exec Sheet" style="border-color:rgba(255,215,102,.3)"><div class="i" style="color:var(--gold)">&#9678;</div><div class="l" style="color:var(--gold)">EXEC</div></div>
+  <div class="lb on" onclick="setLNav(this,'home')"><div class="i">◈</div><div class="l">HOME</div></div>
+  <div class="lb" onclick="setLNav(this,'gr')"><div class="i">◉</div><div class="l">GR</div></div>
+  <div class="lb" onclick="setLNav(this,'fw')"><div class="i">⟁</div><div class="l">FW</div></div>
+  <div class="lb" onclick="setLNav(this,'sim')"><div class="i">▶</div><div class="l">SIM</div></div>
+  <div class="lb" onclick="setLNav(this,'judge')"><div class="i">⚖</div><div class="l">JDG</div></div>
+  <div class="lb" onclick="setLNav(this,'angels')"><div class="i">↓</div><div class="l">FA</div></div>
+  <div class="lb" onclick="setLNav(this,'suits')"><div class="i">⊞</div><div class="l">ADR</div></div>
+  <div class="lsep"></div>
+  <div class="lsec">GOV</div>
+  <div class="lb" onclick="setLNav(this,'pcr')"><div class="i">⚔</div><div class="l">PCR</div></div>
+  <div class="lb" onclick="setLNav(this,'preg')"><div class="i">📜</div><div class="l">PREG</div></div>
+  <div class="lb" onclick="setLNav(this,'casebook')"><div class="i">🔬</div><div class="l">CASE</div></div>
+  <div class="lb" onclick="setLNav(this,'obs')"><div class="i">🏛</div><div class="l">OBS</div></div>
+  <div class="lb" onclick="setLNav(this,'wfr')"><div class="i">📋</div><div class="l">WFR</div></div>
+  <div class="lb" onclick="setLNav(this,'alerts')"><div class="i">🔔</div><div class="l">ALRT</div></div>
+  <div class="lsep"></div>
+  <div class="lsec">SYS</div>
+  <div class="lb" onclick="setLNav(this,'diag')"><div class="i">📡</div><div class="l">DIAG</div></div>
+  <div class="lb" onclick="setLNav(this,'ingest')"><div class="i">⬇</div><div class="l">INGEST</div></div>
+  <div class="lsep"></div>
+  <div class="lsec">FM</div>
+  <div class="lb" onclick="setLNav(this,'fetty-orch')" style="border-color:rgba(0,255,204,.3)"><div class="i" style="color:var(--fetty)">⚡</div><div class="l" style="color:var(--fetty)">ORCH</div></div>
+  <div class="lb" onclick="setLNav(this,'simlab')"><div class="i">🧪</div><div class="l">LAB</div></div>
+</div>
+<div id="center">
+  <div class="ctabs">
+    <div class="ctab" id="t-exec" onclick="setV('exec')" style="color:var(--gold)">&#9678; EXEC</div>
+    <div class="ctab on" id="t-home" onclick="setV('home')">◈ CORPUS</div>
+    <div class="ctab" id="t-gr" onclick="setV('gr')">◉ GHOST RECON</div>
+    <div class="ctab" id="t-fw" onclick="setV('fw')">⟁ FLYWHEELS</div>
+    <div class="ctab" id="t-sim" onclick="setV('sim')">▶ SIM</div>
+    <div class="ctab" id="t-judge" onclick="setV('judge')">⚖ JUDGE MODE</div>
+    <div class="ctab" id="t-angels" onclick="setV('angels')">↓ FALLEN ANGELS</div>
+    <div class="ctab" id="t-suits" onclick="setV('suits')">⊞ ADR FRONTS</div>
+    <div class="ctab ont" id="t-pcr" onclick="setV('pcr')">⚔ CONFLICT RES</div>
+    <div class="ctab ont" id="t-preg" onclick="setV('preg')">📜 PRECEDENCE</div>
+    <div class="ctab ono" id="t-casebook" onclick="setV('casebook')">🔬 CASEBOOK</div>
+    <div class="ctab ono" id="t-obs" onclick="setV('obs')">🏛 OBSERVATORY</div>
+    <div class="ctab ong" id="t-wfr" onclick="setV('wfr')">📋 WORKFLOW</div>
+    <div class="ctab ong" id="t-alerts" onclick="setV('alerts')">🔔 ALERTING</div>
+    <div class="ctab" id="t-diag" onclick="setV('diag')">📡 DIAG</div>
+    <div class="ctab" id="t-ingest" onclick="setV('ingest')">⬇ INGEST</div>
+    <div class="ctab" id="t-fetty-orch" onclick="setV('fetty-orch')" style="color:var(--fetty)">⚡ FETTY ORCH</div>
+    <div class="ctab" id="t-simlab" onclick="setV('simlab')">🧪 SIM LAB</div>
+  </div>
+  <!-- EXEC SHEET -->
+  <div class="cview sp" id="v-exec">
+    <div style="padding:9px 13px 7px;border-bottom:1px solid var(--border);background:var(--bg1);position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;letter-spacing:4px;color:var(--gold)">EXECUTIVE INTELLIGENCE SHEET</div>
+        <div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:2px">Klein-Team ADR · MB v54 · Settlement-Ready · FRE 408</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--fhead);font-size:20px;font-weight:900;color:var(--green)">$350M – $1B+</div>
+        <div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:1px">MAX $7.3B+</div>
+      </div>
+    </div>
+    <div id="exec-kpi-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 13px;border-bottom:1px solid var(--border);background:var(--bg1)"></div>
+    <div style="padding:9px 13px 4px"><div class="cslbl" style="margin-top:0">5 BINARY KILL SHOTS</div><div id="exec-kill-shots"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)">
+      <div style="border-right:1px solid var(--border);padding:9px 13px">
+        <div class="cslbl" style="margin-top:0">ADR DEPLOYMENT</div><div id="exec-fronts"></div>
+      </div>
+      <div style="border-right:1px solid var(--border);padding:9px 13px">
+        <div class="cslbl" style="margin-top:0">CORPUS STATUS</div><div id="exec-corpus"></div>
+        <div class="cslbl">SIM · T<span id="exec-turn">0</span></div><div id="exec-sim"></div>
+      </div>
+      <div style="padding:9px 13px">
+        <div class="cslbl" style="margin-top:0">GOVERNANCE</div><div id="exec-gov"></div>
+        <div class="cslbl">IP NODES</div><div id="exec-nodes"></div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:8px 13px">
+      <div class="cslbl" style="margin-top:0">LOOP FEED</div>
+      <div id="exec-feed" style="font-family:var(--fmono);font-size:8.5px;color:var(--dim);line-height:1.8"></div>
+    </div>
+  </div>
+
+  <div class="cview on sp" id="v-home"><div class="sh"><div class="st">KLEIN-TEAM ADR · NEXUS CORPUS</div><div class="ss">MasterBrief v54 · 291 Evidence Items · 78 Silver Bullets · 8 Fronts · FRE 408 · Governance Intelligence Active</div></div><div id="home-body" class="pad"></div></div>
+  <div class="cview" id="v-gr" style="display:none;overflow:hidden;height:100%">
+  <div class="sh"><div class="st">GHOST RECON PROTOCOL</div><div class="ss">10 Nuclear Lynchpins · Wolf + Tiger + Suits Routing · Evidence Anchors · MB v54</div></div>
+  <div style="display:grid;grid-template-columns:220px 1fr;height:calc(100% - 52px);overflow:hidden">
+    <!-- Left: Agent Registry -->
+    <div style="border-right:1px solid var(--border);overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:var(--fmono);font-size:8px;letter-spacing:2px;color:var(--green);font-weight:600">AGENT REGISTRY <span style="color:var(--dim);font-weight:400">6 ACTIVE</span></div>
+      <div id="gr-agent-reg"></div>
+      <div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:2px;color:var(--dim);margin-top:4px;text-transform:uppercase">Data Flywheels</div>
+      <div id="gr-flywheel-bars"></div>
+      <div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:2px;color:var(--dim);margin-top:4px;text-transform:uppercase">Active Protocols</div>
+      <div id="gr-protocols"></div>
+    </div>
+    <!-- Right: Node Detail -->
+    <div style="overflow-y:auto;padding:10px 13px" id="gr-node-detail">
+      <div style="color:var(--dim);font-family:var(--fmono);font-size:9px;text-align:center;padding:20px">Select a node from the registry to view details.</div>
+    </div>
+  </div>
+</div>
+  <div class="cview sp" id="v-fw"><div class="sh"><div class="st" style="color:var(--cyan)">DATA FLYWHEELS</div><div class="ss">6 Domain Mastery Tracks · Tool Activations · Corpus Coverage · Bridge Density 0.44</div></div><div id="fw-body" class="pad"></div></div>
+  <div class="cview sp" id="v-sim">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st">7-TURN CONVERGENCE SIMULATION</div><div class="ss">FettyFM Orchestrated · Live Rule Engine · Bridge Penalty · Contagion Math</div></div>
+      <div style="display:flex;gap:4px"><button class="btn bc" onclick="resetSim()">RESET</button><button class="btn bg2" onclick="runNext()">NEXT ▶</button><button class="btn bw" onclick="runAll()">RUN ALL ⚡</button></div>
+    </div>
+    <div id="chess-board" class="chg"></div>
+    <div class="pad" style="padding-top:0"><div class="cslbl">TURN SEQUENCE</div><div id="turn-list"></div></div>
+  </div>
+  <div class="cview sp" id="v-judge">
+    <div class="sh"><div class="st" style="color:var(--suits)">JUDGE MODE</div><div class="ss">6-Phase Issue Evaluation · Support / Fit / Priority · Integration Strategy · MB v54 FROZEN</div></div>
+    <div class="jmtb">
+      <select class="jmsel" id="jm-sel"></select>
+      <button class="btn bs" onclick="runJM()">⚖ EVALUATE</button>
+      <button class="btn bc" onclick="runAllJM()">RUN ALL</button>
+    </div>
+    <div id="jm-grid" class="jmg"><div class="jmc jmcf" style="text-align:center;padding:20px;color:var(--dim);font-family:var(--fmono);font-size:10px">Select an issue and click EVALUATE to run 6-phase analysis.</div></div>
+    <div class="pad" style="padding-top:8px"><div class="cslbl">ISSUE QUEUE · 10 PRE-LOADED DK ISSUES</div><div id="jm-queue"></div></div>
+  </div>
+  <div class="cview sp" id="v-angels"><div class="sh"><div class="st">FALLEN ANGELS</div><div class="ss">Chess Piece Health · Collapse Cascade Tracker · Post-Sim State</div></div><div id="angels-body" class="pad"></div></div>
+  <div class="cview sp" id="v-suits"><div class="sh"><div class="st" style="color:var(--suits)">SUITS AMALGAMATION — ADR COMMAND</div><div class="ss">Ghost Recon + Wolf + Tiger → Attorney-Ready Deliverables · 8-Front Deployment · FRE 408</div></div><div id="suits-body" class="pad"></div></div>
+  <div class="cview sp" id="v-pcr">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--policy)">POLICY CONFLICT RESOLVER</div><div class="ss">Multi-rule collision detection · Precedence ordering · Governance arbitration escalation</div></div>
+      <div style="display:flex;gap:4px">
+        <select id="pcr-sel" style="background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:4px 7px;border-radius:var(--r);outline:none"></select>
+        <button class="btn bp" onclick="runPCR()">RESOLVE ▶</button>
+        <button class="btn bc" onclick="runAllPCR()">RUN ALL</button>
+      </div>
+    </div>
+    <div id="pcr-rules" class="pad"></div>
+    <div id="pcr-out"></div>
+  </div>
+  <div class="cview sp" id="v-preg">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--policy)">POLICY PRECEDENCE REGISTRY</div><div class="ss">Rule families · Precedence rankings · Override history · Governance exceptions · Institutional memory</div></div>
+      <div style="display:flex;gap:4px">
+        <button class="btn bp" onclick="showPreg('fam')">FAMILIES</button>
+        <button class="btn bgov" onclick="showPreg('over')">OVERRIDES</button>
+        <button class="btn bcb" onclick="showPreg('exc')">EXCEPTIONS</button>
+      </div>
+    </div>
+    <div id="preg-body" class="pad"></div>
+  </div>
+  <div class="cview sp" id="v-casebook">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--casebook)">POLICY CASEBOOK ANALYZER</div><div class="ss">Conflict recurrence · Override burden · Exception drift · Governance dependency · Policy health score</div></div>
+      <button class="btn bcb" onclick="runCasebook()">▶ RUN ANALYSIS</button>
+    </div>
+    <div id="casebook-body" class="pad" style="color:var(--dim);font-family:var(--fmono);font-size:9.5px;text-align:center;padding:24px">Click RUN ANALYSIS to generate the policy casebook report.</div>
+  </div>
+  <div class="cview" id="v-obs">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--casebook)">GOVERNANCE POLICY OBSERVATORY</div><div class="ss">Unified command view · Policy health · Conflict hotspots · Override leaders · Exception drift · Governance load</div></div>
+      <div style="display:flex;gap:3px">
+        <button class="btn bcb" onclick="setObs('exec')">EXEC</button>
+        <button class="btn bp" onclick="setObs('conf')">CONFLICTS</button>
+        <button class="btn bgov" onclick="setObs('over')">OVERRIDES</button>
+        <button class="btn bc" onclick="setObs('rec')">RECOVERY</button>
+        <button class="btn bs" onclick="setObs('ledg')">LEDGER</button>
+      </div>
+    </div>
+    <div id="obs-strip" class="obsstrip"></div>
+    <div id="obs-body" class="obscols"></div>
+  </div>
+  <div class="cview sp" id="v-wfr">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--gov)">GOVERNANCE WORKFLOW REGISTRY</div><div class="ss">Append-only audit trail · Alert → routing → assignment → escalation → redesign → closure</div></div>
+      <div style="display:flex;gap:4px"><button class="btn bgov" onclick="addWFR()">+ ADD RECORD</button><button class="btn bc" onclick="renderWFR()">↺ REFRESH</button></div>
+    </div>
+    <div id="wfr-body" class="pad"></div>
+  </div>
+  <div class="cview sp" id="v-alerts">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st" style="color:var(--alert)">GOVERNANCE ALERTING ENGINE</div><div class="ss">8 threshold rules · Escalation routing · Policy health · Conflict spikes · Exception drift</div></div>
+      <div style="display:flex;gap:4px"><button class="btn bw" onclick="fireAlerts()">🔔 FIRE ALL</button><button class="btn bc" onclick="clearAlerts()">CLEAR</button></div>
+    </div>
+    <div id="alerts-body" class="pad"></div>
+  </div>
+  <div class="cview sp" id="v-diag">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="st">SYSTEM DIAGNOSTICS LAYER</div><div class="ss">Health · Bottlenecks · Instability · Module Performance · Governance Flags · Trigger Ledger</div></div>
+      <button class="btn bg2" onclick="renderDiag()">↺ REFRESH</button>
+    </div>
+    <div id="diag-body" class="pad g2" style="gap:7px"></div>
+  </div>
+  <div class="cview sp" id="v-ingest">
+    <div class="sh"><div class="st">DATA INGESTION ENGINE</div><div class="ss">Post-Hoc Append · EV-292+ Auto-Numbering · ChatGPT Export Merge · Domain Auto-Detection · GR Node Routing</div></div>
+    <div class="pad" style="display:flex;flex-direction:column;gap:9px">
+      <div class="card"><div class="ct">PRE-LOAD PACKAGES</div><div id="preload-btns" style="display:flex;gap:5px;flex-wrap:wrap"></div></div>
+      <div class="card">
+        <div class="ct">DROP OR PASTE</div>
+        <div class="idrop" id="idz" onclick="document.getElementById('fi').click()" ondragover="handleDO(event)" ondrop="handleDr(event)" ondragleave="this.classList.remove('drag')">
+          <div style="font-size:22px;margin-bottom:5px">⬇</div>
+          <div style="font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">DROP FILE · CLICK TO UPLOAD</div>
+          <div style="font-size:8px;color:var(--gray);font-family:var(--fmono);margin-top:2px">PDF · DOCX · TXT · JSON · ChatGPT conversations.json</div>
+        </div>
+        <input type="file" id="fi" accept=".pdf,.docx,.txt,.json,.xlsx,.md,.html" onchange="handleFU(event)" multiple>
+        <textarea class="iinput" id="ipa" placeholder="Paste document text, DK-Snappy analysis, or ChatGPT JSON export..." rows="4" style="margin-top:7px"></textarea>
+        <div style="display:flex;gap:5px;margin-top:6px;align-items:center">
+          <input style="flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:4px 7px;border-radius:var(--r);outline:none" type="text" id="ilbl" placeholder="Document label">
+          <button class="btn bc" onclick="ingestPaste()">INGEST →</button>
+          <button class="btn bg2" onclick="mergeCGPT()">CHATGPT MERGE</button>
+        </div>
+      </div>
+      <div class="card"><div class="ct">INGESTION LOG · <span id="icnt">0</span> ITEMS · NEXT: <span id="inev">EV-292</span></div><div id="ilog" style="max-height:160px;overflow-y:auto"><div style="text-align:center;padding:12px;font-family:var(--fmono);font-size:8.5px;color:var(--dim)">No items ingested yet.</div></div></div>
+      <div class="card"><div class="ct">FETTY FM CONSOLE</div><div class="fettycon" id="fcon"></div></div>
+    </div>
+  </div>
+
+  <!-- FETTY FM ORCHESTRATION ENGINE -->
+  <div class="cview" id="v-fetty-orch" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+    <div style="padding:8px 13px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:26px;height:26px;border:1px solid var(--fetty2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--fetty);font-size:11px">⊕</div>
+        <div>
+          <div style="font-family:var(--fhead);font-size:17px;font-weight:900;color:var(--fetty);letter-spacing:2px">FETTY FM</div>
+          <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);letter-spacing:2px">SCENARIO ORCHESTRATION ENGINE</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn" style="background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)">ORCHESTRATOR</button>
+        <button class="btn bc">BRIDGE MAP</button>
+      </div>
+    </div>
+    <div style="padding:7px 13px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
+      <span style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:1px">OBJECTIVE ›</span>
+      <input id="fetty-obj" type="text" style="background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:4px 8px;border-radius:var(--r);flex:1;min-width:100px;outline:none" placeholder="Define scenario objective...">
+      <span class="pill pp">ASC 606</span>
+      <span class="pill pp">PLATFORM ECON</span>
+      <span class="pill pp">PRIVACY/ToS</span>
+      <span class="pill pgov">GOVERNANCE</span>
+      <button class="btn bg2" onclick="runFettyOrch()">RUN ▶</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 300px;flex:1;overflow:hidden;min-height:0">
+      <div style="overflow-y:auto;padding:10px 13px;border-right:1px solid var(--border)">
+        <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:2px;margin-bottom:4px">EXECUTION STACK · 7 LAYERS</div>
+        <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);margin-bottom:10px" id="fo-stack-status">0 / 7 layers active · idle</div>
+        <div id="fo-stack"></div>
+      </div>
+      <div style="overflow-y:auto;padding:10px 11px;display:flex;flex-direction:column;gap:8px">
+        <div>
+          <div class="ct">SCENARIO PRESETS</div>
+          <div id="fo-presets"></div>
+        </div>
+        <div class="card">
+          <div class="ct">WEIGHTED COLLAPSE RISK</div>
+          <div style="text-align:center;font-family:var(--fmono);font-size:8px;color:var(--dim);margin-bottom:6px">COMPOSITE</div>
+          <div id="fo-risk"></div>
+        </div>
+        <div class="card">
+          <div class="ct">CHESS ENGINE · MOAT</div>
+          <div id="fo-moat"></div>
+        </div>
+        <div class="card">
+          <div class="ct">CHESS PIECE THREAT MAP</div>
+          <div id="fo-pieces" style="display:grid;grid-template-columns:1fr 1fr;gap:4px"></div>
+        </div>
+        <div class="card">
+          <div class="ct">SIMULATION PHASES</div>
+          <div id="fo-phases"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FETTY FM SIMULATION LAB -->
+  <div class="cview" id="v-simlab" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+    <div style="background:var(--bg1);border-bottom:1px solid var(--border);padding:7px 13px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div style="font-family:var(--fhead);font-size:13px;font-weight:900;letter-spacing:3px;color:var(--white)">NEXUS</div>
+      <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim)">TERMINAL › SIMULATION LAB › HOME</div>
+      <div style="display:flex;gap:4px;margin-left:auto">
+        <button class="btn" style="background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2)" onclick="setSimLabTab('home')">HOME</button>
+        <button class="btn bc" onclick="setSimLabTab('build')">BUILD</button>
+        <button class="btn bgov" onclick="setSimLabTab('stack')">STACK</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:1px;padding:4px 8px 0;background:var(--bg1);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0">
+      <div class="ctab on" id="sl-t-home" onclick="setSimLabTab('home')">01 · LAB HOME</div>
+      <div class="ctab" id="sl-t-build" onclick="setSimLabTab('build')">02 · BUILD MODEL</div>
+      <div class="ctab" id="sl-t-stack" onclick="setSimLabTab('stack')">03 · STACK VIEW</div>
+      <div class="ctab" id="sl-t-mousetrap" onclick="setSimLabTab('mousetrap')">04 · MOUSETRAP</div>
+      <div class="ctab" id="sl-t-simctrl" onclick="setSimLabTab('simctrl')">05 · SIM CONTROL</div>
+      <div class="ctab" id="sl-t-playback" onclick="setSimLabTab('playback')">06 · PLAYBACK</div>
+      <div class="ctab" id="sl-t-results" onclick="setSimLabTab('results')">07 · RESULTS</div>
+      <div class="ctab" id="sl-t-bridges" onclick="setSimLabTab('bridges')">08 · BRIDGES</div>
+    </div>
+    <div style="flex:1;overflow:hidden;min-height:0">
+      <div class="sl-view" id="sl-v-home" style="height:100%;overflow-y:auto">
+        <div style="padding:14px 13px 10px">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px">
+            <div>
+              <div style="font-family:var(--fhead);font-size:24px;font-weight:900;line-height:1.05">FETTY FM<br><span style="color:var(--tiger)">SIMULATION</span><br>LAB</div>
+              <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);margin-top:6px;line-height:1.8">SCENARIO RUNNER · CROSS-DOMAIN BRIDGER ·<br>COLLAPSE MODELER · BIO-TECH ANALOG</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+              <button class="btn" style="background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2);padding:7px 10px" onclick="setSimLabTab('build')">+ NEW SIMULATION</button>
+              <button class="btn bc" style="padding:7px 10px">▶ RUN EXISTING</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:12px" id="sl-stats"></div>
+          <div style="display:grid;grid-template-columns:1fr 200px;gap:8px;margin-bottom:12px">
+            <div class="card">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <div style="width:34px;height:34px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:15px">⚖</div>
+                <div style="flex:1">
+                  <div style="font-family:var(--fhead);font-size:11px;font-weight:700">Stress Test</div>
+                  <div style="font-size:7.5px;color:var(--dim);font-family:var(--fmono)">Last run: 3d ago · 6 turns · Dependency Cascade</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-family:var(--fhead);font-size:18px;font-weight:900;color:var(--tiger)">41%</div>
+                  <div class="pill pt" style="font-size:6.5px">MODERATE</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:3px"><span class="pill pgov">Ad Tech</span><span class="pill pg">Revenue</span><span class="pill pw">FTC</span></div>
+            </div>
+            <div class="card" style="display:flex;align-items:center;gap:8px">
+              <div style="width:3px;height:36px;background:var(--green);border-radius:2px;flex-shrink:0"></div>
+              <div>
+                <div style="font-family:var(--fmono);font-size:8px;color:var(--green);font-weight:600">BIO-TECH</div>
+                <div style="font-size:8.5px;color:var(--dim)">Analog layer</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 180px;gap:8px">
+            <div>
+              <div class="cslbl">FETTY FM — ACTIVE SCENARIO MODULES</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px" id="sl-modules"></div>
+            </div>
+            <div class="card">
+              <div class="ct">SYSTEM STATUS</div>
+              <div id="sl-status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sl-view" id="sl-v-build" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--cyan);margin-bottom:8px">BUILD MODEL</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Configure your simulation model parameters and define the scenario objective.</div>
+      </div>
+      <div class="sl-view" id="sl-v-stack" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--fetty);margin-bottom:8px">STACK VIEW</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">7-layer execution stack visualization · FETTY FM → NEXUS AGENT → FLYWHEEL → BRIDGER → CHESS ENGINE → BIO-ANALOG → OUTPUT</div>
+      </div>
+      <div class="sl-view" id="sl-v-mousetrap" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--wolf);margin-bottom:8px">MOUSETRAP</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Rule trigger map · Conditional escalation logic · 4 rules armed.</div>
+      </div>
+      <div class="sl-view" id="sl-v-simctrl" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--green);margin-bottom:8px">SIM CONTROL</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Run, pause, and control your simulation execution.</div>
+      </div>
+      <div class="sl-view" id="sl-v-playback" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--policy);margin-bottom:8px">PLAYBACK</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Review turn-by-turn simulation history and collapse events.</div>
+      </div>
+      <div class="sl-view" id="sl-v-results" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--gold);margin-bottom:8px">RESULTS</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Simulation output · Collapse analysis · Bridge summary · Governance impact.</div>
+      </div>
+      <div class="sl-view" id="sl-v-bridges" style="display:none;height:100%;overflow-y:auto;padding:13px">
+        <div style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--casebook);margin-bottom:8px">BRIDGE INSIGHTS</div>
+        <div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">Cross-domain bridge scoring · Analog mapping · Prompt generation · 3.1× BES.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="rp">
+  <div class="rph"><div class="rpt">LIVE METRICS</div><div class="pill pc" id="rtb">T0</div></div>
+  <div class="rpb">
+    <div class="card" style="text-align:center">
+      <div class="cring" id="crng" style="border-color:var(--green)">
+        <div class="crn" id="rpcol" style="color:var(--green)">12%</div>
+        <div class="crl">COLLAPSE</div>
+      </div>
+      <div style="margin-top:7px"><div class="mbadge mbd" id="rpmb">DOMAIN REASONING</div></div>
+    </div>
+    <div class="card">
+      <div class="ct">ADR SIMULATION</div>
+      <div class="mw"><div class="ml"><span class="mlb">MOAT SCORE</span><span class="mlv" style="color:var(--green)" id="mm">8.2</span></div><div class="mt"><div class="mf" style="background:var(--green);width:82%" id="mfm"></div></div></div>
+      <div class="mw"><div class="ml"><span class="mlb">BRIDGE STRESS</span><span class="mlv" style="color:var(--suits)" id="mb2">31%</span></div><div class="mt"><div class="mf" style="background:var(--suits);width:31%" id="mfb"></div></div></div>
+      <div class="mw"><div class="ml"><span class="mlb">REG PRESSURE</span><span class="mlv" style="color:var(--tiger)" id="mrp">24%</span></div><div class="mt"><div class="mf" style="background:var(--tiger);width:24%" id="mfr"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="ct">GOVERNANCE LAYER</div>
+      <div class="mw"><div class="ml"><span class="mlb">POLICY HEALTH</span><span class="mlv" style="color:var(--casebook)" id="mph">8.4</span></div><div class="mt"><div class="mf" style="background:var(--casebook);width:84%" id="mfph"></div></div></div>
+      <div class="mw"><div class="ml"><span class="mlb">GOV DEPENDENCY</span><span class="mlv" style="color:var(--gov)" id="mgd">28%</span></div><div class="mt"><div class="mf" style="background:var(--gov);width:28%" id="mfgd"></div></div></div>
+      <div class="row"><span class="lbl">Active Exceptions</span><span class="val" style="color:var(--policy)" id="raex">7</span></div>
+      <div class="row"><span class="lbl">Alerts Fired</span><span class="val" style="color:var(--alert)" id="raf">0</span></div>
+    </div>
+    <div class="card"><div class="ct">GR NODES</div><div id="grm"></div></div>
+    <div class="card" style="text-align:center">
+      <div style="font-family:var(--fhead);font-size:16px;font-weight:900;color:var(--green)">$350M – $1B+</div>
+      <div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:2px">SETTLEMENT BAND</div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+// ══════════════════════════════════════════════════════
+// NEXUS v7.0 SYNTHESIS OS — ALL FUNCTIONS
+// ZERO nested template literals — Safari/iOS compatible
+// ══════════════════════════════════════════════════════
+
+// ── HELPERS ──────────────────────────────────────────
+function cl(v,mn,mx){mn=mn===undefined?0:mn;mx=mx===undefined?1:mx;return Math.max(mn,Math.min(mx,v));}
+function dc(o){return JSON.parse(JSON.stringify(o));}
+function hc(h){return h>0.6?'var(--green)':h>0.3?'var(--tiger)':'var(--wolf)';}
+function pct(v){return Math.round(v*100)+'%';}
+function el(id){return document.getElementById(id);}
+// Safe html builder — no nested backticks
+function tag(t,cls,style,inner){
+  var s='<'+t;
+  if(cls) s+=' class="'+cls+'"';
+  if(style) s+=' style="'+style+'"';
+  s+='>'+inner+'</'+t+'>';
+  return s;
+}
+function addFetty(msg,cls){
+  var f=el('fcon'); if(!f) return;
+  var d=document.createElement('div');
+  d.className=cls||'fl';
+  d.textContent='['+new Date().toLocaleTimeString('en-US',{hour12:false})+'] '+msg;
+  f.appendChild(d);
+  f.scrollTop=f.scrollHeight;
+}
+
+// ── SIMULATION ENGINE ────────────────────────────────
+function initState(p){
+  return{turn:0,mode:'domain_reasoning',
+    pieces:p.pieces.map(function(x){return Object.assign({},x);}),
+    metrics:Object.assign({},p.metrics),
+    bridges:p.bridges.map(function(b){return Object.assign({},b);}),
+    rules_triggered:[],applied:[],flags:{},snaps:[],logs:[],
+    diag:{triggers:[],ledger:[]}};
+}
+function evalRules(proj,st,ev){
+  var fl={}; (ev.flags||[]).forEach(function(f){fl[f]=1;});
+  var out=[];
+  proj.rules.forEach(function(r){
+    if(r.status==='triggered') return;
+    var fires=false;
+    if(r.trigger.type==='event_flag') fires=!!fl[r.trigger.event_flag];
+    else if(r.trigger.type==='metric_threshold'){
+      var v=st.metrics[r.trigger.metric]||0;
+      if(r.trigger.operator==='>='&&v>=r.trigger.value) fires=true;
+    }
+    if(fires) out.push(r);
+  });
+  if(out.length) st.diag.triggers.push({turn:ev.turn,ev:ev.label,rules:out.map(function(r){return r.id;})});
+  return out;
+}
+function applyEffects(st,r){
+  st.rules_triggered.push(r.id);
+  (r.effects||[]).forEach(function(e){
+    if(e.type==='piece_health_delta'){
+      var p=null; st.pieces.forEach(function(x){if(x.id===e.target) p=x;});
+      if(p) p.health=cl(p.health+e.delta);
+    } else if(e.type==='metric_delta'){
+      if(typeof st.metrics[e.metric]==='number') st.metrics[e.metric]=cl(st.metrics[e.metric]+e.delta);
+    }
+  });
+}
+function calcMetrics(proj,st){
+  var ts={};
+  st.rules_triggered.forEach(function(id){ts[id]=1;});
+  var rp=cl(proj.rules.filter(function(r){return ts[r.id];}).reduce(function(s,r){return s+(r.severity||0)*(r.scope||0)*(r.confidence||0)*0.05;},0));
+  var bp=cl(0.1*st.bridges.reduce(function(s,b){return s+Math.pow(b.strength||0,2);},0)*(st.metrics.bridge_stress||0));
+  var pm={};
+  st.pieces.forEach(function(p){pm[p.id]=p;});
+  var cp2=0;
+  st.pieces.forEach(function(p){(p.dependencies||[]).forEach(function(d){var dep=pm[d];if(dep) cp2+=(1-dep.health)*0.03;});});
+  cp2=cl(cp2);
+  var ms=cl(st.pieces.reduce(function(s,p){return s+p.health*(p.weights&&p.weights.collapse||0);},0));
+  var uf=st.pieces.filter(function(p){return p.chess_role==='pawn'||p.id==='bishop_privacy';});
+  var ts2=uf.length?cl(uf.reduce(function(s,p){return s+p.health;},0)/uf.length):(st.metrics.trust_score||0.58);
+  st.metrics.moat_score=ms;
+  st.metrics.rule_pressure=rp;
+  st.metrics.bridge_penalty=bp;
+  st.metrics.contagion_penalty=cp2;
+  st.metrics.trust_score=ts2;
+  st.metrics.collapse_probability=cl((proj.metrics.base_risk||0.15)+rp+bp+cp2);
+}
+function updBridgeStress(st,ev){
+  var fl={}; (ev.flags||[]).forEach(function(f){fl[f]=1;});
+  if(fl.bridge_escalation||fl.collapse_phase) st.metrics.bridge_stress=cl(st.metrics.bridge_stress+0.20);
+  else if(fl.principal_agent_triggered||fl.override_detected) st.metrics.bridge_stress=cl(st.metrics.bridge_stress+0.12);
+  else st.metrics.bridge_stress=cl(st.metrics.bridge_stress+0.04);
+}
+function updMode(proj,st){
+  var e=proj.fetty_fm&&proj.fetty_fm.escalation_rule||{};
+  var c=st.metrics.collapse_probability,bs=st.metrics.bridge_stress;
+  if(c>=(e.scenario_scoring_to_convergence_collapse||0.82)||bs>=0.65) st.mode='convergence_collapse';
+  else if(c>=(e.bridge_reasoning_to_scenario_scoring||0.72)) st.mode='scenario_scoring';
+  else if(c>=(e.domain_reasoning_to_bridge_reasoning||0.60)) st.mode='bridge_reasoning';
+  else st.mode='domain_reasoning';
+}
+function runTurn(proj,st,ev){
+  st.turn=ev.turn; st.applied.push(ev.id);
+  (ev.flags||[]).forEach(function(f){st.flags[f]=1;});
+  st.diag.ledger.push({turn:ev.turn,ev:ev.label,flags:ev.flags||[]});
+  updBridgeStress(st,ev);
+  var trig=evalRules(proj,st,ev);
+  trig.forEach(function(r){applyEffects(st,r);});
+  calcMetrics(proj,st);
+  updMode(proj,st);
+  return st;
+}
+
+// ── PCR ENGINE ───────────────────────────────────────
+var PCR_PRI=['terminal','escalation','retirement','forced_method','default'];
+var PCR_ACT={'skip_to_retirement_review':'terminal','retire_immediately':'terminal','require_governance_approval':'escalation','hold_for_manual_review':'escalation','governance_arbitration_required':'escalation','force_specific_rehab_type':'forced_method','phase_restricted_rehab':'forced_method','auto_queue_rehab':'default','standard_processing':'default'};
+function pcrIdx(action){var c=PCR_ACT[action]||'default';return PCR_PRI.indexOf(c);}
+function pcrConflict(rules){
+  var acts={};
+  rules.forEach(function(r){acts[r.policy_action]=1;});
+  if(acts.skip_to_retirement_review&&acts.auto_queue_rehab) return true;
+  if(acts.retire_immediately&&acts.force_specific_rehab_type) return true;
+  if(acts.skip_to_retirement_review&&acts.force_specific_rehab_type) return true;
+  if(acts.retire_immediately&&acts.auto_queue_rehab) return true;
+  return false;
+}
+function runPCREngine(rules){
+  if(!rules.length) return null;
+  if(rules.length===1) return{resolved_action:rules[0].policy_action,winning_rule:rules[0].rule_id,winning_name:rules[0].rule_name,suppressed:[],arb:false,conflict:false,pri_class:PCR_ACT[rules[0].policy_action]||'default',reason:'Single rule matched.'};
+  var sorted=rules.slice().sort(function(a,b){return pcrIdx(a.policy_action)-pcrIdx(b.policy_action);});
+  var winner=sorted[0];
+  var direct=pcrConflict(rules);
+  var equalPri=rules.filter(function(r){return pcrIdx(r.policy_action)===pcrIdx(winner.policy_action);});
+  var arb=direct&&equalPri.length>1;
+  var supp=arb?[]:rules.filter(function(r){return r!==winner;}).map(function(r){return r.rule_id;});
+  return{
+    resolved_action:arb?'governance_arbitration_required':winner.policy_action,
+    winning_rule:arb?null:winner.rule_id,winning_name:arb?null:winner.rule_name,
+    suppressed:supp,arb:arb,conflict:direct,
+    pri_class:PCR_ACT[winner.policy_action]||'default',
+    reason:arb?'Two equal-priority terminal rules directly conflict — governance arbitration required.':
+      direct?'Direct conflict detected. '+winner.rule_name+' wins via precedence class ['+PCR_ACT[winner.policy_action]+']. '+supp.length+' rule(s) suppressed.':
+      winner.rule_name+' governs via precedence. '+supp.length+' rule(s) subordinated.'
+  };
+}
+
+// ── JUDGE MODE ENGINE ────────────────────────────────
+function runJMCalc(issue){
+  var sup=Math.min(10,(issue.support_items||0)*1.4);
+  var fit=issue.fit_hint||7.0;
+  var srisk=issue.structural_conflict?7.5:3.5;
+  var nov=issue.novelty_hint||6.5;
+  var pri=issue.priority_hint||7.5;
+  var act='defer';
+  if(sup>=8&&srisk<5&&fit>=6) act='add_now';
+  else if(sup>=7&&fit>=6) act='add_with_citation_tightening';
+  else if(srisk>=6.5&&sup>=8) act='structural_reopen_required';
+  else if(sup>=7&&issue.type==='technical') act='route_to_tiger';
+  else if(pri>=8&&issue.type==='strategic') act='route_to_wolf';
+  else if(pri>=7&&issue.type==='legal_synthesis') act='route_to_suits';
+  var band=pri>=8?'IMMEDIATE':pri>=6?'HIGH':pri>=4?'MEDIUM':'DEFERRED';
+  var routes=[];
+  if(act==='route_to_tiger') routes.push('TIGER');
+  if(act==='route_to_wolf') routes.push('WOLF');
+  if(act==='route_to_suits') routes.push('SUITS');
+  if(nov>=7) routes.push('FLYWHEEL');
+  var memo=act==='structural_reopen_required'?'HIGH-VALUE: Support '+sup.toFixed(1)+' / Structural Risk '+srisk.toFixed(1)+' exceeds additive threshold. Architecture review required before MB v54 insertion.':
+    act==='add_now'?'IMMEDIATE INTEGRATION: Support '+sup.toFixed(1)+', Fit '+fit.toFixed(1)+', Low structural risk '+srisk.toFixed(1)+'. Insert via controlled add-on.':
+    'CONTROLLED ADD-ON: '+act.replace(/_/g,' ').toUpperCase()+'. Route: '+(routes.join(' + ')||'integration queue')+'. MB v54 frozen.';
+  return{sup:sup,fit:fit,srisk:srisk,nov:nov,pri:pri,band:band,act:act,routes:routes,memo:memo};
+}
+
+// ── CASEBOOK ENGINE ──────────────────────────────────
+var CB_CONFLICTS=[
+  {sig:'terminality_vs_forced_method',count:14,arb:false},
+  {sig:'icfr_breach_vs_auto_queue',count:9,arb:true},
+  {sig:'governance_escalation_vs_auto_queue',count:11,arb:false},
+  {sig:'retirement_vs_rehab_override',count:6,arb:true},
+  {sig:'asc606_vs_standard_booking',count:8,arb:false},
+  {sig:'calendar_bleed_vs_period_end',count:5,arb:false}
+];
+function runCasebookEngine(){
+  var conflicts=CB_CONFLICTS.map(function(r){return{sig:r.sig,count:r.count,arb:r.arb,sev:r.count>=10?'high':'moderate',impl:r.count>=10?'Structurally recurrent — rule architecture likely needs redesign.':'Occasional — monitor for frequency increase.'};}).sort(function(a,b){return b.count-a.count;});
+  var arb=CB_CONFLICTS.filter(function(r){return r.arb;}).length;
+  var auto=CB_CONFLICTS.length-arb;
+  var ratio=CB_CONFLICTS.length>0?arb/CB_CONFLICTS.length:0;
+  var active=PREG.governance_exceptions.filter(function(e){return e.status==='active';});
+  var fam={};
+  active.forEach(function(e){var k=e.conflict_signature||'unknown';fam[k]=(fam[k]||0)+1;});
+  var domFam=Object.keys(fam).sort(function(a,b){return fam[b]-fam[a];})[0]||'none';
+  var overrides=PREG.override_history.map(function(o){return{rule_id:o.affected_rule_id,rule_name:o.affected_rule_name,count:1,interp:'Overridden. Monitor for rigidity or scope miscalibration.'};});
+  var drift={total:active.length,status:active.length>=5?'elevated':'normal',dominant:domFam};
+  var gov_dep={arb:arb,auto:auto,ratio:+ratio.toFixed(2),status:ratio>=0.30?'moderate_overuse':'normal'};
+  var score=10;
+  var tc=conflicts[0]&&conflicts[0].count||0;
+  score-=Math.min(2.0,tc*0.1);
+  score-=Math.min(1.5,overrides.length*0.2);
+  if(drift.status==='elevated') score-=1.2;
+  if(gov_dep.status==='moderate_overuse') score-=1.0;
+  score=Math.max(0,+score.toFixed(2));
+  var hstatus=score>=8.5?'healthy':score>=6.5?'stable_but_exception_heavy':score>=4.5?'degraded':'unstable';
+  return{conflicts:conflicts,overrides:overrides,drift:drift,gov_dep:gov_dep,health:{score:score,status:hstatus}};
+}
+
+// ── ALERTING ENGINE ──────────────────────────────────
+var ALERT_DEF=[
+  {id:'ALT-001',type:'policy_health_drop',label:'Policy Health Below 7.0',cond:'policy_health < 7.0',sev:'critical',ch:'governance_emergency_lane',desc:'Policy health dropped below 7.0. Structural rule-system degradation. Immediate review required.'},
+  {id:'ALT-002',type:'conflict_spike',label:'Conflict Signature Spike ≥10',cond:'top_conflict_count >= 10',sev:'high',ch:'governance_review_queue',desc:'Most common conflict signature exceeded 10. Unstable policy-family boundary — redesign indicated.'},
+  {id:'ALT-003',type:'override_heavy',label:'Rule Override Frequency High',cond:'single_rule_overrides >= 5',sev:'high',ch:'policy_redesign_backlog',desc:'A single rule overridden too frequently. Rigidity or scope miscalibration.'},
+  {id:'ALT-004',type:'exception_drift',label:'Exception Drift Elevated',cond:'active_exceptions >= 10',sev:'moderate',ch:'governance_review_queue',desc:'Active exceptions accumulating. Shadow policy risk — exceptions becoming operative rule.'},
+  {id:'ALT-005',type:'gov_overuse',label:'Governance Dependency High',cond:'arbitration_ratio >= 0.30',sev:'moderate',ch:'policy_redesign_backlog',desc:'Too many cases escalating to governance arbitration. Insufficient policy specificity.'},
+  {id:'ALT-006',type:'convergence_collapse',label:'Convergence Collapse Active',cond:'simulation_mode = convergence_collapse',sev:'critical',ch:'governance_emergency_lane',desc:'FettyFM convergence collapse active. Multi-front deployment window open. ADR action required.'},
+  {id:'ALT-007',type:'bdo_withdrawal',label:'BDO Withdrawal Trigger Active',cond:'icfr_triggered AND collapse > 0.80',sev:'critical',ch:'governance_emergency_lane',desc:'ICFR breach + collapse > 80% = BDO withdrawal imminent. Track 1 deployment must proceed.'},
+  {id:'ALT-008',type:'apple_risk',label:'Apple Platform Removal Risk',cond:'privacy_breach AND knight.health < 0.70',sev:'high',ch:'governance_review_queue',desc:'Apple platform piece under stress. ATT bypass + brand liability at $0 economic cost.'}
+];
+var FIRED=[];
+function evalAlerts(cb){
+  var c=SIM.metrics.collapse_probability;
+  var out=[];
+  ALERT_DEF.forEach(function(a){
+    var fire=false;
+    if(a.type==='convergence_collapse'&&SIM.mode==='convergence_collapse') fire=true;
+    if(a.type==='bdo_withdrawal'&&c>0.80&&SIM.rules_triggered.indexOf('rule_icfr')>-1) fire=true;
+    if(a.type==='apple_risk'){var kn=null;SIM.pieces.forEach(function(p){if(p.id==='knight_platform') kn=p;});if(kn&&kn.health<0.70) fire=true;}
+    if(a.type==='policy_health_drop'&&cb.health.score<7.0) fire=true;
+    if(a.type==='conflict_spike'&&(cb.conflicts[0]&&cb.conflicts[0].count||0)>=10) fire=true;
+    if(a.type==='exception_drift'&&cb.drift.total>=10) fire=true;
+    if(a.type==='gov_overuse'&&cb.gov_dep.ratio>=0.30) fire=true;
+    if(fire) out.push(Object.assign({},a,{fired_at:new Date().toISOString(),sim_turn:SIM.turn,collapse:pct(c)}));
+  });
+  return out;
+}
+
+// ── WORKFLOW REGISTRY ────────────────────────────────
+var WFR=[];
+function addWorkflow(alert,ch,assign,esc,redesign){
+  var r={
+    id:'GWR-'+Date.now(),alert_id:alert.id,type:alert.type,sev:alert.sev,
+    routing:{ch:ch,at:new Date().toISOString()},
+    assignment:{to:assign,at:new Date().toISOString(),status:'accepted'},
+    escalation:{escalated:esc==='critical',level:esc},
+    redesign:{opened:!!redesign,ticket:redesign?'PRT-'+Math.floor(Math.random()*900+100):null},
+    closure:{status:'open',closed_at:null,disposition:null}
+  };
+  WFR.push(r);
+  addFetty('WFR: '+r.id+' · '+alert.type+' → '+ch,'fgov');
+  var e=el('raf'); if(e) e.textContent=FIRED.length;
+  return r;
+}
+function closeWFR(id,disp){WFR.forEach(function(w){if(w.id===id){w.closure={status:'resolved',closed_at:new Date().toISOString(),disposition:disp,notes:'Governance action completed.'};}});}
+function dismissWFR2(id){WFR.forEach(function(w){if(w.id===id) w.closure={status:'dismissed',closed_at:new Date().toISOString(),disposition:'no_action',notes:'Dismissed.'};});}
+
+// ── INGESTION ENGINE ─────────────────────────────────
+var ILOG=[];
+var nextEV=292;
+function ddomain(txt){
+  var t=(txt||'').toLowerCase();
+  var d=[];
+  if(/(asc 606|asc 810|icfr|restatement|principal.agent)/.test(t)) d.push('accounting');
+  if(/(apple|google|privacy|att|gdpr|platform)/.test(t)) d.push('platform');
+  if(/(coso|sox|governance|caremark|board)/.test(t)) d.push('governance');
+  if(/(cftc|mgcb|sec|fincen|michigan)/.test(t)) d.push('regulatory');
+  if(/(rico|mcpa|arbitration|hermalyn)/.test(t)) d.push('litigation');
+  if(/(policy.conflict|precedence|override|exception.drift)/.test(t)) d.push('policy');
+  return d.length?d:['general'];
+}
+function ingest(label,content,type,src,ph){
+  var ev='EV-'+nextEV++;
+  var entry={ev_id:ev,label:label,type:type||'doc',src:src||'upload',ts:Date.now(),domains:ddomain(content||label),ph:!!ph};
+  ILOG.push(entry);
+  refreshIUI();
+  addFetty('INGEST: '+ev+' → '+label+' ['+entry.domains.join('/')+']','fe');
+  return entry;
+}
+function refreshIUI(){
+  var c=el('icnt'),ne=el('inev'),ll=el('ilog');
+  if(c) c.textContent=ILOG.length;
+  if(ne) ne.textContent='EV-'+nextEV;
+  if(!ll) return;
+  if(!ILOG.length){ll.innerHTML='<div style="text-align:center;padding:12px;font-family:var(--fmono);font-size:8.5px;color:var(--dim)">No items ingested.</div>';return;}
+  var h='';
+  ILOG.slice().reverse().forEach(function(e){
+    h+='<div class="ient">'
+      +'<span class="iev">'+e.ev_id+'</span>'
+      +'<span class="iel">'+e.label+(e.ph?' [POST-HOC]':'')+'</span>'
+      +'<span class="ied">'+e.domains.join('/')+'</span>'
+      +'</div>';
+  });
+  ll.innerHTML=h;
+}
+
+// ── DATA ─────────────────────────────────────────────
+var PROJ={
+  project:{id:'dk_case',name:'DraftKings Collapse Model'},
+  pieces:[
+    {id:'king',chess_role:'king',label:'Platform Core',score:7.8,health:1.0,stack_layer:'SENIOR',dependencies:['queen','knight_platform'],weights:{collapse:0.18}},
+    {id:'queen',chess_role:'queen',label:'Rewards Engine',score:9.2,health:1.0,stack_layer:'MEZZ',dependencies:['king','rook_vendor','bishop_privacy','pawn_users'],weights:{collapse:0.32}},
+    {id:'rook_vendor',chess_role:'rook',label:'Vendor (GPS/Snappy)',score:8.4,health:1.0,stack_layer:'MEZZ',dependencies:['queen','knight_platform'],weights:{collapse:0.14}},
+    {id:'bishop_privacy',chess_role:'bishop',label:'Privacy / ToS',score:7.1,health:1.0,stack_layer:'MEZZ',dependencies:['knight_platform','pawn_users'],weights:{collapse:0.12}},
+    {id:'knight_platform',chess_role:'knight',label:'Apple / Google',score:6.2,health:1.0,stack_layer:'SENIOR',dependencies:['king','bishop_privacy'],weights:{collapse:0.10}},
+    {id:'pawn_users',chess_role:'pawn',label:'VIP Users / Crowns',score:4.5,health:1.0,stack_layer:'EQUITY',dependencies:['queen'],weights:{collapse:0.14}}
+  ],
+  rules:[
+    {id:'rule_icfr',label:'Internal Control Breach (SOX)',status:'armed',severity:0.95,scope:0.90,confidence:0.92,trigger:{type:'event_flag',event_flag:'override_detected'},effects:[{type:'piece_health_delta',target:'queen',delta:-0.25},{type:'piece_health_delta',target:'rook_vendor',delta:-0.10},{type:'metric_delta',metric:'collapse_probability',delta:0.12},{type:'metric_delta',metric:'regulatory_pressure',delta:0.14}]},
+    {id:'rule_privacy',label:'Privacy / ATT Bypass',status:'armed',severity:0.82,scope:0.75,confidence:0.88,trigger:{type:'event_flag',event_flag:'privacy_breach'},effects:[{type:'piece_health_delta',target:'bishop_privacy',delta:-0.30},{type:'piece_health_delta',target:'knight_platform',delta:-0.12},{type:'metric_delta',metric:'collapse_probability',delta:0.10}]},
+    {id:'rule_asc606',label:'ASC 606 Reclassification',status:'armed',severity:0.90,scope:0.88,confidence:0.90,trigger:{type:'event_flag',event_flag:'principal_agent_triggered'},effects:[{type:'piece_health_delta',target:'queen',delta:-0.20},{type:'metric_delta',metric:'collapse_probability',delta:0.13}]},
+    {id:'rule_arbitration',label:'Arbitration Collapse (AutoZone)',status:'armed',severity:0.85,scope:0.80,confidence:0.88,trigger:{type:'event_flag',event_flag:'arbitration_void_signal'},effects:[{type:'metric_delta',metric:'collapse_probability',delta:0.08}]},
+    {id:'rule_convergence',label:'Convergence Collapse (FettyFM)',status:'armed',severity:0.98,scope:1.0,confidence:0.85,trigger:{type:'metric_threshold',metric:'bridge_stress',operator:'>=',value:0.65},effects:[{type:'metric_delta',metric:'collapse_probability',delta:0.16}]}
+  ],
+  events:[
+    {id:'t1',turn:1,label:'Baseline State',flags:[],narrative:'All systems intact. Dynasty Rewards operating. No acute triggers.'},
+    {id:'t2',turn:2,label:'ICFR Override — VIP Host DK$',flags:['override_detected'],narrative:'Alex Franks $1,250 IOC credits outside GL. Shadow ledger documented. SOX exposure emerges.'},
+    {id:'t3',turn:3,label:'Privacy Strike — ATT Bypass',flags:['privacy_breach'],narrative:'Franxe.pdf dual-drafting confirmed. Apple ATT bypass documented.'},
+    {id:'t4',turn:4,label:'ASC 606 Reclassification Forced',flags:['principal_agent_triggered'],narrative:'DK controls Crown pricing + vendor routing + bundle composition. $2.165B liability emergence.'},
+    {id:'t5',turn:5,label:'FettyFM ACTIVATES — Convergence',flags:['arbitration_void_signal','bridge_escalation'],narrative:'Multi-front convergence. AutoZone arbitration void. 7 grounds confirmed.'},
+    {id:'t6',turn:6,label:'Governance Collapse — SOX False Certs',flags:['governance_failure'],narrative:'SOX 302/404 certifications false. COSO five-component failure. BDO cannot certify.'},
+    {id:'t7',turn:7,label:'CHESS COLLAPSE — QUEEN REMOVED',flags:['collapse_phase','bdo_withdrawal'],narrative:'QUEEN REMOVED. BDO withdrawal. 8-front deployment. Settlement band: $350M–$1B+.'}
+  ],
+  metrics:{base_risk:0.15,collapse_probability:0.15,moat_score:0.68,trust_score:0.58,regulatory_pressure:0.24,bridge_stress:0.31,rule_pressure:0,bridge_penalty:0,contagion_penalty:0},
+  bridges:[
+    {id:'br1',source_domain:'accounting',target_domain:'platform',label:'Rewards — Principal Control',strength:0.94,implication:'Platform control satisfies ASC 606-10-55 principal indicators — gross reporting mandatory.'},
+    {id:'br2',source_domain:'platform',target_domain:'accounting',label:'Vendor Routing — VIE Circularity',strength:0.91,implication:'GPS LLC VIE consolidation — DK disclaiming against consolidated VIE = disclaiming against itself.'},
+    {id:'br3',source_domain:'platform',target_domain:'governance',label:'Privacy — Platform Fragility',strength:0.88,implication:'Franxe.pdf dual-drafting creates Apple removal trigger at $0 economic cost.'},
+    {id:'br4',source_domain:'governance',target_domain:'accounting',label:'Governance — ICFR Collapse',strength:0.85,implication:'CFO entanglement + COSO failure = SOX 302/404 certs false.'}
+  ],
+  flywheel:{
+    domain_skillset:{mastery_scores:{accounting:0.97,platform:0.88,governance:0.94,regulatory:0.91,litigation:0.85,finance:0.83}},
+    tools:{
+      accounting:['audit_impossibility_calc','principal_agent_matrix','restatement_band','breakage_tester'],
+      platform:['apple_removal_brief','privacy_tos_crosswalk','gdpr_analyzer','fincen_mapper'],
+      governance:['icfr_weakness_map','caremark_scorer','sox_cert_analyzer','bdo_withdrawal_case'],
+      regulatory:['cftc_wbtcr_drafter','cea_element_mapper','mgcb_8change_matrix','nfa_timeline'],
+      litigation:['mcpa_demand_letter','arbitration_kill_chain','rico_enterprise_map','hermalyn_lock'],
+      finance:['fx_exposure_calc','derivative_classifier','settlement_band_model','damages_quantifier']
+    }
+  },
+  fetty_fm:{escalation_rule:{domain_reasoning_to_bridge_reasoning:0.60,bridge_reasoning_to_scenario_scoring:0.72,scenario_scoring_to_convergence_collapse:0.82}}
+};
+var GR_NODES=[
+  {id:'GR-001',name:'GPS LLC VIE Structure',impact:9.8,agents:['WOLF','TIGER'],ev:'EV-093·EV-271',mb:'§XII.V.1·§XII.O',sb:'SB-34B·SB-LR-68',evidence:'Dynasty Store disclaimer vs actual economic control. VIE consolidation. Arbitration Ground 7.',wolf:'Principal-agent class attack + Arb Ground 7 VIE circular disclaimer',tiger:'ASC 810-10-15-14 three-prong VIE test. DK meets primary beneficiary both tests.',suits:'GPS VIE → restatement → BDO withdrawal → SEC exposure → settlement compression.'},
+  {id:'GR-002',name:'Gus II to III NFA Timeline',impact:9.5,agents:['WOLF'],ev:'EV-BM-02',mb:'§XII.P·F08-01',sb:'SB-APP-03',evidence:'Gus II July 2024 → withdrawal March 2025 → Gus III June 2025 → NFA approval Dec 2025. Unlicensed gap.',wolf:'CFTC WB-TCR + 30-day pre-suit simultaneously. Consciousness of guilt.',tiger:'Timeline maps unlicensed period. CEA §6c element classification.',suits:'F08-01 deployment timing anchor. Consciousness of guilt documentation.'},
+  {id:'GR-003',name:'Binary Settlement Structure',impact:9.7,agents:['WOLF','TIGER'],ev:'EV-004·EV-055',mb:'Engine XII·F08-01',sb:'SB-LR-70',evidence:'Crown OR Snappy physical delivery = binary payoff on notional instrument = commodity option CEA §6c.',wolf:'Primary CFTC enforcement. GR-002+003+009 = three-part case.',tiger:'CEA §1a(10) element-by-element. Crown = notional. GPS = unregistered exchange.',suits:'CFTC F08-01 anchors regulatory deployment track.'},
+  {id:'GR-004',name:'"Any Reason or No Reason"',impact:9.2,agents:['WOLF'],ev:'EV-T1-04',mb:'§V-C·§V-E',sb:'SB-23',evidence:'DK reserves right to modify without notice for any reason or no reason — every material policy section.',wolf:'Class action standing: 3.6M users identical terms = certified class definition.',tiger:'Contra Proferentum. Consistent administration defeats disclaimer.',suits:'MCPA demand foundation. 483% TC inflation + this clause = illusory consideration.'},
+  {id:'GR-005',name:'"No Monetary Value Whatsoever"',impact:8.8,agents:['TIGER'],ev:'EV-T1-05',mb:'§V-D·§XII.V.1',sb:'SB-LR-71',evidence:'Phrase repeated 6+ times. Contradicted by wagering redemption architecture.',wolf:'Contradiction: if no value, why does Crown redemption enable site credit wagering?',tiger:'ASC 606 Step 3 variable consideration. Six repetitions = six liability acknowledgments.',suits:'Core deceptive trade practice. MCPA pyramid fraud foundation.'},
+  {id:'GR-006',name:'MacBook Pro DARC Substitution',impact:8.4,agents:['WOLF','TIGER'],ev:'EV-006·EV-083',mb:'§VI-C·Exhibit V',sb:'SB-06',evidence:'2024 DARC specific item substituted without notice. Documented internal control bypass.',wolf:'Magnuson-Moss Act. Opening damages event in consumer harm narrative.',tiger:'Internal controls gap. No audit traceability in reward fulfillment.',suits:'Exhibit anchor for ADR demand. Specific dollar value. Personalizes fraud.'},
+  {id:'GR-007',name:'550:1 Crown-to-MSRP Rate',impact:8.1,agents:['TIGER'],ev:'EV-256',mb:'Pillar 9·Exhibit W',sb:'SB-46',evidence:'Garmin Venu 3: Snappy +11.1% + RDARC +3.8% = 15.4% total. Apple Watch +71.5%. iPad +75%.',wolf:'CEA §9 price manipulation. Catalog-wide damages quantification.',tiger:'MSRP comparison dataset x 3.6M users = restitution baseline.',suits:'Damages floor for settlement band modeling.'},
+  {id:'GR-008',name:'Alex Franks / LemmyExcel Channel',impact:7.8,agents:['WOLF','TIGER'],ev:'EV-004·EV-T2-03',mb:'§XII.T·EV-004',sb:'SB-44',evidence:'VIP host Alex Franks + LemmyExcel off-book remediation. $1,250 IOC credits outside GL.',wolf:'Silent fraud: DK remediated harm secretly. Institutional awareness of injury.',tiger:'Material weakness. SOX 302/404 false certification chain.',suits:'Silent fraud in ADR demand. Systemic concealment pattern.'},
+  {id:'GR-009',name:'2024 Milestone Program',impact:9.3,agents:['WOLF','TIGER'],ev:'EV-091',mb:'§XII.P·F08-01·Engine XII',sb:'SB-LR-70',evidence:'Binary settlement + milestone stages mirroring options strike prices + GPS LLC + NFA timeline overlap.',wolf:'Named instrument in CFTC WB-TCR. GR-002+003+009 = complete three-part case.',tiger:'Each Milestone = options strike price. Crown = notional. GPS = unregistered exchange.',suits:'Lead vehicle F08-01 + SEC F04-01. Prisoner Dilemma deployment trigger.'},
+  {id:'GR-010',name:'Dynasty Store 3P Disclaimer Paradox',impact:8.6,agents:['TIGER'],ev:'EV-094',mb:'§XII.N·§XII.O',sb:'SB-LR-68',evidence:'"DraftKings is not the auctioneer" — yet DK sets what can be auctioned at what Crown prices to which customers.',wolf:'Principal-agent attack. Disclaimer dismantled by operational control evidence.',tiger:'VIE primary beneficiary. DK meets both ASC 810 tests for GPS LLC.',suits:'GPS consolidation → restatement → BDO withdrawal → four-track cascade.'}
+];
+var JM_ISSUES=[
+  {id:'j001',label:'GPS LLC VIE — Arbitration Ground 7',type:'technical',priority:9.5,support_items:8,gap_items:1,fit_hint:9.2,novelty_hint:7.8,priority_hint:9.5,structural_conflict:false,nodes:['rook_vendor','GR-001'],sections:['§V-D Arb Destab','§XII.V.1']},
+  {id:'j002',label:'DK-Snappy Double Margin (Pillar 9)',type:'technical',priority:9.0,support_items:7,gap_items:2,fit_hint:8.8,novelty_hint:7.2,priority_hint:9.0,structural_conflict:false,nodes:['rook_vendor','GR-007'],sections:['Pillar 9','Exhibit W']},
+  {id:'j003',label:'Calendar Bleed Cross-Period (ASC 450)',type:'technical',priority:8.8,support_items:6,gap_items:2,fit_hint:8.5,novelty_hint:8.0,priority_hint:8.8,structural_conflict:false,nodes:['queen'],sections:['§XII.U Calendar Bleed']},
+  {id:'j004',label:'MGCB 8 Unapproved Material Changes',type:'strategic',priority:9.8,support_items:8,gap_items:0,fit_hint:9.5,novelty_hint:8.5,priority_hint:9.8,structural_conflict:false,nodes:['pawn_users','queen'],sections:['§V-A MGCB','§V-C Anti-Exemption']},
+  {id:'j005',label:'ASC 830 FX Non-Disclosure Crown CAD',type:'technical',priority:8.5,support_items:5,gap_items:3,fit_hint:8.0,novelty_hint:8.8,priority_hint:8.5,structural_conflict:false,nodes:['queen'],sections:['§XII.W FX','Engine XII']},
+  {id:'j006',label:'VIE Circular Disclaimer Arb Ground 7',type:'technical',priority:9.5,support_items:8,gap_items:1,fit_hint:9.0,novelty_hint:7.5,priority_hint:9.5,structural_conflict:false,nodes:['rook_vendor','GR-010'],sections:['§V-D Arb Ground 7','§XII.O']},
+  {id:'j007',label:'EGC Expiration SOX 404(b) Impossibility',type:'technical',priority:9.2,support_items:7,gap_items:2,fit_hint:9.0,novelty_hint:8.2,priority_hint:9.2,structural_conflict:false,nodes:['king','GR-008'],sections:['§XII.T ICFR','BDO Front 01']},
+  {id:'j008',label:'AppLovin/Playstudios BDO CAM Asymmetry',type:'technical',priority:8.8,support_items:6,gap_items:2,fit_hint:8.5,novelty_hint:9.0,priority_hint:8.8,structural_conflict:false,nodes:['king'],sections:['§XII.W Playstudios','§XII.X AppLovin']},
+  {id:'j009',label:'Gus II-III NFA Timeline Consciousness',type:'strategic',priority:9.5,support_items:7,gap_items:1,fit_hint:9.0,novelty_hint:8.5,priority_hint:9.5,structural_conflict:false,nodes:['rook_vendor','GR-002'],sections:['§XII.P Railbird','F08-01']},
+  {id:'j010',label:'DK-Snappy Integration Full Deep Dive',type:'strategic',priority:9.8,support_items:9,gap_items:0,fit_hint:9.5,novelty_hint:9.2,priority_hint:9.8,structural_conflict:false,nodes:['rook_vendor','queen','GR-001','GR-007','GR-010'],sections:['Pillar 9','§XII.V.1','Exhibit W','§XII.N','§XII.O']}
+];
+var PCR_SCENARIOS=[
+  {id:'s1',label:'ICFR Breach vs Auto-Queue Rehab',desc:'DK$ override detected. Does system auto-queue or escalate to governance?',rules:[{rule_id:'RP-001',rule_name:'Terminal cases skip rehab',policy_action:'skip_to_retirement_review',confidence:0.90},{rule_id:'RP-003',rule_name:'ICFR breach requires governance approval',policy_action:'require_governance_approval',confidence:0.95}]},
+  {id:'s2',label:'ASC 606 Reclass vs Phase-Restricted Rehab',desc:'Principal-agent trigger fires. Forced method vs default queue vs governance gate.',rules:[{rule_id:'RP-ASC606',rule_name:'ASC 606 principal-agent triggers restatement',policy_action:'force_specific_rehab_type',confidence:0.90},{rule_id:'RP-DEFAULT',rule_name:'Auto-queue for standard review',policy_action:'auto_queue_rehab',confidence:0.70},{rule_id:'RP-GOV',rule_name:'Restatement requires governance gate',policy_action:'require_governance_approval',confidence:0.88}]},
+  {id:'s3',label:'Apple Platform Removal vs Hold for Review',desc:'ATT bypass + brand liability. Immediate action vs escalation vs governance.',rules:[{rule_id:'RP-APPLE',rule_name:'Platform breach triggers retirement review',policy_action:'skip_to_retirement_review',confidence:0.85},{rule_id:'RP-MANUAL',rule_name:'Hold for Apple legal review',policy_action:'hold_for_manual_review',confidence:0.88}]},
+  {id:'s4',label:'Calendar Bleed vs Standard Booking',desc:'2023/2024 DARC calendar bleed. ASC 450 accrual vs standard period-end booking.',rules:[{rule_id:'RP-CAL1',rule_name:'Cross-period accrual requires manual reclass',policy_action:'force_specific_rehab_type',confidence:0.92},{rule_id:'RP-CAL2',rule_name:'Standard period-end booking applies',policy_action:'auto_queue_rehab',confidence:0.45}]},
+  {id:'s5',label:'Equal-Priority Collision: Two Terminal Rules',desc:'ICFR override + immediate retirement both fire. Governance arbitration required.',rules:[{rule_id:'RP-T1',rule_name:'Override detected: immediate retirement',policy_action:'retire_immediately',confidence:0.88},{rule_id:'RP-T2',rule_name:'BDO withdrawal: skip to retirement review',policy_action:'skip_to_retirement_review',confidence:0.91}]}
+];
+var PREG={
+  registry_id:'PPR-001',
+  rule_families:[
+    {id:'RF-001',name:'safety_terminality_rules',rank:1,col:'wolf',desc:'Terminal degradation, retirement bypass, safety-first exclusions. Maps to: ASC 606 void contracts, Void where prohibited collapse, calendar bleed permanent liability.'},
+    {id:'RF-002',name:'governance_escalation_rules',rank:2,col:'gov',desc:'Governance approval gates, manual review holds. Maps to: SOX 302/404 certification chain, BDO arbitration impossibility.'},
+    {id:'RF-003',name:'retirement_quarantine_rules',rank:3,col:'tiger',desc:'Retirement review triggers, quarantine pending investigation. Maps to: MGCB suspension, CFTC exchange shutdown.'},
+    {id:'RF-004',name:'forced_rehab_method_rules',rank:4,col:'policy',desc:'Specific rehab method enforcement. Maps to: ASC 606→405 restatement, 7.3B reconciliation forced path.'},
+    {id:'RF-005',name:'default_queueing_rules',rank:5,col:'cyan',desc:'Default auto-queue rehab, standard processing. Maps to: DraftKings standard ToS baseline terms.'}
+  ],
+  precedence_rankings:[
+    {id:'PR-001',higher:'safety_terminality_rules',lower:'governance_escalation_rules',rationale:'Terminal safety outranks formal review when irreversible harm is imminent.'},
+    {id:'PR-002',higher:'governance_escalation_rules',lower:'retirement_quarantine_rules',rationale:'Governance gate must fire before quarantine becomes permanent.'},
+    {id:'PR-003',higher:'retirement_quarantine_rules',lower:'forced_rehab_method_rules',rationale:'Quarantine supersedes method-forcing when structural viability is in doubt.'},
+    {id:'PR-004',higher:'forced_rehab_method_rules',lower:'default_queueing_rules',rationale:'Method-forced rehab overrides default queue whenever evidence supports specific treatment.'}
+  ],
+  override_history:[
+    {override_id:'POR-001',affected_rule_id:'RP-001',affected_rule_name:'Terminal cases skip rehab',override_action:'allow_single_rehab_attempt',approved_by:'governance_board',approved_at:'2026-03-15T19:20:00Z',expires_at:'2026-06-15T00:00:00Z',reason:'Component is mission-critical. Prior evidence suggests salvageability despite terminal severity.'},
+    {override_id:'POR-002',affected_rule_id:'RP-007',affected_rule_name:'Low-confidence methods require approval',override_action:'approve_phase_restricted_only',approved_by:'senior_analyst',approved_at:'2026-03-20T14:00:00Z',expires_at:null,reason:'Phase-restricted rehab confirmed viable. Full approval not required when method is pre-approved.'},
+    {override_id:'POR-003',affected_rule_id:'RP-ASC-450',affected_rule_name:'Cross-period accrual standard booking',override_action:'manual_reclass_required',approved_by:'chief_accounting_officer',approved_at:'2026-01-03T00:00:00Z',expires_at:null,reason:'2023 DARC calendar closed 2/3/2024. Revenue recognition bridge applies. Manual restatement required.'}
+  ],
+  governance_exceptions:[
+    {exception_id:'GER-001',conflict_signature:'terminality_vs_forced_method',applies_to:'strategy_pack / severe',resolved_action:'require_governance_approval',constraints:['phase_restricted_rehab_only'],approved_by:'governance_board',created_at:'2026-03-01T00:00:00Z',status:'active'},
+    {exception_id:'GER-002',conflict_signature:'icfr_breach_vs_auto_queue',applies_to:'rewards_engine / critical',resolved_action:'hold_for_manual_review',constraints:['bdo_notification_required','restatement_assessment'],approved_by:'audit_committee',created_at:'2026-02-14T00:00:00Z',status:'active'},
+    {exception_id:'GER-003',conflict_signature:'governance_escalation_vs_auto_queue',applies_to:'vip_user_credits / moderate',resolved_action:'require_governance_approval',constraints:[],approved_by:'compliance_officer',created_at:'2026-01-20T00:00:00Z',status:'active'},
+    {exception_id:'GER-004',conflict_signature:'retirement_vs_rehab_override',applies_to:'apple_bundle / high',resolved_action:'force_specific_rehab_type',constraints:['magnuson_moss_disclosure_required'],approved_by:'governance_board',created_at:'2025-12-10T00:00:00Z',status:'expired'}
+  ]
+};
+var SUITS_FRONTS=[
+  {id:'F01',label:'BDO Professional Standards + Auditor Withdrawal',target:'BDO USA LLP',track:'Track 1',status:'ARMED',priority:'FIRST STRIKE',desc:'Audit impossibility. $7.3B+ reconciliation. EGC expiration SOX 404(b). BDO withdrawal = first-strike mechanism.'},
+  {id:'F02',label:'Apple Platform Removal — Brand Liability at $0',target:'Apple Inc. Legal',track:'Track 1',status:'ARMED',priority:'HIGH LEVERAGE',desc:'$0 revenue to Apple. Brand liability at zero economic cost. ATT bypass. Refurbished-as-new fraud.'},
+  {id:'F03',label:'Google Platform Removal',target:'Google Play Legal',track:'Track 1',status:'ARMED',priority:'PARALLEL',desc:'Developer Program Policy violations. Privacy misrepresentation. GDPR via Notified.com.'},
+  {id:'F04',label:'SEC Enforcement — ICFR / SOX',target:'SEC Division of Enforcement',track:'Track 2',status:'STAGED',priority:'ESCALATION',desc:'SOX 302/404 false certs. ASC 606 restatement. PCAOB CAM asymmetry vs AppLovin.'},
+  {id:'F05',label:'IRS Criminal Investigation + Form 211',target:'IRS-CI',track:'Track 2',status:'STAGED',priority:'ESCALATION',desc:'Off-book DK$ as unreported income. AML cascade via Apple Pay.'},
+  {id:'F06',label:'FinCEN AML / Suspicious Activity',target:'FinCEN Enforcement',track:'Track 2',status:'STAGED',priority:'ESCALATION',desc:'Crown-to-DK$ structuring. Apple Pay money transmission. VIP IOC credits.'},
+  {id:'F07',label:'PCAOB Division of Enforcement',target:'PCAOB',track:'Track 2',status:'STAGED',priority:'ESCALATION',desc:'AS 2501 breakage inadmissibility. CAM failure. Audit impossibility certification.'},
+  {id:'F08',label:'CFTC Unregistered Derivatives Exchange',target:'CFTC Division of Enforcement',track:'Track 2',status:'STAGED',priority:'ESCALATION',desc:'GR-002+003+009 three-part case. GPS LLC unregistered. Binary settlement = CEA §6c commodity option.'}
+];
+var KILL_SHOTS=[
+  {n:1,title:'AutoZone Precedent — Arbitration Collapse',desc:'7 independent grounds. Michigan forum. MCPA class cert unlocked.',col:'wolf'},
+  {n:2,title:'ASC 606→405 Audit Impossibility',desc:'$7.3B+ reconciliation. 900+ BDO audit points. Double-margin padding.',col:'tiger'},
+  {n:3,title:'RICO / Self-Dealing (Robins/Extend)',desc:'Enterprise mapping. Extend board conflicts. Class B voting lock.',col:'wolf'},
+  {n:4,title:'Apple Fiduciary Liability',desc:'$0 revenue. Brand liability. Caremark chain. ATT bypass. Refurbished-as-new.',col:'cyan'},
+  {n:5,title:'Privacy / Notified.com / AML Cascade',desc:'Dual-drafting. GDPR/CCPA/BIPA. Apple Pay AML. FinCEN suspicious activity.',col:'suits'}
+];
+var DOM_COLORS={accounting:'cyan',platform:'green',governance:'suits',regulatory:'tiger',litigation:'wolf',finance:'gold'};
+var DOM_LABELS={accounting:'Forensic Accounting',platform:'Platform / Privacy',governance:'Governance / ICFR',regulatory:'Regulatory / CFTC',litigation:'Corp Fraud / Litigation',finance:'Finance / Derivatives'};
+var PREG_TAB='fam';
+var OBS_VIEW='exec';
+var SIM=initState(PROJ);
+var SNAPS=[];
+var CUR_TURN=0;
+var CB=runCasebookEngine();
+
+// ── NAVIGATION ───────────────────────────────────────
+var FLEX_VIEWS=['gr','fetty-orch','simlab'];
+function setV(v){
+  document.querySelectorAll('.cview').forEach(function(e){
+    e.classList.remove('on');
+    e.style.display='none';
+  });
+  document.querySelectorAll('.ctab').forEach(function(e){e.classList.remove('on');});
+  var vEl=el('v-'+v), tEl=el('t-'+v);
+  if(vEl){
+    if(FLEX_VIEWS.indexOf(v)>-1){vEl.style.display='flex';}
+    else{vEl.classList.add('on');vEl.style.display='';}
+  }
+  if(tEl) tEl.classList.add('on');
+  if(v==='diag') renderDiag();
+  if(v==='obs') renderObs();
+  if(v==='wfr') renderWFR();
+  if(v==='alerts') renderAlerts();
+  if(v==='fetty-orch') renderFettyOrch();
+  if(v==='simlab') renderSimLab();
+}
+function setLNav(btn,v){
+  document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  setV(v);
+}
+
+// ── RENDER HOME ──────────────────────────────────────
+function renderHome(){
+  var h='<div class="g3" style="margin-bottom:10px">';
+  var stats=[['291','EVIDENCE ITEMS','cyan'],['78','SILVER BULLETS','green'],['8','ENFORCEMENT FRONTS','wolf'],['10','GR LYNCHPINS','tiger'],['7','ARBIT. KILL GROUNDS','suits'],['93%','COLLAPSE @ T7','gold'],['5','POLICY FAMILIES','policy'],['6','GOV MODULES','gov'],['8.4','POLICY HEALTH','casebook']];
+  stats.forEach(function(s){
+    h+='<div class="card"><div style="font-family:var(--fhead);font-size:24px;font-weight:900;color:var(--'+s[2]+')">'+s[0]+'</div><div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:2px">'+s[1]+'</div></div>';
+  });
+  h+='</div><div class="cslbl">BINARY KILL SHOTS</div>';
+  KILL_SHOTS.forEach(function(k){
+    h+='<div class="card" style="display:flex;align-items:center;gap:9px;margin-bottom:4px;cursor:pointer">'
+      +'<div style="font-family:var(--fhead);font-size:13px;font-weight:900;color:var(--wolf);min-width:20px">'+k.n+'</div>'
+      +'<div><div style="font-family:var(--fhead);font-size:11px;font-weight:700">'+k.title+'</div>'
+      +'<div style="font-size:9px;color:var(--dim);margin-top:2px">'+k.desc+'</div></div>'
+      +'<span class="pill p'+k.col+'" style="margin-left:auto">'+k.col.toUpperCase()+'</span>'
+      +'</div>';
+  });
+  var hb=el('home-body'); if(hb) hb.innerHTML=h;
+}
+
+// ── RENDER GR ────────────────────────────────────────
+function renderGR(){
+  renderGRRegistry();
+  selectGRNode(GR_NODES[0].id);
+}
+function renderGRRegistry(){
+  var domColors={'accounting':'cyan','governance':'gov','regulatory':'suits','platform':'tiger','fraud':'wolf','finance':'green'};
+  var ms=PROJ.flywheel.domain_skillset.mastery_scores;
+  // Agent Registry
+  var arH='';
+  var agents=[
+    {label:'ORCHESTRATION',name:'FETTY FM',col:'fetty',bar:100},
+    {label:'CORE NEXUS AGENT',name:'NEXUS PRIMARY',col:'cyan',bar:95},
+    {label:'SUITS AMALGAMATION',name:'SUITS AGENT',col:'suits',bar:88,badge:'NEW'},
+    {label:'SPECIALIZED AGENTS',name:'',col:'',bar:0},
+    {label:'WOLF',name:'WOLF AGENT',col:'wolf',bar:82},
+    {label:'TIGER',name:'TIGER AGENT',col:'tiger',bar:79}
+  ];
+  agents.forEach(function(a){
+    if(a.bar===0){arH+='<div class="gr-agent-label" style="margin-top:6px">'+a.label+'</div>';return;}
+    arH+='<div class="gr-agent-section">'
+      +'<div class="gr-agent-label">'+a.label+(a.badge?' <span class="pill pg" style="font-size:6px">'+a.badge+'</span>':'')+'</div>'
+      +'<div class="gr-agent-bar" style="background:var(--'+a.col+');width:'+a.bar+'%"></div>'
+      +'</div>';
+  });
+  var arEl=el('gr-agent-reg'); if(arEl) arEl.innerHTML=arH;
+
+  // Flywheel bars
+  var fwH='';
+  var fwData=[
+    {lbl:'Forensic Accounting',pct:97,col:'cyan'},
+    {lbl:'Regulatory/CFTC',pct:91,col:'suits'},
+    {lbl:'Privacy/Platform',pct:88,col:'tiger'},
+    {lbl:'Governance/ICFR',pct:94,col:'gold'},
+    {lbl:'Corp Fraud/Lit',pct:85,col:'wolf'}
+  ];
+  fwData.forEach(function(d){
+    fwH+='<div style="margin-bottom:6px">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:2px">'
+      +'<span style="font-size:8.5px;color:var(--'+d.col+');font-weight:600">'+d.lbl+'</span>'
+      +'<span style="font-family:var(--fmono);font-size:8px;color:var(--'+d.col+')">'+d.pct+'%</span>'
+      +'</div>'
+      +'<div style="height:2px;background:var(--bg3);border-radius:1px">'
+      +'<div style="height:2px;background:var(--'+d.col+');width:'+d.pct+'%;border-radius:1px"></div>'
+      +'</div></div>';
+  });
+  var fwEl=el('gr-flywheel-bars'); if(fwEl) fwEl.innerHTML=fwH;
+
+  // Active Protocols
+  var prH='<div class="gr-node-btn" style="border-color:var(--green2);background:var(--green3)">'
+    +'<span style="color:var(--green);font-size:9px">◆</span>'
+    +'<span style="font-family:var(--fhead);font-size:9.5px;font-weight:700;color:var(--green)">GHOST RECON</span>'
+    +'<span class="pill pg" style="font-size:6.5px;margin-left:auto">LIVE · 10 NODES</span>'
+    +'</div>'
+    +'<div class="gr-node-btn" style="border-color:var(--wolf2);margin-top:3px">'
+    +'<span style="color:var(--wolf);font-size:9px">↓</span>'
+    +'<span style="font-family:var(--fhead);font-size:9.5px;font-weight:700">FALLEN ANGELS</span>'
+    +'<span class="pill pw" style="font-size:6.5px;margin-left:auto">QUEEN FALLEN</span>'
+    +'</div>'
+    +'<div class="gr-node-btn" style="margin-top:3px">'
+    +'<span style="color:var(--fetty);font-size:9px">⚡</span>'
+    +'<span style="font-family:var(--fhead);font-size:9.5px;font-weight:700;color:var(--fetty)">FETTY FM</span>'
+    +'<span class="pill" style="font-size:6.5px;margin-left:auto;background:var(--fetty3);color:var(--fetty);border-color:var(--fetty2)">ARMED</span>'
+    +'</div>';
+  var prEl=el('gr-protocols'); if(prEl) prEl.innerHTML=prH;
+
+  renderGRM();
+}
+function selectGRNode(id){
+  var n=null;
+  GR_NODES.forEach(function(g){if(g.id===id)n=g;});
+  if(!n) return;
+  // Highlight selected in mini list
+  document.querySelectorAll('.gr-node-btn.grn-sel').forEach(function(b){b.classList.remove('grn-sel','sel');});
+  var selBtn=el('grb-'+id); if(selBtn){selBtn.classList.add('grn-sel','sel');}
+  var agts='';
+  n.agents.forEach(function(a){agts+='<span class="pill p'+a.toLowerCase()+'">'+a+'</span> ';});
+  var impactW=Math.min(100,parseFloat(n.impact||'0')*10);
+  var h='<div style="margin-bottom:10px">'
+    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+    +'<span style="font-family:var(--fhead);font-size:20px;font-weight:900;color:var(--green)">'+n.id+'</span>'
+    +'<span style="font-family:var(--fmono);font-size:8px;color:var(--dim)">'+n.mb+'</span>'
+    +'<span style="font-family:var(--fmono);font-size:8px;color:var(--dim)">'+n.ev+'</span>'
+    +'</div>'
+    +'<div style="font-family:var(--fhead);font-size:14px;font-weight:900;margin-bottom:3px">'+n.name+'</div>'
+    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">'
+    +'<span style="font-size:8.5px;color:var(--dim);font-family:var(--fmono)">Nuclear Impact</span>'
+    +'<div style="flex:1;height:3px;background:var(--bg3);border-radius:2px">'
+    +'<div style="height:3px;background:var(--wolf);width:90%;border-radius:2px"></div>'
+    +'</div>'
+    +'<span style="font-family:var(--fmono);font-size:11px;font-weight:700;color:var(--wolf)">'+n.impact+'</span>'
+    +'</div>'
+    +'<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px">'+agts+'<span class="pill pgray">'+n.sb+'</span></div>'
+    +'</div>'
+    +'<div style="border-left:2px solid var(--green);padding:8px 10px;background:var(--green3);border-radius:0 var(--r2) var(--r2) 0;margin-bottom:8px">'
+    +'<div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:2px;color:var(--green);margin-bottom:4px">EVIDENCE ANCHOR</div>'
+    +'<div style="font-size:9px;line-height:1.6;color:var(--white)">'+n.evidence+'</div>'
+    +'</div>'
+    +'<div style="margin-bottom:8px">'
+    +'<div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:2px;color:var(--policy);margin-bottom:5px">CONNECTIVE TISSUE</div>'
+    +'<div class="grnrb rs" style="font-size:8.5px;line-height:1.6;padding:8px 10px;border-radius:var(--r2)">'+n.suits+'</div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
+    +'<div>'
+    +'<div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:1.5px;color:var(--wolf);margin-bottom:4px">🐺 WOLF ROUTING</div>'
+    +'<div class="grnrb rw" style="font-size:8.5px;line-height:1.5;padding:8px 10px;border-radius:var(--r2)">'+n.wolf+'</div>'
+    +'</div>'
+    +'<div>'
+    +'<div style="font-family:var(--fmono);font-size:7.5px;letter-spacing:1.5px;color:var(--tiger);margin-bottom:4px">🐯 TIGER ROUTING</div>'
+    +'<div class="grnrb rt" style="font-size:8.5px;line-height:1.5;padding:8px 10px;border-radius:var(--r2)">'+n.tiger+'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div style="margin-top:10px;display:flex;gap:5px">'
+    +'<button class="btn bc" onclick="askNexus('gr',''+n.id+'')">ASK NEXUS AGENT ▶</button>'
+    +'</div>';
+  var det=el('gr-node-detail'); if(det) det.innerHTML=h;
+}
+function renderGRM(){
+  var h='';
+  GR_NODES.forEach(function(n){
+    h+='<div id="grb-'+n.id+'" class="gr-node-btn" onclick="selectGRNode(''+n.id+'')">'
+      +'<span style="font-family:var(--fmono);font-size:8px;color:var(--cyan);font-weight:600;min-width:48px">'+n.id+'</span>'
+      +'<span style="font-size:8.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+n.name+'</span>'
+      +'<span style="font-family:var(--fmono);font-size:10px;font-weight:700;color:var(--wolf)">'+n.impact+'</span>'
+      +'</div>';
+  });
+  var grm=el('grm'); if(grm) grm.innerHTML=h;
+}
+
+// ── RENDER FLYWHEELS ─────────────────────────────────
+function renderFW(){
+  var h='';
+  var ms=PROJ.flywheel.domain_skillset.mastery_scores;
+  Object.keys(ms).forEach(function(dom){
+    var score=ms[dom];
+    var col=DOM_COLORS[dom]||'cyan';
+    var lbl=DOM_LABELS[dom]||dom;
+    var tools=PROJ.flywheel.tools[dom]||[];
+    var toolsH='';
+    tools.forEach(function(t){
+      toolsH+='<div class="fwb" onclick="toggleTool(this,\''+dom+'\',\''+t+'\')">'+t.replace(/_/g,' ')+'</div>';
+    });
+    h+='<div class="fwd">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">'
+        +'<div><div class="fwt" style="color:var(--'+col+')">'+lbl+'</div>'
+        +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:1px">'+tools.length+' tools active</div></div>'
+        +'<div class="fwp" style="color:var(--'+col+')">'+Math.round(score*100)+'%</div>'
+      +'</div>'
+      +'<div class="mt" style="margin-bottom:7px"><div class="mf" style="background:var(--'+col+');width:'+Math.round(score*100)+'%"></div></div>'
+      +'<div class="fwtl">'+toolsH+'</div>'
+      +'</div>';
+  });
+  var fb=el('fw-body'); if(fb) fb.innerHTML=h;
+}
+function toggleTool(btn,dom,tool){
+  btn.classList.toggle('on');
+  addFetty('FLYWHEEL /'+dom+'/'+tool+' → '+(btn.classList.contains('on')?'ACTIVATED':'DEACTIVATED'),'fpol');
+}
+
+// ── RENDER CHESS + SIMULATION ────────────────────────
+var GL={king:'♔',queen:'♛',rook:'♖',bishop:'♗',knight:'♘',pawn:'♙'};
+function renderChess(st){
+  var h='';
+  st.pieces.forEach(function(p){
+    var hp=Math.round(p.health*100);
+    var cls=p.health<=0.1?'fallen':p.health<=0.3?'critical':p.health<=0.65?'stressed':'';
+    h+='<div class="cp '+cls+'">'
+      +'<div class="cpg">'+(GL[p.chess_role]||'◈')+'</div>'
+      +'<div class="cpn">'+p.label+'</div>'
+      +'<div style="font-family:var(--fmono);font-size:9px;font-weight:700;color:'+hc(p.health)+'">'+hp+'%</div>'
+      +'<div class="cph" style="background:'+hc(p.health)+';width:'+hp+'%"></div>'
+      +'</div>';
+  });
+  var cb=el('chess-board'); if(cb) cb.innerHTML=h;
+}
+function renderTurns(cur){
+  var h='';
+  var evs=PROJ.events.slice().sort(function(a,b){return a.turn-b.turn;});
+  evs.forEach(function(ev){
+    var snap=null;
+    SNAPS.forEach(function(s){if(s.turn===ev.turn) snap=s;});
+    var snapH='';
+    if(snap){
+      snapH='<div style="display:flex;gap:3px;margin-top:4px;flex-wrap:wrap">'
+        +'<span class="pill pw">COLLAPSE '+pct(snap.metrics.collapse_probability)+'</span>'
+        +'<span class="pill pg">MOAT '+(snap.metrics.moat_score*10).toFixed(1)+'</span>'
+        +'<span class="pill pgray">'+snap.mode.replace(/_/g,' ').toUpperCase()+'</span>'
+        +'</div>';
+    }
+    var cls='ti'+(ev.turn<=cur?' done':'')+(ev.turn===cur?' on':'');
+    h+='<div class="'+cls+'" onclick="jumpTo('+ev.turn+')">'
+      +'<div class="tin">T'+ev.turn+'</div>'
+      +'<div style="flex:1"><div class="til">'+ev.label+'</div>'
+      +'<div class="tinarr">'+ev.narrative+'</div>'
+      +snapH+'</div></div>';
+  });
+  var tl=el('turn-list'); if(tl) tl.innerHTML=h;
+}
+function resetSim(){
+  SIM=initState(PROJ); SNAPS=[]; CUR_TURN=0;
+  renderChess(SIM); renderTurns(0); updTop(SIM); updRP(SIM);
+  addFetty('SIM RESET → T0 BASELINE','fd');
+}
+function runNext(){
+  updExec();
+  var evs=PROJ.events.slice().sort(function(a,b){return a.turn-b.turn;});
+  var nxt=null;
+  evs.forEach(function(e){if(!nxt&&e.turn>CUR_TURN) nxt=e;});
+  if(!nxt){addFetty('SIMULATION COMPLETE — ALL 7 TURNS EXECUTED','fe');return;}
+  SIM=runTurn(PROJ,SIM,nxt); SNAPS.push(dc(SIM)); CUR_TURN=nxt.turn;
+  renderChess(SIM); renderTurns(CUR_TURN); updTop(SIM); updRP(SIM);
+  var c=Math.round(SIM.metrics.collapse_probability*100);
+  addFetty('T'+nxt.turn+': '+nxt.label+' · COLLAPSE '+c+'% · '+SIM.mode.toUpperCase(),c>=82?'fc2':c>=60?'fw2':'fd');
+  if(SIM.mode==='convergence_collapse') addFetty('FETTY FM → CONVERGENCE_COLLAPSE ACTIVATED','fe');
+  // Auto-alert evaluation
+  CB=runCasebookEngine();
+  var fired=evalAlerts(CB);
+  fired.forEach(function(a){
+    FIRED.push(a);
+    addFetty('ALERT: '+a.label+' ['+a.sev.toUpperCase()+'] → '+a.ch,'fgov');
+    if(a.sev==='critical') addWorkflow(a,a.ch,'governance_board','critical',a.type==='bdo_withdrawal');
+  });
+  var raf=el('raf'); if(raf) raf.textContent=FIRED.length;
+}
+function runAll(){
+  resetSim();
+  var evs=PROJ.events.slice().sort(function(a,b){return a.turn-b.turn;});
+  var d=0;
+  evs.forEach(function(ev){setTimeout(runNext,d); d+=700;});
+}
+function jumpTo(t){
+  resetSim();
+  var evs=PROJ.events.slice().sort(function(a,b){return a.turn-b.turn;});
+  evs.forEach(function(ev){
+    if(ev.turn<=t){SIM=runTurn(PROJ,SIM,ev); SNAPS.push(dc(SIM)); CUR_TURN=ev.turn;}
+  });
+  renderChess(SIM); renderTurns(CUR_TURN); updTop(SIM); updRP(SIM);
+}
+
+// ── RENDER FALLEN ANGELS ─────────────────────────────
+function renderAngels(){
+  var h='';
+  SIM.pieces.forEach(function(p){
+    var hp=Math.round(p.health*100);
+    var cls=p.health<=0.1?'fafl':p.health<=0.3?'facr':p.health<=0.65?'fast':'faact';
+    h+='<div class="fap '+cls+'">'
+      +'<div class="fag">'+(GL[p.chess_role]||'◈')+'</div>'
+      +'<div><div class="fan" style="color:'+hc(p.health)+'">'+p.label+'</div>'
+      +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:1px">'+p.stack_layer+'</div></div>'
+      +'<div><div class="fahv" style="color:'+hc(p.health)+'">'+hp+'%</div>'
+      +'<div class="fahb"><div class="fahf" style="background:'+hc(p.health)+';width:'+hp+'%"></div></div></div>'
+      +'</div>';
+  });
+  var ab=el('angels-body'); if(ab) ab.innerHTML=h;
+}
+
+// ── RENDER ADR FRONTS ────────────────────────────────
+function renderSuits(){
+  var h='';
+  SUITS_FRONTS.forEach(function(f){
+    var tpil='<span class="pill '+(f.track==='Track 1'?'pw':'pt')+'">'+f.track.toUpperCase()+'</span>';
+    var spil='<span class="pill '+(f.status==='ARMED'?'pg':'pgray')+'">'+f.status+'</span>';
+    h+='<div class="sfront">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+        +'<span style="font-family:var(--fmono);font-size:8.5px;color:var(--suits);font-weight:700">'+f.id+'</span>'
+        +'<div style="display:flex;gap:3px">'+tpil+spil+'<span class="pill pgold">'+f.priority+'</span></div>'
+      +'</div>'
+      +'<div style="font-family:var(--fhead);font-size:11px;font-weight:700;margin-bottom:2px">'+f.label+'</div>'
+      +'<div style="font-size:8.5px;color:var(--cyan);font-family:var(--fmono);margin-bottom:4px">'+f.target+'</div>'
+      +'<div style="font-size:9px;color:var(--dim);line-height:1.5">'+f.desc+'</div>'
+      +'</div>';
+  });
+  var sb=el('suits-body'); if(sb) sb.innerHTML=h;
+}
+
+// ── PCR UI ───────────────────────────────────────────
+function initPCR(){
+  var s=el('pcr-sel'); if(!s) return;
+  var h='';
+  PCR_SCENARIOS.forEach(function(sc){h+='<option value="'+sc.id+'">'+sc.label+'</option>';});
+  s.innerHTML=h;
+}
+function runPCR(){
+  var id=el('pcr-sel')&&el('pcr-sel').value;
+  var sc=null; PCR_SCENARIOS.forEach(function(s){if(s.id===id) sc=s;});
+  if(!sc) return;
+  var res=runPCREngine(sc.rules);
+  renderPCRResult(sc,res);
+  addFetty('PCR: '+sc.label+' → '+res.resolved_action.toUpperCase()+' [ARB:'+res.arb+']','fpol');
+}
+function renderPCRResult(sc,res){
+  var pr=el('pcr-rules');
+  if(pr){
+    var h='<div style="margin-bottom:9px"><div style="font-family:var(--fhead);font-size:11px;font-weight:700;color:var(--policy);margin-bottom:2px">'+sc.label+'</div><div style="font-size:9px;color:var(--dim)">'+sc.desc+'</div></div>';
+    sc.rules.forEach(function(r){
+      var isW=r.rule_id===res.winning_rule;
+      var isS=res.suppressed.indexOf(r.rule_id)>-1;
+      var cls=res.arb?'pcra':isW?'pcrw':isS?'pcrs':'pcr';
+      var priCol={terminal:'wolf',escalation:'gov',forced_method:'policy',default:'cyan'}[PCR_ACT[r.policy_action]||'default']||'gray';
+      var idx=pcrIdx(r.policy_action)+1;
+      h+='<div class="pcr '+cls+'">'
+        +'<div class="pcrpri" style="color:var(--'+priCol+')">'+idx+'</div>'
+        +'<div style="flex:1"><div class="pcrn">'+r.rule_name+'</div>'
+        +'<div class="pcrcls">'+r.rule_id+' · CLASS: '+(PCR_ACT[r.policy_action]||'default').toUpperCase()+' · CONF: '+Math.round(r.confidence*100)+'%</div>'
+        +'<div style="font-size:8.5px;color:var(--'+priCol+');font-family:var(--fmono);margin-top:2px">ACTION: '+r.policy_action.replace(/_/g,' ').toUpperCase()+'</div>'
+        +'</div>'
+        +'<span class="pill '+(res.arb?'pt':isW?'pg':isS?'pw':'pgray')+'">'+(res.arb?'ARBITRATE':isW?'WINS':isS?'SUPPRESSED':'PENDING')+'</span>'
+        +'</div>';
+    });
+    pr.innerHTML=h;
+  }
+  var po=el('pcr-out');
+  if(po){
+    var ac={terminal:'wolf',escalation:'gov',forced_method:'policy',default:'cyan'}[res.pri_class]||'gray';
+    po.innerHTML='<div class="rbox">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">'
+        +'<div class="rbv" style="color:var(--'+(res.arb?'tiger':ac)+')">'+(res.arb?'GOVERNANCE ARBITRATION REQUIRED':'RESOLVED VIA PRECEDENCE')+'</div>'
+        +'<span class="pill p'+(res.arb?'t':ac)+'">'+res.resolved_action.replace(/_/g,' ').toUpperCase()+'</span>'
+      +'</div>'
+      +(res.winning_name?'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-bottom:7px">WINNING RULE: '+res.winning_rule+' — '+res.winning_name+'</div>':'')
+      +'<div class="rreason">'+res.reason+'</div>'
+      +'</div>';
+  }
+}
+function runAllPCR(){
+  addFetty('PCR: Running all '+PCR_SCENARIOS.length+' scenarios...','fd');
+  PCR_SCENARIOS.forEach(function(sc,i){
+    setTimeout(function(){
+      var r=runPCREngine(sc.rules);
+      addFetty('PCR-'+(i+1)+': '+sc.label+' → '+r.resolved_action.toUpperCase()+' [ARB:'+r.arb+']',r.arb?'fw2':'fpol');
+    },i*300);
+  });
+}
+
+// ── PRECEDENCE REGISTRY UI ───────────────────────────
+function showPreg(tab){PREG_TAB=tab; renderPreg();}
+function renderPreg(){
+  var pb=el('preg-body'); if(!pb) return;
+  var h='';
+  if(PREG_TAB==='fam'){
+    h='<div class="cslbl">RULE FAMILIES · '+PREG.rule_families.length+' REGISTERED</div>';
+    PREG.rule_families.forEach(function(f){
+      h+='<div class="prf"><div class="prfr">'+f.rank+'</div>'
+        +'<div style="flex:1"><div class="prfn" style="color:var(--'+f.col+')">'+f.name.replace(/_/g,' ').toUpperCase()+'</div>'
+        +'<div class="prfd">'+f.desc+'</div></div>'
+        +'<span class="pill pp" style="margin-left:auto">RANK '+f.rank+'</span>'
+        +'</div>';
+    });
+    h+='<div class="cslbl" style="margin-top:10px">PRECEDENCE RANKINGS</div>';
+    PREG.precedence_rankings.forEach(function(r){
+      h+='<div class="card" style="margin-bottom:4px;padding:7px 10px">'
+        +'<div style="font-family:var(--fmono);font-size:9px;color:var(--policy)">'+r.higher.replace(/_/g,' ')+' ↑ OVER ↓ '+r.lower.replace(/_/g,' ')+'</div>'
+        +'<div style="font-size:8.5px;color:var(--dim);margin-top:2px">'+r.rationale+'</div>'
+        +'</div>';
+    });
+  } else if(PREG_TAB==='over'){
+    h='<div class="cslbl">OVERRIDE HISTORY · '+PREG.override_history.length+' RECORDS</div>';
+    PREG.override_history.forEach(function(o){
+      h+='<div class="over">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+          +'<span style="font-family:var(--fmono);font-size:8.5px;color:var(--tiger);font-weight:700">'+o.override_id+'</span>'
+          +'<span class="pill '+(o.expires_at?'pgray':'pt')+'">'+(o.expires_at?'EXPIRES '+o.expires_at.slice(0,10):'STANDING')+'</span>'
+        +'</div>'
+        +'<div style="font-family:var(--fhead);font-size:10.5px;font-weight:700">'+o.affected_rule_name+'</div>'
+        +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:2px">'+o.affected_rule_id+' · APPROVED: '+o.approved_by.replace(/_/g,' ').toUpperCase()+'</div>'
+        +'<div style="font-size:9px;margin-top:3px">OVERRIDE: <span style="color:var(--tiger)">'+o.override_action.replace(/_/g,' ')+'</span></div>'
+        +'<div style="font-size:9px;color:var(--dim);margin-top:3px;line-height:1.5">'+o.reason+'</div>'
+        +'</div>';
+    });
+  } else {
+    h='<div class="cslbl">GOVERNANCE EXCEPTIONS · '+PREG.governance_exceptions.length+' RECORDS</div>';
+    PREG.governance_exceptions.forEach(function(e){
+      var cls='gex'+(e.status==='active'?' gexon':'');
+      h+='<div class="'+cls+'">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+          +'<span style="font-family:var(--fmono);font-size:8.5px;color:var(--gov);font-weight:700">'+e.exception_id+'</span>'
+          +'<span class="pill '+(e.status==='active'?'pg':'pgray')+'">'+e.status.toUpperCase()+'</span>'
+        +'</div>'
+        +'<div style="font-family:var(--fmono);font-size:9.5px;font-weight:600;color:var(--policy)">'+e.conflict_signature.replace(/_/g,' ')+'</div>'
+        +'<div style="font-size:8.5px;color:var(--dim);margin-top:1px">'+e.applies_to+'</div>'
+        +'<div style="font-size:9px;margin-top:3px">RESOLVED: <span style="color:var(--gov)">'+e.resolved_action.replace(/_/g,' ')+'</span></div>'
+        +(e.constraints.length?'<div style="font-size:8px;color:var(--dim);margin-top:2px">Constraints: '+e.constraints.join(' · ')+'</div>':'')
+        +'<div style="font-size:8px;color:var(--dim);margin-top:2px;font-family:var(--fmono)">APPROVED: '+e.approved_by.replace(/_/g,' ')+' · '+e.created_at.slice(0,10)+'</div>'
+        +'</div>';
+    });
+  }
+  pb.innerHTML=h;
+}
+
+// ── CASEBOOK ANALYZER UI ─────────────────────────────
+function runCasebook(){
+  CB=runCasebookEngine();
+  var bb=el('casebook-body'); if(!bb) return;
+  var sc=CB.health.score;
+  var scCol=sc>=8.5?'var(--green)':sc>=6.5?'var(--tiger)':'var(--wolf)';
+  var hcls='hs'+(CB.health.status==='healthy'?'h':CB.health.status==='stable_but_exception_heavy'?'s':CB.health.status==='degraded'?'d':'u');
+  var h='<div class="g2" style="margin-bottom:10px">'
+    +'<div class="card" style="text-align:center">'
+      +'<div class="hring" style="border-color:'+scCol+'">'
+        +'<div class="hrscore" style="color:'+scCol+'">'+sc+'</div>'
+        +'<div class="hrlbl">OUT OF 10</div>'
+      +'</div>'
+      +'<div class="hsbadge '+hcls+'">'+CB.health.status.replace(/_/g,' ').toUpperCase()+'</div>'
+    +'</div>'
+    +'<div class="card">'
+      +'<div class="ct">GOVERNANCE OVERUSE</div>';
+  h+='<div class="drrow"><span class="drk">Arbitration Cases</span><span class="drv" style="color:var(--wolf)">'+CB.gov_dep.arb+'</span></div>';
+  h+='<div class="drrow"><span class="drk">Auto-Resolved</span><span class="drv" style="color:var(--green)">'+CB.gov_dep.auto+'</span></div>';
+  h+='<div class="drrow"><span class="drk">Dependency Ratio</span><span class="drv" style="color:'+(CB.gov_dep.ratio>=0.30?'var(--tiger)':'var(--green)')+'">'+Math.round(CB.gov_dep.ratio*100)+'%</span></div>';
+  h+='<span class="pill '+(CB.gov_dep.status==='moderate_overuse'?'pt':'pg')+'" style="margin-top:6px;display:inline-block">'+CB.gov_dep.status.replace(/_/g,' ').toUpperCase()+'</span>';
+  h+='<div class="ct" style="margin-top:10px">EXCEPTION DRIFT</div>';
+  h+='<div class="drrow"><span class="drk">Active Exceptions</span><span class="drv" style="color:var(--policy)">'+CB.drift.total+'</span></div>';
+  h+='<div class="drrow"><span class="drk">Drift Status</span><span class="drv" style="color:'+(CB.drift.status==='elevated'?'var(--tiger)':'var(--green)')+'">'+CB.drift.status.toUpperCase()+'</span></div>';
+  h+='</div></div>';
+  h+='<div class="cslbl">CONFLICT SIGNATURES — RANKED BY FREQUENCY</div>';
+  CB.conflicts.forEach(function(c){
+    var col=c.sev==='high'?'var(--wolf)':'var(--tiger)';
+    h+='<div class="csig">'
+      +'<div class="csigt">'
+        +'<span class="csign">'+c.sig.replace(/_/g,' ')+'</span>'
+        +'<div style="display:flex;align-items:center;gap:7px">'
+          +'<span class="pill '+(c.sev==='high'?'pw':'pt')+'">'+c.sev.toUpperCase()+'</span>'
+          +'<span style="font-family:var(--fhead);font-size:16px;font-weight:900;color:'+col+'">'+c.count+'</span>'
+        +'</div>'
+      +'</div>'
+      +'<div class="csigb"><div class="csigf" style="background:'+col+';width:'+Math.min(100,c.count*5)+'%"></div></div>'
+      +'<div style="font-size:9px;color:var(--dim);line-height:1.5">'+c.impl+'</div>'
+      +'</div>';
+  });
+  h+='<div class="cslbl" style="margin-top:10px">OVERRIDE LEADERS</div>';
+  CB.overrides.forEach(function(o){
+    h+='<div class="card" style="margin-bottom:4px;display:flex;align-items:center;justify-content:space-between">'
+      +'<div><div style="font-family:var(--fhead);font-size:10.5px;font-weight:700">'+o.rule_name+'</div>'
+      +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:1px">'+o.rule_id+' · '+o.interp+'</div></div>'
+      +'<span style="font-family:var(--fhead);font-size:15px;font-weight:900;color:var(--tiger);margin-left:10px">'+o.count+'x</span>'
+      +'</div>';
+  });
+  bb.innerHTML=h;
+  updGovBar(CB);
+  addFetty('CASEBOOK: Policy Health '+CB.health.score+'/10 · '+CB.health.status.toUpperCase()+' · Conflicts: '+CB.conflicts.length,'fgov');
+}
+
+// ── OBSERVATORY ──────────────────────────────────────
+function setObs(v){OBS_VIEW=v; renderObs();}
+function renderObs(){
+  var strip=el('obs-strip');
+  if(strip){
+    var stats=[
+      [CB.health.score+'/10','POLICY HEALTH',CB.health.score>=8?'green':CB.health.score>=6.5?'tiger':'wolf'],
+      [Math.round(CB.gov_dep.ratio*100)+'%','GOV DEPENDENCY',CB.gov_dep.status==='moderate_overuse'?'tiger':'green'],
+      [CB.drift.total,'EXCEPTIONS',CB.drift.status==='elevated'?'tiger':'policy'],
+      [CB.conflicts[0]&&CB.conflicts[0].count||0,'TOP CONFLICT',CB.conflicts[0]&&CB.conflicts[0].sev==='high'?'wolf':'tiger'],
+      [FIRED.length,'ALERTS FIRED',FIRED.length>0?'wolf':'green'],
+      [WFR.length,'WF RECORDS','gov']
+    ];
+    var h='';
+    stats.forEach(function(s){
+      h+='<div class="obsstat" onclick="setObs(\'exec\')">'
+        +'<div class="ossn" style="color:var(--'+s[2]+')">'+s[0]+'</div>'
+        +'<div class="ossl">'+s[1]+'</div>'
+        +'</div>';
+    });
+    strip.innerHTML=h;
+  }
+  var body=el('obs-body'); if(!body) return;
+  var views={
+    exec:[
+      {t:'POLICY HEALTH',c:buildObsHealth()},
+      {t:'GOVERNANCE LOAD',c:buildObsGovLoad()},
+      {t:'ADR STATUS',c:buildObsADR()}
+    ],
+    conf:[
+      {t:'CONFLICT HOTSPOTS',c:buildObsConf()},
+      {t:'PRECEDENCE RANKINGS',c:buildObsPrec()},
+      {t:'RULE FAMILIES',c:buildObsFam()}
+    ],
+    over:[
+      {t:'OVERRIDE LEADERS',c:buildObsOver()},
+      {t:'ACTIVE EXCEPTIONS',c:buildObsExc()},
+      {t:'ALERTS FIRED',c:buildObsAlerts()}
+    ],
+    rec:[
+      {t:'SIMULATION STATE',c:buildObsSim()},
+      {t:'ADR DEPLOYMENT',c:buildObsDeploy()},
+      {t:'SETTLEMENT BAND',c:buildObsSettle()}
+    ],
+    ledg:[
+      {t:'OVERRIDE HISTORY',c:buildObsLedgOver()},
+      {t:'GOVERNANCE EXCEPTIONS',c:buildObsLedgExc()},
+      {t:'WORKFLOW RECORDS',c:buildObsLedgWFR()}
+    ]
+  };
+  var cols=views[OBS_VIEW]||views.exec;
+  var h='';
+  cols.forEach(function(col){
+    h+='<div class="obscol"><div class="obscolt">'+col.t+'</div>'+col.c+'</div>';
+  });
+  body.innerHTML=h;
+}
+function buildObsHealth(){
+  var sc=CB.health.score;
+  var col=sc>=8?'var(--green)':sc>=6.5?'var(--tiger)':'var(--wolf)';
+  return '<div style="text-align:center;padding:10px 0">'
+    +'<div style="font-family:var(--fhead);font-size:30px;font-weight:900;color:'+col+'">'+sc+'</div>'
+    +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:3px">OUT OF 10.0</div>'
+    +'</div>'
+    +'<div class="hsbadge '+(CB.health.status==='healthy'?'hsh':'hss')+'" style="display:block;text-align:center">'+CB.health.status.replace(/_/g,' ').toUpperCase()+'</div>';
+}
+function buildObsGovLoad(){
+  var rows=[['Arbitration Cases',CB.gov_dep.arb,'wolf'],['Auto-Resolved',CB.gov_dep.auto,'green'],['Dependency Ratio',Math.round(CB.gov_dep.ratio*100)+'%',CB.gov_dep.ratio>=0.3?'tiger':'green'],['Active Exceptions',CB.drift.total,'policy'],['Drift Status',CB.drift.status.toUpperCase(),CB.drift.status==='elevated'?'tiger':'green']];
+  var h='';
+  rows.forEach(function(r){h+='<div class="drrow"><span class="drk">'+r[0]+'</span><span class="drv" style="color:var(--'+r[2]+')">'+r[1]+'</span></div>';});
+  return h;
+}
+function buildObsADR(){var h='';SUITS_FRONTS.slice(0,4).forEach(function(f){h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bg3)"><span style="font-size:9px">'+f.id+': '+f.label.substring(0,22)+'...</span><span class="pill '+(f.status==='ARMED'?'pg':'pgray')+'">'+f.status+'</span></div>';});return h;}
+function buildObsConf(){var h='';CB.conflicts.forEach(function(c){var col=c.sev==='high'?'var(--wolf)':'var(--tiger)';h+='<div class="csig" style="margin-bottom:3px"><div class="csigt"><span class="csign" style="font-size:9px">'+c.sig.replace(/_/g,' ')+'</span><span style="color:'+col+';font-family:var(--fhead);font-size:14px;font-weight:900">'+c.count+'</span></div><div class="csigb"><div class="csigf" style="background:'+col+';width:'+Math.min(100,c.count*5)+'%"></div></div></div>';});return h;}
+function buildObsPrec(){var h='';PREG.precedence_rankings.forEach(function(r){h+='<div class="card" style="margin-bottom:3px;padding:6px 8px"><div style="font-size:9px;color:var(--policy);font-family:var(--fmono)">'+r.higher.replace(/_/g,' ')+' ↑ OVER ↓ '+r.lower.replace(/_/g,' ')+'</div></div>';});return h;}
+function buildObsFam(){var h='';PREG.rule_families.forEach(function(f){h+='<div style="display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--bg3)"><span style="font-family:var(--fhead);font-size:14px;font-weight:900;color:var(--'+f.col+')">'+f.rank+'</span><span style="font-size:9.5px;font-family:var(--fhead);font-weight:700">'+f.name.replace(/_/g,' ')+'</span></div>';});return h;}
+function buildObsOver(){var h='';CB.overrides.forEach(function(o){h+='<div class="card" style="margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;padding:6px 8px"><div><div style="font-size:10px;font-family:var(--fhead);font-weight:700">'+o.rule_name+'</div><div style="font-size:8px;color:var(--dim);font-family:var(--fmono)">'+o.rule_id+'</div></div><span style="font-family:var(--fhead);font-size:16px;font-weight:900;color:var(--tiger)">'+o.count+'x</span></div>';});return h;}
+function buildObsExc(){var h='';PREG.governance_exceptions.filter(function(e){return e.status==='active';}).forEach(function(e){h+='<div class="gex gexon" style="margin-bottom:3px"><div style="font-family:var(--fmono);font-size:9px;color:var(--policy)">'+e.conflict_signature.replace(/_/g,' ')+'</div><div style="font-size:8.5px;color:var(--dim);margin-top:1px">'+e.resolved_action.replace(/_/g,' ')+' · '+e.approved_by.replace(/_/g,' ')+'</div></div>';});return h||'<div style="color:var(--green);font-family:var(--fmono);font-size:9px;padding:6px 0">No active exceptions.</div>';}
+function buildObsAlerts(){if(!FIRED.length) return '<div style="color:var(--green);font-family:var(--fmono);font-size:9px;padding:6px 0">No alerts fired. Run simulation.</div>';var h='';FIRED.slice(-5).forEach(function(a){h+='<div class="alc al'+a.sev+'" style="margin-bottom:3px"><div style="font-family:var(--fhead);font-size:9.5px;font-weight:700">'+a.label+'</div><div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:1px">'+a.ch+' · T'+a.sim_turn+'</div></div>';});return h;}
+function buildObsSim(){var h='';SIM.pieces.forEach(function(p){h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px"><span style="font-size:9px">'+p.label+'</span><div style="display:flex;align-items:center;gap:5px"><div style="width:55px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden"><div style="height:100%;background:'+hc(p.health)+';width:'+Math.round(p.health*100)+'%"></div></div><span style="font-family:var(--fmono);font-size:8.5px;font-weight:700;color:'+hc(p.health)+'">'+Math.round(p.health*100)+'%</span></div></div>';});return h;}
+function buildObsDeploy(){var h='';SUITS_FRONTS.forEach(function(f){h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bg3)"><span style="font-size:8.5px">'+f.id+': '+f.label.substring(0,20)+'...</span><span class="pill '+(f.status==='ARMED'?'pg':'pgray')+'">'+f.status+'</span></div>';});return h;}
+function buildObsSettle(){return '<div style="text-align:center;padding:14px 0"><div style="font-family:var(--fhead);font-size:20px;font-weight:900;color:var(--green)">$350M – $1B+</div><div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:3px">SETTLEMENT BAND</div><div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-top:1px">THEORETICAL MAX: $7.3B+</div><div style="margin-top:10px"><div style="font-family:var(--fhead);font-size:11px;font-weight:700;color:var(--wolf)">COLLAPSE: '+pct(SIM.metrics.collapse_probability)+'</div><div style="font-family:var(--fhead);font-size:11px;font-weight:700;color:var(--green);margin-top:3px">MOAT: '+(SIM.metrics.moat_score*10).toFixed(1)+'</div></div></div>';}
+function buildObsLedgOver(){var h='';PREG.override_history.forEach(function(o){h+='<div class="card" style="margin-bottom:4px;padding:6px 8px"><div style="font-family:var(--fmono);font-size:8.5px;color:var(--tiger);font-weight:600">'+o.override_id+' · '+o.approved_at.slice(0,10)+'</div><div style="font-size:9.5px;font-family:var(--fhead);font-weight:700;margin-top:2px">'+o.affected_rule_name+'</div><div style="font-size:8.5px;color:var(--dim);margin-top:2px">'+o.reason.substring(0,80)+'...</div></div>';});return h;}
+function buildObsLedgExc(){var h='';PREG.governance_exceptions.forEach(function(e){h+='<div class="card" style="margin-bottom:4px;padding:6px 8px;border-color:'+(e.status==='active'?'var(--green)':'var(--border)')+'"><div style="display:flex;justify-content:space-between"><span style="font-family:var(--fmono);font-size:8.5px;color:var(--gov)">'+e.exception_id+'</span><span class="pill '+(e.status==='active'?'pg':'pgray')+'">'+e.status.toUpperCase()+'</span></div><div style="font-size:9px;color:var(--policy);font-family:var(--fmono);margin-top:2px">'+e.conflict_signature.replace(/_/g,' ')+'</div></div>';});return h;}
+function buildObsLedgWFR(){if(!WFR.length) return '<div style="color:var(--dim);font-family:var(--fmono);font-size:9px;padding:8px 0">No workflow records. Run simulation.</div>';var h='';WFR.slice(-5).reverse().forEach(function(w){h+='<div class="wfr" style="margin-bottom:3px"><div class="wfrh"><span class="wfrid">'+w.id+'</span><span class="pill '+(w.sev==='critical'?'pw':w.sev==='high'?'pt':'pp')+'">'+w.sev.toUpperCase()+'</span></div><div style="font-size:9px;color:var(--dim);font-family:var(--fmono)">'+w.type.replace(/_/g,' ')+'</div></div>';});return h;}
+
+// ── WORKFLOW REGISTRY UI ─────────────────────────────
+function addWFR(){
+  var a=ALERT_DEF[Math.floor(Math.random()*ALERT_DEF.length)];
+  addWorkflow(a,a.ch,'governance_board',a.sev==='critical'?'critical':'high',Math.random()>0.5);
+  renderWFR();
+}
+function renderWFR(){
+  var wb=el('wfr-body'); if(!wb) return;
+  if(!WFR.length){wb.innerHTML='<div style="text-align:center;padding:24px;color:var(--dim);font-family:var(--fmono);font-size:9.5px">No workflow records. Run simulation or fire alerts to generate records.</div>';return;}
+  var h='';
+  WFR.slice().reverse().forEach(function(w){
+    var steps=[{l:'ROUTED',d:true},{l:'ASSIGNED',d:!!(w.assignment&&w.assignment.to)},{l:'ESCALATED',d:!!(w.escalation&&w.escalation.escalated)},{l:'REDESIGN',d:!!(w.redesign&&w.redesign.opened)},{l:'CLOSED',d:!!(w.closure&&w.closure.status==='resolved')}];
+    var stepsH='';
+    steps.forEach(function(s,i){
+      if(i>0) stepsH+='<span class="wflarr">→</span>';
+      stepsH+='<div class="wfls '+(s.d?'wflsd':'wflo')+'">'+s.l+'</div>';
+    });
+    var sevpil='<span class="pill '+(w.sev==='critical'?'pw':w.sev==='high'?'pt':'pp')+'">'+w.sev.toUpperCase()+'</span>';
+    var statpil='<span class="pill '+(w.closure&&w.closure.status==='resolved'?'pg':'pgray')+'">'+(w.closure&&w.closure.status?w.closure.status.toUpperCase():'OPEN')+'</span>';
+    h+='<div class="wfr">'
+      +'<div class="wfrh"><div><span class="wfrid">'+w.id+'</span></div><div style="display:flex;gap:3px">'+sevpil+statpil+'</div></div>'
+      +'<div class="wfrt">'+w.type.replace(/_/g,' ').toUpperCase()+'</div>'
+      +'<div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:2px">'+(w.routing&&w.routing.at?w.routing.at.slice(0,19):'—')+'</div>'
+      +'<div class="wfrlc">'+stepsH+'</div>'
+      +(w.redesign&&w.redesign.opened?'<div style="font-size:8px;color:var(--tiger);font-family:var(--fmono);margin-top:3px">REDESIGN TICKET: '+w.redesign.ticket+'</div>':'')
+      +'<div style="display:flex;gap:4px;margin-top:6px">'
+        +(!(w.closure&&w.closure.status==='resolved')?'<button class="btn bg2" style="padding:3px 8px;font-size:7.5px" onclick="closeWFR2(\''+w.id+'\')">CLOSE RESOLVED</button>':'')
+        +'<button class="btn bw" style="padding:3px 8px;font-size:7.5px" onclick="dimissWFR(\''+w.id+'\')">DISMISS</button>'
+      +'</div>'
+      +'</div>';
+  });
+  wb.innerHTML=h;
+}
+function closeWFR2(id){closeWFR(id,'resolved');renderWFR();addFetty('WFR: '+id+' → RESOLVED','fgov');}
+function dimissWFR(id){dismissWFR2(id);renderWFR();}
+
+// ── ALERTING UI ──────────────────────────────────────
+function renderAlerts(){
+  var ab=el('alerts-body'); if(!ab) return;
+  var fired_ids={};
+  FIRED.forEach(function(a){fired_ids[a.id]=1;});
+  var h='<div style="margin-bottom:10px">'
+    +'<div class="cslbl">CONFIGURED THRESHOLDS · '+ALERT_DEF.length+' RULES</div>'
+    +'<div style="display:flex;gap:5px;margin-bottom:9px">'
+      +'<span class="pill pw">'+ALERT_DEF.filter(function(a){return a.sev==='critical';}).length+' CRITICAL</span>'
+      +'<span class="pill pt">'+ALERT_DEF.filter(function(a){return a.sev==='high';}).length+' HIGH</span>'
+      +'<span class="pill pp">'+ALERT_DEF.filter(function(a){return a.sev==='moderate';}).length+' MODERATE</span>'
+    +'</div>'
+    +'</div>';
+  ALERT_DEF.forEach(function(a){
+    var firing=fired_ids[a.id];
+    var cls='alc al'+a.sev+(firing?' alfiring':'');
+    h+='<div class="'+cls+'">'
+      +'<div class="ach">'
+        +'<span style="font-family:var(--fmono);font-size:8.5px;color:var(--'+(a.sev==='critical'?'wolf':a.sev==='high'?'tiger':'policy')+');font-weight:600">'+a.id+'</span>'
+        +'<div style="display:flex;gap:3px;align-items:center">'
+          +'<span class="pill '+(a.sev==='critical'?'pw':a.sev==='high'?'pt':'pp')+'">'+a.sev.toUpperCase()+'</span>'
+          +'<span class="pill '+(firing?'pw paa':'pgray')+'">'+(firing?'FIRING':'ARMED')+'</span>'
+        +'</div>'
+      +'</div>'
+      +'<div class="acty">'+a.label+'</div>'
+      +'<div class="acnd">CONDITION: '+a.cond+'</div>'
+      +'<div class="acrt">→ '+a.ch.replace(/_/g,' ')+'</div>'
+      +'<div style="font-size:9px;color:var(--dim);line-height:1.5;margin-top:4px">'+a.desc+'</div>'
+      +'</div>';
+  });
+  ab.innerHTML=h;
+}
+function fireAlerts(){
+  CB=runCasebookEngine();
+  FIRED=evalAlerts(CB);
+  FIRED.forEach(function(a){
+    addFetty('ALERT FIRED: '+a.label+' ['+a.sev.toUpperCase()+'] → '+a.ch,'fgov');
+    addWorkflow(a,a.ch,'governance_board',a.sev,a.sev==='critical');
+  });
+  var raf=el('raf'); if(raf) raf.textContent=FIRED.length;
+  renderAlerts(); renderWFR();
+  addFetty('ALERTING ENGINE: '+FIRED.length+' conditions met','fe');
+}
+function clearAlerts(){FIRED=[];var raf=el('raf');if(raf) raf.textContent=0;renderAlerts();addFetty('ALERTING ENGINE: Alert log cleared','fd');}
+
+// ── JUDGE MODE UI ────────────────────────────────────
+function initJM(){
+  var s=el('jm-sel'); if(!s) return;
+  var h='';
+  JM_ISSUES.forEach(function(i){h+='<option value="'+i.id+'">['+i.priority+'] '+i.label+'</option>';});
+  s.innerHTML=h;
+}
+function renderJMQueue(){
+  var q=el('jm-queue'); if(!q) return;
+  var h='';
+  JM_ISSUES.forEach(function(i){
+    var pri=i.priority;
+    var pcl=pri>=9.5?'pw':pri>=9?'pt':'pc';
+    h+='<div class="card" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 9px;margin-bottom:3px" onclick="pickJM(\''+i.id+'\')">'
+      +'<div><span class="pill pgray" style="margin-right:5px">'+i.id+'</span><span style="font-size:9.5px;font-family:var(--fhead);font-weight:700">'+i.label+'</span></div>'
+      +'<span class="pill '+pcl+'">'+pri+'</span>'
+      +'</div>';
+  });
+  q.innerHTML=h;
+}
+function pickJM(id){
+  var s=el('jm-sel'); if(s) s.value=id;
+  runJM();
+}
+function runJM(){
+  var id=el('jm-sel')&&el('jm-sel').value;
+  var issue=null; JM_ISSUES.forEach(function(i){if(i.id===id) issue=i;});
+  if(!issue) return;
+  var r=runJMCalc(issue);
+  renderJMResult(issue,r);
+  addFetty('JUDGE MODE: '+issue.label+' → '+r.act.toUpperCase()+' ['+r.band+']','fe');
+}
+function renderJMResult(issue,r){
+  function scCol(v){return v>=8?'var(--green)':v>=6?'var(--cyan)':v>=4?'var(--tiger)':'var(--wolf)';}
+  function actPil(a){return a==='add_now'?'pg':a==='structural_reopen_required'?'pw':a.indexOf('tiger')>-1?'pt':a.indexOf('wolf')>-1?'pw':a.indexOf('suits')>-1?'ps':'pc';}
+  var routesH='';
+  r.routes.forEach(function(rt){
+    var c=rt.toLowerCase()==='flywheel'?'pg':rt.toLowerCase()==='tiger'?'pt':rt.toLowerCase()==='wolf'?'pw':'ps';
+    routesH+='<span class="pill '+c+'">'+rt+'</span> ';
+  });
+  var nodesH=''; (issue.nodes||[]).forEach(function(n){nodesH+='<span class="pill pc">'+n+'</span> ';});
+  var secsH=''; (issue.sections||[]).forEach(function(s){secsH+='<span class="pill pgray">'+s+'</span> ';});
+  var h='<div class="jmc"><div class="jmt">ISSUE</div>'
+    +'<div style="font-family:var(--fhead);font-size:11px;font-weight:700;margin-bottom:5px">'+issue.label+'</div>'
+    +'<span class="pill pgray">'+issue.id+'</span> <span class="pill pgray">'+issue.type.toUpperCase()+'</span>'
+    +'</div>';
+  h+='<div class="jmc"><div class="jmt">SCORES</div>';
+  var scores=[['Support',r.sup],['Fit',r.fit],['Struct Risk',r.srisk],['Novelty',r.nov],['Priority',r.pri]];
+  scores.forEach(function(s){
+    h+='<div class="jmsr"><span class="jmsl">'+s[0]+'</span><span style="font-family:var(--fmono);font-size:10.5px;font-weight:700;color:'+scCol(s[1])+'">'+s[1].toFixed(1)+'</span></div>';
+  });
+  h+='</div>';
+  h+='<div class="jmc"><div class="jmt">BEST FIT</div>'
+    +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-bottom:3px">NODES:</div>'
+    +'<div style="margin-bottom:6px">'+nodesH+'</div>'
+    +'<div style="font-size:8.5px;color:var(--dim);font-family:var(--fmono);margin-bottom:3px">SECTIONS:</div>'
+    +'<div>'+secsH+'</div>'
+    +'</div>';
+  h+='<div class="jmc"><div class="jmt">PRIORITY + ACTION</div>'
+    +'<div style="font-family:var(--fmono);font-size:8.5px;color:var(--dim);margin-bottom:3px">BAND</div>'
+    +'<span class="pill '+(r.band==='IMMEDIATE'?'pw':r.band==='HIGH'?'pt':'pc')+'">'+r.band+'</span>'
+    +'<div style="font-family:var(--fmono);font-size:8.5px;color:var(--dim);margin:7px 0 3px">ACTION</div>'
+    +'<span class="pill '+actPil(r.act)+'">'+r.act.replace(/_/g,' ').toUpperCase()+'</span>'
+    +(r.routes.length?'<div style="font-family:var(--fmono);font-size:8.5px;color:var(--dim);margin:7px 0 3px">ROUTING</div><div>'+routesH+'</div>':'')
+    +'</div>';
+  h+='<div class="jmc jmcf"><div class="jmt">DECISION MEMO</div><div class="jmmemo">'+r.memo+'</div></div>';
+  var g=el('jm-grid'); if(g) g.innerHTML=h;
+}
+function runAllJM(){
+  addFetty('JUDGE MODE: Running all '+JM_ISSUES.length+' issues...','fd');
+  JM_ISSUES.forEach(function(issue,i){
+    setTimeout(function(){
+      var r=runJMCalc(issue);
+      addFetty(issue.id+': '+r.act.toUpperCase()+' ['+r.band+'] — '+issue.label.substring(0,40)+'...',r.band==='IMMEDIATE'?'fw2':'fd');
+    },i*200);
+  });
+}
+
+// ── DIAGNOSTICS ──────────────────────────────────────
+function renderDiag(){
+  var db=el('diag-body'); if(!db) return;
+  var c=SIM.metrics.collapse_probability;
+  var cb2=CB;
+  function drow(k,v,col){return '<div class="drrow"><span class="drk">'+k+'</span><span class="drv" style="color:'+col+'">'+v+'</span></div>';}
+  var h='';
+  h+='<div class="card">'
+    +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="dbdg '+(c<0.5?'dbh':c<0.8?'dbw':'dbc')+'"></div><div class="ct" style="margin:0">SIM HEALTH</div></div>'
+    +drow('Overall',c<0.5?'HEALTHY':c<0.8?'WARNING':'CRITICAL',c<0.5?'var(--green)':c<0.8?'var(--tiger)':'var(--wolf)')
+    +drow('Mode',SIM.mode.replace(/_/g,' ').toUpperCase(),'var(--cyan)')
+    +drow('Collapse',pct(c),c>0.8?'var(--wolf)':c>0.5?'var(--tiger)':'var(--green)')
+    +drow('Turn',SIM.turn+' / 7','var(--gold)')
+    +drow('Rules Triggered',SIM.rules_triggered.length,'var(--tiger)')
+    +drow('Pieces Stressed',SIM.pieces.filter(function(p){return p.health<0.7;}).length,'var(--tiger)')
+    +'</div>';
+  h+='<div class="card">'
+    +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="dbdg '+(cb2.health.score>=7?'dbh':'dbw')+'"></div><div class="ct" style="margin:0">GOV LAYER</div></div>'
+    +drow('Policy Health',cb2.health.score+'/10',cb2.health.score>=8?'var(--green)':'var(--tiger)')
+    +drow('Status',cb2.health.status.replace(/_/g,' ').substring(0,16).toUpperCase(),'var(--casebook)')
+    +drow('Gov Dependency',Math.round(cb2.gov_dep.ratio*100)+'%',cb2.gov_dep.ratio>=0.3?'var(--tiger)':'var(--green)')
+    +drow('Active Exceptions',cb2.drift.total,'var(--policy)')
+    +drow('Alerts Fired',FIRED.length,FIRED.length>0?'var(--wolf)':'var(--green)')
+    +drow('WF Records',WFR.length,'var(--gov)')
+    +'</div>';
+  var tlog=SIM.diag.triggers;
+  var tlogH='';
+  if(tlog.length){tlog.forEach(function(e){tlogH+='<div class="drrow"><span class="drk">T'+e.turn+': '+e.ev+'</span><span class="drv" style="color:var(--tiger)">['+e.rules.join(', ')+']</span></div>';});}
+  else {tlogH='<div style="color:var(--dim);padding:4px 0;font-size:8.5px">No triggers fired. Run simulation.</div>';}
+  h+='<div class="card" style="grid-column:1/-1">'
+    +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="dbdg '+(tlog.length>0?'dbw':'dbh')+'"></div><div class="ct" style="margin:0">TRIGGER LEDGER · '+tlog.length+' ENTRIES</div></div>'
+    +'<div style="max-height:110px;overflow-y:auto">'+tlogH+'</div>'
+    +'</div>';
+  db.innerHTML=h;
+}
+
+// ── INGEST HANDLERS ──────────────────────────────────
+function handleFU(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){ingest(f.name,ev.target.result||'',f.type,'upload',true);};r.readAsText(f);});}
+function handleDO(e){e.preventDefault();el('idz').classList.add('drag');}
+function handleDr(e){e.preventDefault();el('idz').classList.remove('drag');Array.from(e.dataTransfer.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){ingest(f.name,ev.target.result||'','file','drop',true);};r.readAsText(f);});}
+function ingestPaste(){
+  var c=el('ipa')&&el('ipa').value||'';
+  var l=el('ilbl')&&el('ilbl').value||'Pasted Content';
+  if(!c.trim()){alert('No content to ingest.');return;}
+  ingest(l,c,'paste','manual',true);
+  if(el('ipa')) el('ipa').value='';
+  if(el('ilbl')) el('ilbl').value='';
+}
+function mergeCGPT(){
+  var c=el('ipa')&&el('ipa').value||'';
+  var l=el('ilbl')&&el('ilbl').value||'ChatGPT Export';
+  if(!c.trim()){alert('Paste ChatGPT conversations.json content first.');return;}
+  try{
+    var parsed=JSON.parse(c);
+    var items=Array.isArray(parsed)?parsed:[parsed];
+    items.forEach(function(item){ingest(item.title||l,JSON.stringify(item),'chatgpt_export','chatgpt',true);});
+    addFetty('CHATGPT MERGE: '+items.length+' conversations ingested → EV-'+(nextEV-items.length)+'→EV-'+(nextEV-1),'fe');
+  } catch(err){ingest(l,c,'chatgpt_text','chatgpt',true);addFetty('CHATGPT MERGE: Text ingested (non-JSON)','fw2');}
+  if(el('ipa')) el('ipa').value='';
+}
+function initPreloads(){
+  var pb=el('preload-btns'); if(!pb) return;
+  var pkgs=[
+    {l:'DK-Snappy Deep Dive',c:'GPS LLC DraftKings Snappy double margin padding principal agent ASC 606 VIE RDARC MSRP 550:1 crown pricing'},
+    {l:'Hermalyn Admissions',c:'DraftKings Hermalyn 732 F Supp 3d 84 judicial admissions RICO derivatives platform control'},
+    {l:'MGCB 8 Changes',c:'MGCB Michigan R 432.206 material change 483% tier credit inflation Onyx calendar bleed'},
+    {l:'BDO Impossibility',c:'BDO auditor PCAOB ASC 606 restatement audit impossibility EGC SOX 404b CAM loyalty program'},
+    {l:'Policy Governance',c:'policy conflict resolver precedence registry override exception drift governance casebook analyzer'}
+  ];
+  pkgs.forEach(function(p){
+    var b=document.createElement('button');
+    b.className='btn bc'; b.style.fontSize='7.5px'; b.style.padding='3px 7px';
+    b.textContent=p.l;
+    b.onclick=function(){ingest('[PRE-LOAD] '+p.l,p.c,'preload','preload',false);};
+    pb.appendChild(b);
+  });
+}
+
+// ── TOP BAR / RIGHT PANEL ────────────────────────────
+function updTop(st){
+  var c=Math.round(st.metrics.collapse_probability*100);
+  var m=st.mode.replace(/_/g,' ').toUpperCase();
+  var pm=el('pmode'),pc2=el('pcol');
+  if(pm) pm.textContent=m;
+  if(pc2){pc2.textContent='COLLAPSE: '+c+'%'; pc2.className='tb-pill '+(c>=80?'tp-w':c>=60?'tp-t':'tp-g');}
+  var rtb=el('rtb'); if(rtb) rtb.textContent='T'+st.turn;
+  var rpcol=el('rpcol');
+  if(rpcol){rpcol.textContent=c+'%'; rpcol.style.color=c>=80?'var(--wolf)':c>=60?'var(--tiger)':'var(--green)';}
+  var rpmb=el('rpmb');
+  if(rpmb){rpmb.textContent=m; rpmb.className='mbadge '+(st.mode==='convergence_collapse'?'mbc':st.mode==='scenario_scoring'?'mbs':st.mode==='bridge_reasoning'?'mbb':'mbd');}
+  var crng=el('crng');
+  if(crng) crng.style.borderColor=c>=80?'var(--wolf)':c>=60?'var(--tiger)':'var(--green)';
+  var mm=el('mm'),mfm=el('mfm'); if(mm) mm.textContent=(st.metrics.moat_score*10).toFixed(1); if(mfm) mfm.style.width=(st.metrics.moat_score*100)+'%';
+  var mb2=el('mb2'),mfb=el('mfb'); var bs=Math.round((st.metrics.bridge_stress||0)*100); if(mb2) mb2.textContent=bs+'%'; if(mfb) mfb.style.width=bs+'%';
+  var mrp2=el('mrp'),mfr=el('mfr'); var rp=Math.round((st.metrics.regulatory_pressure||0.24)*100); if(mrp2) mrp2.textContent=rp+'%'; if(mfr) mfr.style.width=rp+'%';
+}
+function updRP(st){updTop(st);}
+function updGovBar(cb2){
+  var pph=el('pph'),pgov=el('pgov'),mph=el('mph'),mfph=el('mfph');
+  if(pph) pph.textContent='POLICY: '+(cb2.health.status==='healthy'?'HEALTHY':'WARNING')+' '+cb2.health.score;
+  if(pgov) pgov.textContent='GOV: '+(cb2.gov_dep.status==='moderate_overuse'?'ELEVATED':'NORMAL');
+  if(mph) mph.textContent=cb2.health.score;
+  if(mfph) mfph.style.width=(cb2.health.score*10)+'%';
+  var mgd=el('mgd'),mfgd=el('mfgd');
+  if(mgd) mgd.textContent=Math.round(cb2.gov_dep.ratio*100)+'%';
+  if(mfgd) mfgd.style.width=Math.round(cb2.gov_dep.ratio*100)+'%';
+  var raex=el('raex'); if(raex) raex.textContent=cb2.drift.total;
+}
+
+// ── CLOCK ────────────────────────────────────────────
+setInterval(function(){var c=el('clk');if(c) c.textContent=new Date().toLocaleTimeString('en-US',{hour12:false});},1000);
+
+// ── BOOT ─────────────────────────────────────────────
+
+// ── EXEC SHEET ──────────────────────────────────────
+var EXEC_IP_NODES=[
+  {id:'NODE-01',label:'AutoZone Arbitration Collapse',domain:'Contract/MCPA',status:'crystallized',mb:'§V-D'},
+  {id:'NODE-02',label:'Calendar Bleed Restatement',domain:'ASC 606/450',status:'crystallized',mb:'§XII.U'},
+  {id:'NODE-03',label:'GPS LLC VIE Circular Disclaimer',domain:'ASC 810/RICO',status:'crystallized',mb:'§XII.V.1'},
+  {id:'NODE-04',label:'MGCB Two-Prong Violation',domain:'R432/Consumer',status:'crystallized',mb:'§V-A'},
+  {id:'NODE-05',label:'BDO Audit Impossibility',domain:'PCAOB/SOX',status:'crystallized',mb:'§XII.L'},
+  {id:'NODE-06',label:'Apple Fiduciary Liability',domain:'Platform/ATT',status:'active',mb:'§XII.Q'},
+  {id:'NODE-07',label:'Hermalyn Judicial Admissions',domain:'Estoppel/RICO',status:'crystallized',mb:'§VII'},
+  {id:'NODE-08',label:'CFTC Binary Options Architecture',domain:'CEA/GPS LLC',status:'active',mb:'§XII.P'},
+  {id:'NODE-09',label:'Privacy/Notified.com Cascade',domain:'GDPR/CCPA/BIPA',status:'active',mb:'§IX'},
+  {id:'NODE-10',label:'DK-Snappy Double Margin Padding',domain:'ASC820/MCPA',status:'crystallized',mb:'Pillar 9'},
+  {id:'NODE-11',label:'Synthesis OS Product IP',domain:'Tech/Product',status:'forming',mb:'Internal'}
+];
+var EXEC_FEED=[
+  {t:'4m',msg:'Bridge MGCB R432 to MCPA §445.903 promoted · score 96',col:'fe'},
+  {t:'11m',msg:'IP Node 11 (Synthesis OS) entered crystallization queue',col:'fpol'},
+  {t:'23m',msg:'Cross-vertical audit complexity: 80.3B reconciliation points',col:'fw2'},
+  {t:'41m',msg:'GPS VIE three-track consolidation complete',col:'fe'},
+  {t:'1h',msg:'Dynasty Rules 1/3/2025 · 4 new MGCB material changes documented',col:'fgov'},
+  {t:'2h',msg:'v8 executive sheet active · 16 views operational',col:'fd'},
+  {t:'3h',msg:'MasterBrief v54 FROZEN · EV-291 · SB-78 · GPS VIE §XII.V.2 inserted',col:'fe'}
+];
+function renderExec(){
+  renderExecKPIs();renderExecKS();renderExecFronts();
+  renderExecCorpus();renderExecSim();renderExecGov();
+  renderExecNodes();renderExecFeed();
+}
+function renderExecKPIs(){
+  var s=document.getElementById('exec-kpi-strip');if(!s) return;
+  var cp=SIM.metrics.collapse_probability;
+  var ks=[
+    {l:'COLLAPSE',v:Math.round(cp*100)+'%',c:cp>=0.8?'wolf':cp>=0.6?'tiger':'green'},
+    {l:'MOAT',v:(SIM.metrics.moat_score*10).toFixed(1),c:'green'},
+    {l:'EVIDENCE',v:'EV-291',c:'cyan'},
+    {l:'SB',v:'SB-78',c:'gold'},
+    {l:'POLICY',v:'8.4/10',c:'casebook'},
+    {l:'FRONTS',v:'8 ARMED',c:'suits'}
+  ];
+  var h='';
+  ks.forEach(function(k){
+    h+='<div style="text-align:center;padding:6px 4px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2)">'
+      +'<div style="font-family:var(--fhead);font-size:17px;font-weight:900;color:var(--'+k.c+')">'+k.v+'</div>'
+      +'<div style="font-size:7px;color:var(--dim);font-family:var(--fmono);margin-top:1px">'+k.l+'</div>'
+      +'</div>';
+  });
+  s.innerHTML=h;
+}
+function renderExecKS(){
+  var el=document.getElementById('exec-kill-shots');if(!el) return;
+  var h='';
+  KILL_SHOTS.forEach(function(k){
+    var b=k.badge||k.col||'wolf';
+    h+='<div class="hsrow">'
+      +'<div style="font-family:var(--fhead);font-size:12px;font-weight:900;color:var(--'+b+');min-width:18px">'+k.n+'</div>'
+      +'<div style="flex:1"><div class="hss2">'+k.title+'</div>'
+      +'<div style="font-size:8px;color:var(--dim);margin-top:1px">'+k.desc+'</div></div>'
+      +'<span style="font-family:var(--fmono);font-size:7px;font-weight:600;padding:2px 5px;border-radius:20px;background:var(--'+b+'3);color:var(--'+b+');border:1px solid var(--'+b+'2);margin-left:6px;flex-shrink:0">ARMED</span>'
+      +'</div>';
+  });
+  el.innerHTML=h;
+}
+function renderExecFronts(){
+  var el=document.getElementById('exec-fronts');if(!el) return;
+  var h='';
+  SUITS_FRONTS.forEach(function(f){
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bg3)">'
+      +'<span style="font-size:8.5px">'+f.id+': '+f.label.substring(0,22)+'</span>'
+      +'<span style="font-family:var(--fmono);font-size:7.5px;color:'+(f.status==='ARMED'?'var(--green)':'var(--tiger)')+'">'+f.status+'</span>'
+      +'</div>';
+  });
+  el.innerHTML=h;
+}
+function renderExecCorpus(){
+  var el=document.getElementById('exec-corpus');if(!el) return;
+  var rows=[['MB','v54 FROZEN','cyan'],['EV','291 items','white'],['SB','78 items','gold'],
+    ['GR','10 nodes','tiger'],['Fronts','8 deployed','suits'],['JM','10 issues','policy'],
+    ['PCR','5 scenarios','gov'],['Alerts','8 rules','wolf']];
+  var h='';
+  rows.forEach(function(r){
+    h+='<div class="drrow"><span class="drk">'+r[0]+'</span>'
+      +'<span class="drv" style="color:var(--'+r[2]+')">'+r[1]+'</span></div>';
+  });
+  el.innerHTML=h;
+}
+function renderExecSim(){
+  var el=document.getElementById('exec-sim');if(!el) return;
+  var et=document.getElementById('exec-turn');if(et) et.textContent=SIM.turn||0;
+  var cp=SIM.metrics.collapse_probability;
+  var h='';
+  SIM.pieces.forEach(function(p){
+    var hp=Math.round(p.health*100);
+    var col=hc(p.health);
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">'
+      +'<span style="font-size:8.5px">'+p.label+'</span>'
+      +'<div style="display:flex;align-items:center;gap:3px">'
+      +'<div style="width:40px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden">'
+      +'<div style="height:100%;background:'+col+';width:'+hp+'%"></div></div>'
+      +'<span style="font-family:var(--fmono);font-size:8px;font-weight:700;color:'+col+';min-width:24px;text-align:right">'+hp+'%</span>'
+      +'</div></div>';
+  });
+  h+='<div style="margin-top:4px;padding-top:3px;border-top:1px solid var(--border)">'
+    +'<div class="drrow"><span class="drk">Mode</span><span class="drv" style="color:var(--cyan);font-size:8px">'+SIM.mode.replace(/_/g,' ').toUpperCase()+'</span></div>'
+    +'<div class="drrow"><span class="drk">Collapse</span><span class="drv" style="color:'+(cp>0.8?'var(--wolf)':cp>0.5?'var(--tiger)':'var(--green)')+'">'+Math.round(cp*100)+'%</span></div>'
+    +'</div>';
+  el.innerHTML=h;
+}
+function renderExecGov(){
+  var el=document.getElementById('exec-gov');if(!el) return;
+  el.innerHTML='<div class="drrow"><span class="drk">Policy Health</span><span class="drv" style="color:var(--casebook)">8.4/10</span></div>'
+    +'<div class="drrow"><span class="drk">Exceptions</span><span class="drv" style="color:var(--policy)">7</span></div>'
+    +'<div class="drrow"><span class="drk">Gov Dep.</span><span class="drv" style="color:var(--green)">28%</span></div>'
+    +'<div class="drrow"><span class="drk">WF Records</span><span class="drv" style="color:var(--gov)" id="exec-wfr-cnt">0</span></div>'
+    +'<div class="drrow"><span class="drk">Alerts</span><span class="drv" style="color:var(--alert)" id="exec-alert-cnt">0</span></div>';
+}
+function renderExecNodes(){
+  var el=document.getElementById('exec-nodes');if(!el) return;
+  var h='';
+  EXEC_IP_NODES.forEach(function(n){
+    var col=n.status==='crystallized'?'cyan':n.status==='active'?'green':'tiger';
+    var dot=n.status==='crystallized'?'●':n.status==='active'?'◉':'○';
+    h+='<div style="display:flex;align-items:flex-start;gap:4px;margin-bottom:3px;padding-bottom:3px;border-bottom:1px solid var(--bg3)">'
+      +'<span style="font-family:var(--fmono);font-size:9px;color:var(--'+col+');flex-shrink:0">'+dot+'</span>'
+      +'<div><div style="font-size:8.5px;line-height:1.3">'+n.label+'</div>'
+      +'<div style="font-family:var(--fmono);font-size:7px;color:var(--dim);margin-top:1px">'+n.id+' '+n.mb+'</div>'
+      +'</div></div>';
+  });
+  el.innerHTML=h;
+}
+function renderExecFeed(){
+  var el=document.getElementById('exec-feed');if(!el) return;
+  var h='';
+  EXEC_FEED.forEach(function(e){
+    h+='<span style="color:var(--dim);margin-right:5px">['+e.t+']</span>'
+      +'<span class="'+e.col+'">'+e.msg+'</span><br>';
+  });
+  el.innerHTML=h;
+}
+function updExec(){
+  var et=document.getElementById('exec-turn');if(et) et.textContent=SIM.turn||0;
+  var wc=document.getElementById('exec-wfr-cnt');if(wc) wc.textContent=WFR.length;
+  var ac=document.getElementById('exec-alert-cnt');if(ac) ac.textContent=FIRED.length;
+  renderExecSim();
+}
+
+
+function boot(){
+  try{
+    renderHome();
+    renderGR();
+    renderFW();
+    renderChess(SIM);
+    renderTurns(0);
+    renderAngels();
+    renderSuits();
+    initPCR();
+    renderPreg();
+    CB=runCasebookEngine();
+    updGovBar(CB);
+    initJM();
+    renderJMQueue();
+    renderAlerts();
+    renderWFR();
+    initPreloads();
+    refreshIUI();
+    updTop(SIM);
+    addFetty('NEXUS v8.0 SYNTHESIS OS BETA — INITIALIZED','fe');
+    addFetty('MasterBrief v54 · EV-291 · SB-78 · 8 Fronts · 10 GR Nodes LOADED','fd');
+    addFetty('15 views ACTIVE · Zero nested template literals · Safari compatible','fd');
+    addFetty('ADR Framework ARMED · Ghost Recon READY · Judge Mode ACTIVE','fd');
+    addFetty('Policy Conflict Resolver READY · Precedence Registry LOADED','fpol');
+    addFetty('Casebook Analyzer READY · Policy Health: '+CB.health.score+'/10 · '+CB.health.status.toUpperCase(),'fgov');
+    addFetty('Policy Observatory ACTIVE · Workflow Registry STANDING BY','fgov');
+    addFetty('Alerting Engine ARMED · 8 thresholds configured','fgov');
+    addFetty('Data Ingestion Engine STANDING BY · EV-292 next · ChatGPT merge READY','fd');
+    addFetty('Synthesis OS: All 15 modules operational','fe');
+  } catch(err){
+    console.error('NEXUS boot error:',err);
+    var f=el('fcon');
+    if(f){var d=document.createElement('div');d.style.color='var(--wolf)';d.textContent='BOOT ERROR: '+err.message;f.appendChild(d);}
+  }
+}
+
+// ── FETTY FM ORCHESTRATION ────────────────────────────
+var FO_LAYERS=[
+  {num:'01',name:'FETTY FM',col:'fetty',status:'ACTIVE',desc:'Scenario runner · trigger engine · conditional escalation logic · objective routing',tags:['SCENARIO RUNNER','TRIGGER ENGINE','ESCALATION']},
+  {num:'02',name:'NEXUS AGENT',col:'cyan',status:'PENDING',desc:'Core reasoning engine · domain-aware logic · multi-turn analytical memory',tags:['REASONING','DOMAIN LOGIC','MEMORY']},
+  {num:'03',name:'FLYWHEEL',col:'green',status:'PENDING',desc:'Domain mastery radar · drill-down analytics · BES compounding score',tags:['MASTERY RADAR','BES SCORE','DRILL-DOWN']},
+  {num:'04',name:'BRIDGER',col:'suits',status:'PENDING',desc:'Analog mapping · bridge scoring · cross-domain prompt generation · 3.1x BES',tags:['ANALOG MAP','BRIDGE SCORE','PROMPT GEN']},
+  {num:'05',name:'CHESS ENGINE',col:'wolf',status:'PENDING',desc:'Moat scoring · collapse modeling · scenario weighting · piece-level threat map',tags:['MOAT SCORE','COLLAPSE MODEL','WEIGHTING']},
+  {num:'06',name:'BIO-ANALOG',col:'policy',status:'PENDING',desc:'Mutation modeling · system instability thresholds · adaptive interpretation',tags:['MUTATION MODEL','INSTABILITY','ADAPTIVE']},
+  {num:'07',name:'OUTPUT',col:'gov',status:'PENDING',desc:'Risk synthesis · leverage identification · collapse trigger documentation',tags:['RISK','LEVERAGE','COLLAPSE']}
+];
+var FO_PRESETS=[
+  {title:'Convergence Collapse',sub:'Multi-domain simultaneous trigger platform',sel:true},
+  {title:'Audit Withdrawal Cascade',sub:'BDO EGC exit → 404(b) impossibility',sel:false},
+  {title:'Arbitration Collapse',sub:'AutoZone + VIE circular + MGCB grounds',sel:false},
+  {title:'Platform Terminal Vulnerability',sub:'Apple/Google removal → staged collapse',sel:false},
+  {title:'Custom Objective',sub:'Define in command bar above and run',sel:false}
+];
+var FO_MOAT=[
+  {lbl:'Financial Str.',val:38,col:'wolf'},
+  {lbl:'Customer Trust',val:52,col:'tiger'},
+  {lbl:'Platform Control',val:61,col:'suits'},
+  {lbl:'Reg. Exposure',val:82,col:'wolf'},
+  {lbl:'Governance',val:44,col:'gov'}
+];
+var FO_PIECES=[
+  {sym:'♔',lbl:'KING',col:'gold'},
+  {sym:'♕',lbl:'QUEEN',col:'gov'},
+  {sym:'♖',lbl:'ROOK',col:'policy'},
+  {sym:'♗',lbl:'BISHOP',col:'suits'},
+  {sym:'♘',lbl:'KNIGHT',col:'tiger'},
+  {sym:'♙',lbl:'PAWN',col:'wolf'}
+];
+var FO_PHASES=[
+  {lbl:'Detection',col:'wolf'},
+  {lbl:'Amplification',col:'tiger'},
+  {lbl:'Convergence',col:'suits'},
+  {lbl:'Collapse Event',col:'alert'}
+];
+var FO_SELECTED=0;
+var FO_RUNNING=false;
+
+function renderFettyOrch(){
+  var stackEl=el('fo-stack');
+  if(!stackEl||stackEl.innerHTML) return;
+  var h='';
+  FO_LAYERS.forEach(function(ly,i){
+    var badgeSt=ly.status==='ACTIVE'?'background:var(--green3);color:var(--green);border-color:var(--green2)':'background:var(--bg3);color:var(--dim);border-color:var(--border2)';
+    var tagH='';
+    ly.tags.forEach(function(t){tagH+='<span class="pill pgray" style="font-size:7px;margin-right:3px">'+t+'</span>';});
+    h+='<div class="fo-layer'+(ly.status==='ACTIVE'?' active':'')+'" id="fo-l-'+i+'">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +'<span class="fo-layer-num">'+ly.num+'</span>'
+      +'<span class="fo-layer-name" style="color:var(--'+ly.col+')">'+ly.name+'</span>'
+      +'<span class="fo-layer-badge" style="'+badgeSt+'">'+ly.status+'</span>'
+      +'</div>'
+      +'<div style="font-size:8.5px;color:var(--dim);margin-bottom:5px;padding-left:30px">'+ly.desc+'</div>'
+      +'<div style="padding-left:30px">'+tagH+'</div>'
+      +(i===0?'<div style="margin-top:6px;padding-left:30px"><div style="height:2px;background:var(--fetty);border-radius:1px;width:80%"></div></div>':'')
+      +'</div>';
+  });
+  stackEl.innerHTML=h;
+
+  var presetsEl=el('fo-presets');
+  if(presetsEl){
+    var ph='';
+    FO_PRESETS.forEach(function(p,i){
+      ph+='<div class="fo-preset'+(i===0?' sel':'')+'" onclick="foSelectPreset('+i+')">'
+        +'<div class="fo-preset-title" style="color:'+(i===0?'var(--tiger)':'var(--white)')+'">'+p.title+'</div>'
+        +'<div class="fo-preset-sub">'+p.sub+'</div>'
+        +'</div>';
+    });
+    presetsEl.innerHTML=ph;
+  }
+
+  var riskEl=el('fo-risk');
+  if(riskEl){
+    var rh='<div style="display:flex;align-items:flex-end;gap:3px;height:56px;margin-bottom:5px">';
+    var rv=[30,55,70,45,90,20,65];
+    rv.forEach(function(v){rh+='<div style="flex:1;background:var(--wolf);opacity:0.7;border-radius:2px 2px 0 0;height:'+v+'%"></div>';});
+    rh+='</div><div style="font-size:7.5px;color:var(--dim);font-family:var(--fmono);text-align:center">run simulation to compute</div>';
+    riskEl.innerHTML=rh;
+  }
+
+  var moatEl=el('fo-moat');
+  if(moatEl){
+    var mh='';
+    FO_MOAT.forEach(function(m){
+      mh+='<div style="margin-bottom:5px">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:2px">'
+        +'<span style="font-size:9px;font-family:var(--fmono)">'+m.lbl+'</span>'
+        +'<span style="font-size:9px;font-family:var(--fmono);color:var(--'+m.col+')">'+m.val+'%</span>'
+        +'</div>'
+        +'<div style="height:3px;background:var(--bg3);border-radius:2px">'
+        +'<div style="height:3px;background:var(--'+m.col+');width:'+m.val+'%;border-radius:2px"></div>'
+        +'</div></div>';
+    });
+    moatEl.innerHTML=mh;
+  }
+
+  var piecesEl=el('fo-pieces');
+  if(piecesEl){
+    var piH='';
+    FO_PIECES.forEach(function(p){
+      piH+='<div class="card" style="text-align:center;padding:8px 5px">'
+        +'<div style="font-size:20px;color:var(--'+p.col+')">'+p.sym+'</div>'
+        +'<div style="font-family:var(--fmono);font-size:6.5px;color:var(--dim);margin-top:3px">'+p.lbl+'</div>'
+        +'</div>';
+    });
+    piecesEl.innerHTML=piH;
+  }
+
+  var phEl=el('fo-phases');
+  if(phEl){
+    var phH='';
+    FO_PHASES.forEach(function(p){
+      var pid='fp-'+p.lbl.replace(/ /g,'-').toLowerCase();
+      phH+='<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">'
+        +'<div style="width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2)" id="'+pid+'"></div>'
+        +'<span style="font-family:var(--fmono);font-size:9px;color:var(--dim)">'+p.lbl+'</span>'
+        +'</div>';
+    });
+    phEl.innerHTML=phH;
+  }
+}
+
+function foSelectPreset(i){
+  FO_SELECTED=i;
+  document.querySelectorAll('.fo-preset').forEach(function(e,j){
+    e.classList.toggle('sel',j===i);
+    e.querySelector('.fo-preset-title').style.color=j===i?'var(--tiger)':'var(--white)';
+  });
+}
+
+function runFettyOrch(){
+  if(FO_RUNNING) return;
+  FO_RUNNING=true;
+  addFetty('FettyFM Orchestration started : preset '+FO_PRESETS[FO_SELECTED].title,'fl');
+  var statusEl=el('fo-stack-status');
+  var layerIdx=0;
+  function activateNext(){
+    if(layerIdx>=FO_LAYERS.length){
+      FO_RUNNING=false;
+      if(statusEl) statusEl.textContent='7 / 7 layers active : complete';
+      addFetty('Execution stack complete : OUTPUT layer armed','fe');
+      FO_PHASES.forEach(function(p,i){
+        setTimeout(function(){
+          var dot=document.getElementById('fp-'+p.lbl.replace(/ /g,'-').toLowerCase());
+          if(dot) dot.style.background='var(--'+p.col+')';
+          addFetty('Phase: '+p.lbl+' triggered','fw2');
+        }, i*600);
+      });
+      setTimeout(function(){
+        var obj=el('fetty-obj');
+        var objText=obj?obj.value:'';
+        askNexus('fetty',objText||FO_PRESETS[FO_SELECTED].title);
+      }, 800);
+      return;
+    }
+    var lEl=el('fo-l-'+layerIdx);
+    if(lEl){
+      lEl.className='fo-layer active';
+      var badge=lEl.querySelector('.fo-layer-badge');
+      if(badge){badge.style.cssText='background:var(--green3);color:var(--green);border-color:var(--green2)';badge.textContent='ACTIVE';}
+    }
+    if(statusEl) statusEl.textContent=(layerIdx+1)+' / 7 layers active : running';
+    addFetty('Layer '+FO_LAYERS[layerIdx].num+' '+FO_LAYERS[layerIdx].name+' activated','fl');
+    layerIdx++;
+    setTimeout(activateNext, 400);
+  }
+  activateNext();
+}
+
+// ── FETTY FM SIMULATION LAB ────────────────────────────
+var SL_STATS=[
+  {val:'72%',lbl:'COLLAPSE PROB DK',col:'wolf'},
+  {val:'24',lbl:'ACTIVE BRIDGES',col:'suits'},
+  {val:'9.2',lbl:'QUEEN SCORE DK',col:'tiger'},
+  {val:'3',lbl:'SIMULATIONS RUN',col:'green'},
+  {val:'4',lbl:'RULES ARMED',col:'policy'}
+];
+var SL_MODULES=[
+  {icon:'&#127919;',lbl:'CONVERGENCE COLLAPSE',desc:'Multi-domain failure cascade detection',col:'wolf'},
+  {icon:'&#9820;',lbl:'CHESS MATE',desc:'Piece elimination path modeling',col:'gov'},
+  {icon:'&#128138;',lbl:'BIO-ANALOG',desc:'Mutation + immune response modeling',col:'green'}
+];
+var SL_SYS=[
+  {lbl:'NEXUS Agent',status:'ACTIVE',col:'green'},
+  {lbl:'Chess Engine',status:'ARMED',col:'green'},
+  {lbl:'MouseTrap Rules 4',status:'ARMED',col:'green'},
+  {lbl:'Bridge Detector 24',status:'ACTIVE',col:'green'},
+  {lbl:'Bio-Tech Analog',status:'STANDBY',col:'tiger'}
+];
+var SL_INIT=false;
+
+function renderSimLab(){
+  if(SL_INIT) return;
+  SL_INIT=true;
+  var statsEl=el('sl-stats');
+  if(statsEl){
+    var sh='';
+    SL_STATS.forEach(function(s){
+      sh+='<div class="card" style="text-align:center;padding:10px 6px">'
+        +'<div style="font-family:var(--fhead);font-size:22px;font-weight:900;color:var(--'+s.col+')">'+s.val+'</div>'
+        +'<div style="font-family:var(--fmono);font-size:7px;color:var(--dim);margin-top:3px;line-height:1.3">'+s.lbl+'</div>'
+        +'</div>';
+    });
+    statsEl.innerHTML=sh;
+  }
+  var modEl=el('sl-modules');
+  if(modEl){
+    var mh='';
+    SL_MODULES.forEach(function(m){
+      mh+='<div class="card" style="cursor:pointer;text-align:center;padding:10px 8px">'
+        +'<div style="font-size:22px;margin-bottom:6px">'+m.icon+'</div>'
+        +'<div style="font-family:var(--fhead);font-size:9px;font-weight:700;color:var(--'+m.col+');margin-bottom:4px">'+m.lbl+'</div>'
+        +'<div style="font-size:7.5px;color:var(--dim)">'+m.desc+'</div>'
+        +'</div>';
+    });
+    modEl.innerHTML=mh;
+  }
+  var statEl=el('sl-status');
+  if(statEl){
+    var stH='';
+    SL_SYS.forEach(function(s){
+      stH+='<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">'
+        +'<div style="width:7px;height:7px;border-radius:50%;background:var(--'+s.col+');flex-shrink:0"></div>'
+        +'<span style="font-size:8.5px;flex:1">'+s.lbl+'</span>'
+        +'<span style="font-family:var(--fmono);font-size:8px;color:var(--'+s.col+');font-weight:600">'+s.status+'</span>'
+        +'</div>';
+    });
+    statEl.innerHTML=stH;
+  }
+}
+
+function setSimLabTab(t){
+  document.querySelectorAll('.sl-view').forEach(function(v){v.style.display='none';v.classList.remove('on');});
+  document.querySelectorAll('[id^="sl-t-"]').forEach(function(tab){tab.classList.remove('on');});
+  var vEl=el('sl-v-'+t), tEl=el('sl-t-'+t);
+  if(vEl){vEl.style.display='block';vEl.classList.add('on');}
+  if(tEl) tEl.classList.add('on');
+}
+
+// ── SETTINGS PANEL ─────────────────────────────────────
+var NEXUS_API_KEY='';
+function toggleSettings(){
+  var sp=el('nexus-settings');
+  if(sp) sp.classList.toggle('on');
+}
+function saveAPIKey(){
+  var inp=el('api-key-input');
+  if(inp&&inp.value.trim()){
+    NEXUS_API_KEY=inp.value.trim();
+    addFetty('API key configured : Claude integration armed','fe');
+    toggleSettings();
+  }
+}
+
+// ── CLAUDE API INTEGRATION ──────────────────────────────
+function askNexus(context, detail){
+  if(!NEXUS_API_KEY){
+    addFetty('NEXUS API: No API key set - click Settings gear to configure','fw2');
+    return;
+  }
+  var systemPrompt='You are NEXUS, the ADR intelligence platform for the Klein-Team DraftKings case. '
+    +'Provide concise, high-impact analysis. Reference evidence codes (EV-xxx), Silver Bullets (SB-xx), '
+    +'arbitration grounds (AG-x), and regulatory codes (MGCB, CFTC, ASC). '
+    +'Format: direct, intelligence-grade, action-oriented.';
+  var userMsg='';
+  if(context==='gr'){
+    userMsg='Analyze GR node '+detail+': provide Wolf routing strategy, Tiger leverage points, and top 3 arbitration actions.';
+  } else if(context==='fetty'){
+    userMsg='FettyFM scenario: '+detail+'. Collapse risk assessment + domain bridge recommendations + Chess Engine moat analysis.';
+  } else {
+    userMsg=detail||'NEXUS status: top priority action items and highest-leverage arbitration moves.';
+  }
+  addFetty('NEXUS AGENT: Claude API call initiated...','fl');
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':NEXUS_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-ipc':'true'},
+    body:JSON.stringify({model:'claude-opus-4-6',max_tokens:600,system:systemPrompt,messages:[{role:'user',content:userMsg}]})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.content&&data.content[0]){
+      addFetty('--- NEXUS AGENT RESPONSE ---','fe');
+      data.content[0].text.split('
+').forEach(function(line){if(line.trim()) addFetty(line,'fd');});
+      addFetty('--- END RESPONSE ---','fe');
+    } else if(data.error){
+      addFetty('API Error: '+data.error.message,'fw2');
+    }
+  }).catch(function(err){addFetty('NEXUS API error: '+err.message,'fw2');});
+}
+
+function ingestLLMData(textInput, domain){
+  if(!textInput||!textInput.trim()){addFetty('Ingest: No data provided','fw2');return;}
+  var wordCount=textInput.split(/\s+/).length;
+  if(PROJ.flywheel&&PROJ.flywheel.domain_skillset&&PROJ.flywheel.domain_skillset.mastery_scores){
+    var ms=PROJ.flywheel.domain_skillset.mastery_scores;
+    var dom=domain||'accounting';
+    if(ms[dom]) ms[dom]=Math.min(1,(ms[dom]||0)+Math.min(0.02,wordCount/50000));
+  }
+  addFetty('Ingest complete: '+wordCount+' tokens domain:'+domain+' flywheel updated','fe');
+  addFetty('EV-292 auto-generated GR node routing queued','fd');
+  if(NEXUS_API_KEY){
+    askNexus('ingest','Analyze DraftKings data excerpt, identify top arbitration leverage points and GR node evidence anchors: '+textInput.substring(0,600));
+  }
+}
+
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+
+<!-- SETTINGS PANEL -->
+<div id="nexus-settings">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-family:var(--fhead);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--cyan)">NEXUS SETTINGS</div>
+    <button class="btn bc" onclick="toggleSettings()" style="padding:3px 8px">X</button>
+  </div>
+  <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);margin-bottom:6px;letter-spacing:1px">CLAUDE API KEY</div>
+  <input id="api-key-input" type="password" class="api-input" placeholder="sk-ant-api03-...">
+  <div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:4px;line-height:1.5">Enter your Anthropic API key to enable NEXUS Agent intelligence. Key stored in session only.</div>
+  <button class="btn bc" onclick="saveAPIKey()" style="margin-top:8px;width:100%">SAVE + ARM NEXUS</button>
+  <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+    <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">DATA INGEST</div>
+    <textarea id="ingest-raw" style="background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8px;padding:6px 8px;border-radius:var(--r);width:100%;height:80px;outline:none;resize:vertical" placeholder="Paste DraftKings project data, evidence text, or LLM dataset here..."></textarea>
+    <select id="ingest-domain-sel" style="background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8px;padding:4px 6px;border-radius:var(--r);width:100%;margin-top:4px;outline:none">
+      <option value="accounting">Forensic Accounting</option>
+      <option value="governance">Governance/ICFR</option>
+      <option value="regulatory">Regulatory/CFTC</option>
+      <option value="platform">Privacy/Platform</option>
+      <option value="fraud">Corp Fraud/Lit</option>
+      <option value="finance">Finance</option>
+    </select>
+    <button class="btn bg2" onclick="ingestLLMData(el('ingest-raw').value,el('ingest-domain-sel').value);el('ingest-raw').value=''" style="margin-top:6px;width:100%">INGEST + TRAIN</button>
+  </div>
+  <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+    <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">MODEL SETTINGS</div>
+    <div style="font-size:8.5px;color:var(--dim)">Active Model: <span style="color:var(--cyan);font-family:var(--fmono)">claude-opus-4-6</span></div>
+    <div style="font-size:8.5px;color:var(--dim);margin-top:4px">Platform: <span style="color:var(--green);font-family:var(--fmono)">NEXUS Synthesis OS v8</span></div>
+    <div style="font-size:8.5px;color:var(--dim);margin-top:4px">Agents: <span style="color:var(--fetty);font-family:var(--fmono)">FettyFM / Wolf / Tiger / Suits</span></div>
+  </div>
+</div>
+</body>
+</html>
