@@ -2407,29 +2407,35 @@ function setSimLabTab(t){
 
 // ── SETTINGS PANEL ─────────────────────────────────────
 var NEXUS_API_KEY='';
+var NEXUS_BACKEND_URL=''; // e.g. http://127.0.0.1:7433 when Python bridge is running
 function toggleSettings(){
   var sp=el('nexus-settings');
   if(sp) sp.classList.toggle('on');
 }
 function saveAPIKey(){
   var inp=el('api-key-input');
+  var binp=el('backend-url-input');
+  if(binp) NEXUS_BACKEND_URL=(binp.value||'').trim().replace(/\/$/,'');
   if(inp&&inp.value.trim()){
     NEXUS_API_KEY=inp.value.trim();
-    addFetty('API key configured : Claude integration armed','fe');
+    var mode=NEXUS_BACKEND_URL?'PYTHON BRIDGE @ '+NEXUS_BACKEND_URL:'DIRECT API';
+    addFetty('API key configured : '+mode+' armed','fe');
+    toggleSettings();
+  } else if(NEXUS_BACKEND_URL){
+    addFetty('Python bridge configured @ '+NEXUS_BACKEND_URL,'fe');
     toggleSettings();
   }
+}
+function syncFromBackend(){
+  if(!NEXUS_BACKEND_URL){addFetty('No backend URL set','fw2');return;}
+  fetch(NEXUS_BACKEND_URL+'/api/state').then(function(r){return r.json();}).then(function(d){
+    if(d.gr_nodes) Object.assign(PROJ.gr=PROJ.gr||{},d.gr_nodes);
+    addFetty('BACKEND SYNC: '+Object.keys(d.gr_nodes||{}).length+' GR nodes, flywheel updated','fe');
+  }).catch(function(e){addFetty('Backend sync error: '+e.message,'fw2');});
 }
 
 // ── CLAUDE API INTEGRATION ──────────────────────────────
 function askNexus(context, detail){
-  if(!NEXUS_API_KEY){
-    addFetty('NEXUS API: No API key set - click Settings gear to configure','fw2');
-    return;
-  }
-  var systemPrompt='You are NEXUS, the ADR intelligence platform for the Klein-Team DraftKings case. '
-    +'Provide concise, high-impact analysis. Reference evidence codes (EV-xxx), Silver Bullets (SB-xx), '
-    +'arbitration grounds (AG-x), and regulatory codes (MGCB, CFTC, ASC). '
-    +'Format: direct, intelligence-grade, action-oriented.';
   var userMsg='';
   if(context==='gr'){
     userMsg='Analyze GR node '+detail+': provide Wolf routing strategy, Tiger leverage points, and top 3 arbitration actions.';
@@ -2438,23 +2444,60 @@ function askNexus(context, detail){
   } else {
     userMsg=detail||'NEXUS status: top priority action items and highest-leverage arbitration moves.';
   }
-  addFetty('NEXUS AGENT: Claude API call initiated...','fl');
+  addFetty('NEXUS AGENT: initiating intelligence request...','fl');
+  if(NEXUS_BACKEND_URL){
+    _askNexusBackend(userMsg,context);
+  } else {
+    _askNexusDirect(userMsg);
+  }
+}
+
+function _askNexusBackend(userMsg,context){
+  var persona=context==='suits'?'suits':context==='wolf'?'wolf':context==='tiger'?'tiger':'nexus_master';
+  addFetty('PYTHON BRIDGE: streaming from nexus_ai.py...','fl');
+  fetch(NEXUS_BACKEND_URL+'/api/ask',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:userMsg,persona:persona,use_tools:false})
+  }).then(function(r){
+    var reader=r.body.getReader();
+    var dec=new TextDecoder();
+    var buf='';
+    addFetty('--- NEXUS AGENT RESPONSE ---','fe');
+    function pump(){
+      return reader.read().then(function(chunk){
+        if(chunk.done){if(buf.trim())addFetty(buf,'fd');addFetty('--- END RESPONSE ---','fe');return;}
+        dec.decode(chunk.value,{stream:true}).split('\n').forEach(function(line){
+          if(!line.startsWith('data: '))return;
+          var raw=line.slice(6);
+          if(raw==='[DONE]')return;
+          try{var d=JSON.parse(raw);if(d.text)buf+=d.text;if(d.error)addFetty('Bridge:'+d.error,'fw2');}catch(e){}
+        });
+        return pump();
+      });
+    }
+    return pump();
+  }).catch(function(e){addFetty('Backend error: '+e.message+' — run: python nexus_ai.py serve','fw2');});
+}
+
+function _askNexusDirect(userMsg){
+  if(!NEXUS_API_KEY){addFetty('NEXUS API: No API key set - click Settings gear','fw2');return;}
+  var sys='You are NEXUS, the ADR intelligence platform for the Klein-Team DraftKings case. '
+    +'Provide concise, high-impact analysis. Reference evidence codes (EV-xxx), Silver Bullets (SB-xx), '
+    +'arbitration grounds (AG-x), and regulatory codes (MGCB, CFTC, ASC). '
+    +'Format: direct, intelligence-grade, action-oriented.';
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':NEXUS_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-ipc':'true'},
-    body:JSON.stringify({model:'claude-opus-4-6',max_tokens:600,system:systemPrompt,messages:[{role:'user',content:userMsg}]})
+    body:JSON.stringify({model:'claude-opus-4-6',max_tokens:600,system:sys,messages:[{role:'user',content:userMsg}]})
   }).then(function(r){return r.json();}).then(function(data){
     if(data.content&&data.content[0]){
       addFetty('--- NEXUS AGENT RESPONSE ---','fe');
-      data.content[0].text.split('
-').forEach(function(line){if(line.trim()) addFetty(line,'fd');});
+      data.content[0].text.split('\n').forEach(function(line){if(line.trim())addFetty(line,'fd');});
       addFetty('--- END RESPONSE ---','fe');
-    } else if(data.error){
-      addFetty('API Error: '+data.error.message,'fw2');
-    }
+    } else if(data.error){addFetty('API Error: '+data.error.message,'fw2');}
   }).catch(function(err){addFetty('NEXUS API error: '+err.message,'fw2');});
 }
-
 function ingestLLMData(textInput, domain){
   if(!textInput||!textInput.trim()){addFetty('Ingest: No data provided','fw2');return;}
   var wordCount=textInput.split(/\s+/).length;
@@ -2481,8 +2524,14 @@ document.addEventListener('DOMContentLoaded',boot);
   </div>
   <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);margin-bottom:6px;letter-spacing:1px">CLAUDE API KEY</div>
   <input id="api-key-input" type="password" class="api-input" placeholder="sk-ant-api03-...">
-  <div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:4px;line-height:1.5">Enter your Anthropic API key to enable NEXUS Agent intelligence. Key stored in session only.</div>
-  <button class="btn bc" onclick="saveAPIKey()" style="margin-top:8px;width:100%">SAVE + ARM NEXUS</button>
+  <div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:4px;line-height:1.5">Enter your Anthropic API key to enable direct Claude API calls. Key stored in session only.</div>
+  <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:1px;margin-top:12px;margin-bottom:4px">PYTHON BRIDGE URL <span style="color:var(--green)">(optional)</span></div>
+  <input id="backend-url-input" type="text" class="api-input" placeholder="http://127.0.0.1:7433" style="font-size:9px">
+  <div style="font-size:8px;color:var(--dim);font-family:var(--fmono);margin-top:4px;line-height:1.5">Run <span style="color:var(--cyan)">python nexus_ai.py serve</span> to enable GR tool use, data ingestion, and persistent state.</div>
+  <div style="display:flex;gap:6px;margin-top:8px">
+    <button class="btn bc" onclick="saveAPIKey()" style="flex:1">SAVE + ARM NEXUS</button>
+    <button class="btn bg2" onclick="syncFromBackend()" style="flex:1" title="Pull GR nodes from Python bridge">SYNC STATE</button>
+  </div>
   <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
     <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">DATA INGEST</div>
     <textarea id="ingest-raw" style="background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8px;padding:6px 8px;border-radius:var(--r);width:100%;height:80px;outline:none;resize:vertical" placeholder="Paste DraftKings project data, evidence text, or LLM dataset here..."></textarea>
