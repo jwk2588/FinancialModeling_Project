@@ -1,0 +1,562 @@
+{
+  "EVD-0001": {
+    "anchor_id": "EVD-0001",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §I.1: Section I — Contract Formation and Hidden Economic Structure",
+    "source": "MB_v54/§I.1",
+    "domain": "litigation_risk",
+    "gr_node": "MB-I1",
+    "legal_standards": "UCC §2-204; MCL §566.132",
+    "theory": "Non-exchangeability; Hidden exchange channels; Failure of mutual assent"
+  },
+  "EVD-0002": {
+    "anchor_id": "EVD-0002",
+    "ev_code": "EV-T1-05",
+    "text": "EV-T1-05 referenced in §I.1: Section I — Contract Formation and Hidden Economic Structure",
+    "source": "MB_v54/§I.1",
+    "domain": "litigation_risk",
+    "gr_node": "MB-I1",
+    "legal_standards": "UCC §2-204; MCL §566.132",
+    "theory": "Non-exchangeability; Hidden exchange channels; Failure of mutual assent"
+  },
+  "EVD-0003": {
+    "anchor_id": "EVD-0003",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in §I.1A: Section I-A — Non-Exchangeability, Hidden Exchange Channels, Failure of Mutual A",
+    "source": "MB_v54/§I.1A",
+    "domain": "litigation_risk",
+    "gr_node": "MB-I1A",
+    "legal_standards": "MCL §566.132; UCC §2-207",
+    "theory": "Crown/DK$ hidden exchange; IOC off-book credits; no monetary value clause"
+  },
+  "EVD-0004": {
+    "anchor_id": "EVD-0004",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §I.1A: Section I-A — Non-Exchangeability, Hidden Exchange Channels, Failure of Mutual A",
+    "source": "MB_v54/§I.1A",
+    "domain": "litigation_risk",
+    "gr_node": "MB-I1A",
+    "legal_standards": "MCL §566.132; UCC §2-207",
+    "theory": "Crown/DK$ hidden exchange; IOC off-book credits; no monetary value clause"
+  },
+  "EVD-0005": {
+    "anchor_id": "EVD-0005",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in §II.1: Section II Insert — Tier Credits as Underlying; Diamond and Onyx as Contingent S",
+    "source": "MB_v54/§II.1",
+    "domain": "platform_economics",
+    "gr_node": "MB-II1",
+    "legal_standards": "CEA §1a(10); CEA §4c(b); Dufoe v. DraftKings",
+    "theory": "TC binary option structure; Crowey Test; CEA §4c(b)"
+  },
+  "EVD-0006": {
+    "anchor_id": "EVD-0006",
+    "ev_code": "EV-055",
+    "text": "EV-055 referenced in §II.1: Section II Insert — Tier Credits as Underlying; Diamond and Onyx as Contingent S",
+    "source": "MB_v54/§II.1",
+    "domain": "platform_economics",
+    "gr_node": "MB-II1",
+    "legal_standards": "CEA §1a(10); CEA §4c(b); Dufoe v. DraftKings",
+    "theory": "TC binary option structure; Crowey Test; CEA §4c(b)"
+  },
+  "EVD-0007": {
+    "anchor_id": "EVD-0007",
+    "ev_code": "EV-091",
+    "text": "EV-091 referenced in §II.1: Section II Insert — Tier Credits as Underlying; Diamond and Onyx as Contingent S",
+    "source": "MB_v54/§II.1",
+    "domain": "platform_economics",
+    "gr_node": "MB-II1",
+    "legal_standards": "CEA §1a(10); CEA §4c(b); Dufoe v. DraftKings",
+    "theory": "TC binary option structure; Crowey Test; CEA §4c(b)"
+  },
+  "EVD-0008": {
+    "anchor_id": "EVD-0008",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §V-A: Section V-A — Michigan Gaming Control Board Material Change Violations",
+    "source": "MB_v54/§V-A",
+    "domain": "governance",
+    "gr_node": "MB-VA",
+    "legal_standards": "R 432.206(2); R 432.632a(9); R 432.663(1)",
+    "theory": "8 unapproved material changes; R 432.206(2); R 432.632a(9); two-prong framework"
+  },
+  "EVD-0009": {
+    "anchor_id": "EVD-0009",
+    "ev_code": "EV-017",
+    "text": "EV-017 referenced in §V-A: Section V-A — Michigan Gaming Control Board Material Change Violations",
+    "source": "MB_v54/§V-A",
+    "domain": "governance",
+    "gr_node": "MB-VA",
+    "legal_standards": "R 432.206(2); R 432.632a(9); R 432.663(1)",
+    "theory": "8 unapproved material changes; R 432.206(2); R 432.632a(9); two-prong framework"
+  },
+  "EVD-0010": {
+    "anchor_id": "EVD-0010",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in §V-A: Section V-A — Michigan Gaming Control Board Material Change Violations",
+    "source": "MB_v54/§V-A",
+    "domain": "governance",
+    "gr_node": "MB-VA",
+    "legal_standards": "R 432.206(2); R 432.632a(9); R 432.663(1)",
+    "theory": "8 unapproved material changes; R 432.206(2); R 432.632a(9); two-prong framework"
+  },
+  "EVD-0011": {
+    "anchor_id": "EVD-0011",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in §V-B: Section V-B — Authenticated Five-Step Evidence Chain",
+    "source": "MB_v54/§V-B",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VB",
+    "legal_standards": "FRE 901; FRE 803(6)",
+    "theory": "Admissibility chain; screenshot authentication; chain of custody"
+  },
+  "EVD-0012": {
+    "anchor_id": "EVD-0012",
+    "ev_code": "EV-017",
+    "text": "EV-017 referenced in §V-B: Section V-B — Authenticated Five-Step Evidence Chain",
+    "source": "MB_v54/§V-B",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VB",
+    "legal_standards": "FRE 901; FRE 803(6)",
+    "theory": "Admissibility chain; screenshot authentication; chain of custody"
+  },
+  "EVD-0013": {
+    "anchor_id": "EVD-0013",
+    "ev_code": "EV-083",
+    "text": "EV-083 referenced in §V-B: Section V-B — Authenticated Five-Step Evidence Chain",
+    "source": "MB_v54/§V-B",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VB",
+    "legal_standards": "FRE 901; FRE 803(6)",
+    "theory": "Admissibility chain; screenshot authentication; chain of custody"
+  },
+  "EVD-0014": {
+    "anchor_id": "EVD-0014",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §V-C: Section V-C — Anti-Exemption / Not Specifically Authorized Michigan Framing",
+    "source": "MB_v54/§V-C",
+    "domain": "privacy_tos",
+    "gr_node": "MB-VC",
+    "legal_standards": "Smith v. Globe Life, 460 Mich. 446 (1999); MCL §445.903",
+    "theory": "Smith v. Globe Life defeat; MCPA §445.903 applicability despite licensed status"
+  },
+  "EVD-0015": {
+    "anchor_id": "EVD-0015",
+    "ev_code": "EV-017",
+    "text": "EV-017 referenced in §V-C: Section V-C — Anti-Exemption / Not Specifically Authorized Michigan Framing",
+    "source": "MB_v54/§V-C",
+    "domain": "privacy_tos",
+    "gr_node": "MB-VC",
+    "legal_standards": "Smith v. Globe Life, 460 Mich. 446 (1999); MCL §445.903",
+    "theory": "Smith v. Globe Life defeat; MCPA §445.903 applicability despite licensed status"
+  },
+  "EVD-0016": {
+    "anchor_id": "EVD-0016",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §V-D: Section V-D — AutoZone / Arbitration Collapse and Forum Destabilization",
+    "source": "MB_v54/§V-D",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VD",
+    "legal_standards": "AutoZone v. Munroe; Klapp v. United Ins. Group; Pakideh v. Franklin",
+    "theory": "7 arbitration kill grounds; AutoZone illusory consideration precedent; forum collapse"
+  },
+  "EVD-0017": {
+    "anchor_id": "EVD-0017",
+    "ev_code": "EV-017",
+    "text": "EV-017 referenced in §V-D: Section V-D — AutoZone / Arbitration Collapse and Forum Destabilization",
+    "source": "MB_v54/§V-D",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VD",
+    "legal_standards": "AutoZone v. Munroe; Klapp v. United Ins. Group; Pakideh v. Franklin",
+    "theory": "7 arbitration kill grounds; AutoZone illusory consideration precedent; forum collapse"
+  },
+  "EVD-0018": {
+    "anchor_id": "EVD-0018",
+    "ev_code": "EV-094",
+    "text": "EV-094 referenced in §V-D: Section V-D — AutoZone / Arbitration Collapse and Forum Destabilization",
+    "source": "MB_v54/§V-D",
+    "domain": "litigation_risk",
+    "gr_node": "MB-VD",
+    "legal_standards": "AutoZone v. Munroe; Klapp v. United Ins. Group; Pakideh v. Franklin",
+    "theory": "7 arbitration kill grounds; AutoZone illusory consideration precedent; forum collapse"
+  },
+  "EVD-0019": {
+    "anchor_id": "EVD-0019",
+    "ev_code": "EV-017",
+    "text": "EV-017 referenced in §V-E: Section V-E — 483% Tier Credit Inflation as Quantitative Proof",
+    "source": "MB_v54/§V-E",
+    "domain": "governance",
+    "gr_node": "MB-VE",
+    "legal_standards": "MCL §566.132; AutoZone v. Munroe",
+    "theory": "TC threshold inflation from 75k to 437.5k; mathematical illusory consideration"
+  },
+  "EVD-0020": {
+    "anchor_id": "EVD-0020",
+    "ev_code": "EV-T1-04",
+    "text": "EV-T1-04 referenced in §V-E: Section V-E — 483% Tier Credit Inflation as Quantitative Proof",
+    "source": "MB_v54/§V-E",
+    "domain": "governance",
+    "gr_node": "MB-VE",
+    "legal_standards": "MCL §566.132; AutoZone v. Munroe",
+    "theory": "TC threshold inflation from 75k to 437.5k; mathematical illusory consideration"
+  },
+  "EVD-0021": {
+    "anchor_id": "EVD-0021",
+    "ev_code": "EV-BM-01",
+    "text": "EV-BM-01 referenced in §V-F: Section V-F — Bay Mills Delegated Licensure and Inverted Principal-Agent Doctrin",
+    "source": "MB_v54/§V-F",
+    "domain": "governance",
+    "gr_node": "MB-VF",
+    "legal_standards": "R 432.639; Michigan iGaming regs",
+    "theory": "Bay Mills/Crown MI Gaming; R 432.639 joint compliance; bilateral license leverage"
+  },
+  "EVD-0022": {
+    "anchor_id": "EVD-0022",
+    "ev_code": "EV-BM-02",
+    "text": "EV-BM-02 referenced in §V-F: Section V-F — Bay Mills Delegated Licensure and Inverted Principal-Agent Doctrin",
+    "source": "MB_v54/§V-F",
+    "domain": "governance",
+    "gr_node": "MB-VF",
+    "legal_standards": "R 432.639; Michigan iGaming regs",
+    "theory": "Bay Mills/Crown MI Gaming; R 432.639 joint compliance; bilateral license leverage"
+  },
+  "EVD-0023": {
+    "anchor_id": "EVD-0023",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in §VI-B: Section VI-B — Public RG/ESG Assurances vs. Hidden Testing and Customer Harvesti",
+    "source": "MB_v54/§VI-B",
+    "domain": "governance",
+    "gr_node": "MB-VIB",
+    "legal_standards": "Omnicare v. Laborers, 575 U.S. 175 (2015)",
+    "theory": "ESG disclosure fraud; Omnicare framework; RG false assurances"
+  },
+  "EVD-0024": {
+    "anchor_id": "EVD-0024",
+    "ev_code": "EV-T2-01",
+    "text": "EV-T2-01 referenced in §VI-B: Section VI-B — Public RG/ESG Assurances vs. Hidden Testing and Customer Harvesti",
+    "source": "MB_v54/§VI-B",
+    "domain": "governance",
+    "gr_node": "MB-VIB",
+    "legal_standards": "Omnicare v. Laborers, 575 U.S. 175 (2015)",
+    "theory": "ESG disclosure fraud; Omnicare framework; RG false assurances"
+  },
+  "EVD-0025": {
+    "anchor_id": "EVD-0025",
+    "ev_code": "EV-031",
+    "text": "EV-031 referenced in §VI-C: Section VI-C — Go Play Golf Promotion: Non-Fulfillment and Defective Cure",
+    "source": "MB_v54/§VI-C",
+    "domain": "privacy_tos",
+    "gr_node": "MB-VIC",
+    "legal_standards": "MCL §445.903(n); Magnuson-Moss",
+    "theory": "$150K golf promo; Snappy-gated non-fulfillment; casino credit substitution"
+  },
+  "EVD-0026": {
+    "anchor_id": "EVD-0026",
+    "ev_code": "EV-035",
+    "text": "EV-035 referenced in §VI-C: Section VI-C — Go Play Golf Promotion: Non-Fulfillment and Defective Cure",
+    "source": "MB_v54/§VI-C",
+    "domain": "privacy_tos",
+    "gr_node": "MB-VIC",
+    "legal_standards": "MCL §445.903(n); Magnuson-Moss",
+    "theory": "$150K golf promo; Snappy-gated non-fulfillment; casino credit substitution"
+  },
+  "EVD-0027": {
+    "anchor_id": "EVD-0027",
+    "ev_code": "EV-083",
+    "text": "EV-083 referenced in §VI-C: Section VI-C — Go Play Golf Promotion: Non-Fulfillment and Defective Cure",
+    "source": "MB_v54/§VI-C",
+    "domain": "privacy_tos",
+    "gr_node": "MB-VIC",
+    "legal_standards": "MCL §445.903(n); Magnuson-Moss",
+    "theory": "$150K golf promo; Snappy-gated non-fulfillment; casino credit substitution"
+  },
+  "EVD-0028": {
+    "anchor_id": "EVD-0028",
+    "ev_code": "EV-T2-01",
+    "text": "EV-T2-01 referenced in §VII: Section VII — Responsible Gaming Overlay and Harm Integration",
+    "source": "MB_v54/§VII",
+    "domain": "governance",
+    "gr_node": "MB-VII",
+    "legal_standards": "NCPG standards; ESG commitments",
+    "theory": "RG liability; addiction exploitation; problem gambler targeting"
+  },
+  "EVD-0029": {
+    "anchor_id": "EVD-0029",
+    "ev_code": "EV-T2-02",
+    "text": "EV-T2-02 referenced in §VII: Section VII — Responsible Gaming Overlay and Harm Integration",
+    "source": "MB_v54/§VII",
+    "domain": "governance",
+    "gr_node": "MB-VII",
+    "legal_standards": "NCPG standards; ESG commitments",
+    "theory": "RG liability; addiction exploitation; problem gambler targeting"
+  },
+  "EVD-0030": {
+    "anchor_id": "EVD-0030",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in §XII.V.2: §XII.V.2 — GPS LLC VIE Three-Track Definitive Analysis [PENDING]",
+    "source": "MB_v54/§XII.V.2",
+    "domain": "litigation_risk",
+    "gr_node": "MB-XIIV2",
+    "legal_standards": "ASC 810-10-15-14; ASC 606-10-55-36; PCAOB AS 2501; Reg S-K Item 303; Rule 10b-5(b)",
+    "theory": "Three-track VIE analysis: (1) DK as principal obligor; (2) Absent ARV/BoL/condition = SM-new-01 audit-testability defect; (3) GPS LLC probable VIE und"
+  },
+  "EVD-0031": {
+    "anchor_id": "EVD-0031",
+    "ev_code": "EV-094",
+    "text": "EV-094 referenced in §XII.V.2: §XII.V.2 — GPS LLC VIE Three-Track Definitive Analysis [PENDING]",
+    "source": "MB_v54/§XII.V.2",
+    "domain": "litigation_risk",
+    "gr_node": "MB-XIIV2",
+    "legal_standards": "ASC 810-10-15-14; ASC 606-10-55-36; PCAOB AS 2501; Reg S-K Item 303; Rule 10b-5(b)",
+    "theory": "Three-track VIE analysis: (1) DK as principal obligor; (2) Absent ARV/BoL/condition = SM-new-01 audit-testability defect; (3) GPS LLC probable VIE und"
+  },
+  "EVD-0032": {
+    "anchor_id": "EVD-0032",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in §XII.L-REV: §XII.L — 80.3 Billion Reconciliation Points Revised Calculation [PENDING]",
+    "source": "MB_v54/§XII.L-REV",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-XIILREV",
+    "legal_standards": "PCAOB AS 2501; ASC 830; ASC 606",
+    "theory": "Six new audit complexity dimensions: sportsbook odds-bracket boundary; DFS/Pick6 split; DK Horse 400% TC rate cut (CM-new-01); CAD 0.8x FX scalar (vs "
+  },
+  "EVD-0033": {
+    "anchor_id": "EVD-0033",
+    "ev_code": "EV-119",
+    "text": "EV-119 referenced in §XII.L-REV: §XII.L — 80.3 Billion Reconciliation Points Revised Calculation [PENDING]",
+    "source": "MB_v54/§XII.L-REV",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-XIILREV",
+    "legal_standards": "PCAOB AS 2501; ASC 830; ASC 606",
+    "theory": "Six new audit complexity dimensions: sportsbook odds-bracket boundary; DFS/Pick6 split; DK Horse 400% TC rate cut (CM-new-01); CAD 0.8x FX scalar (vs "
+  },
+  "EVD-0034": {
+    "anchor_id": "EVD-0034",
+    "ev_code": "EV-120",
+    "text": "EV-120 referenced in §XII.L-REV: §XII.L — 80.3 Billion Reconciliation Points Revised Calculation [PENDING]",
+    "source": "MB_v54/§XII.L-REV",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-XIILREV",
+    "legal_standards": "PCAOB AS 2501; ASC 830; ASC 606",
+    "theory": "Six new audit complexity dimensions: sportsbook odds-bracket boundary; DFS/Pick6 split; DK Horse 400% TC rate cut (CM-new-01); CAD 0.8x FX scalar (vs "
+  },
+  "EVD-0035": {
+    "anchor_id": "EVD-0035",
+    "ev_code": "EV-119",
+    "text": "EV-119 referenced in §V-A-NEW: §V-A Update — CM-new-01 through CM-new-04: 1/3/2025 Dynasty Rules MGCB Material ",
+    "source": "MB_v54/§V-A-NEW",
+    "domain": "governance",
+    "gr_node": "MB-VANEW",
+    "legal_standards": "R 432.206(2); R 432.632a(9); ASC 606; ASC 450-20-25",
+    "theory": "CM-new-01: DK Horse TC rate 1/$4 to 1/$20 (400% cut, silent). CM-new-02: Loyalty-year boundary shifted to Jan 3. CM-new-03: Override-tier exclusion co"
+  },
+  "EVD-0036": {
+    "anchor_id": "EVD-0036",
+    "ev_code": "EV-120",
+    "text": "EV-120 referenced in §V-A-NEW: §V-A Update — CM-new-01 through CM-new-04: 1/3/2025 Dynasty Rules MGCB Material ",
+    "source": "MB_v54/§V-A-NEW",
+    "domain": "governance",
+    "gr_node": "MB-VANEW",
+    "legal_standards": "R 432.206(2); R 432.632a(9); ASC 606; ASC 450-20-25",
+    "theory": "CM-new-01: DK Horse TC rate 1/$4 to 1/$20 (400% cut, silent). CM-new-02: Loyalty-year boundary shifted to Jan 3. CM-new-03: Override-tier exclusion co"
+  },
+  "EVD-0037": {
+    "anchor_id": "EVD-0037",
+    "ev_code": "EV-BM-01",
+    "text": "EV-BM-01 referenced in §V-F-BAY: §V-F — Bay Mills Inverted Principal-Agent Doctrine [CURRENTLY IN BRIEF, NEEDS EX",
+    "source": "MB_v54/§V-F-BAY",
+    "domain": "governance",
+    "gr_node": "MB-VFBAY",
+    "legal_standards": "R 432.639; Michigan iGaming regs; MCL §432.201",
+    "theory": "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation. Five failure siloes: Customer Support disconnection; VIP host IOC "
+  },
+  "EVD-0038": {
+    "anchor_id": "EVD-0038",
+    "ev_code": "EV-BM-02",
+    "text": "EV-BM-02 referenced in §V-F-BAY: §V-F — Bay Mills Inverted Principal-Agent Doctrine [CURRENTLY IN BRIEF, NEEDS EX",
+    "source": "MB_v54/§V-F-BAY",
+    "domain": "governance",
+    "gr_node": "MB-VFBAY",
+    "legal_standards": "R 432.639; Michigan iGaming regs; MCL §432.201",
+    "theory": "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation. Five failure siloes: Customer Support disconnection; VIP host IOC "
+  },
+  "EVD-0039": {
+    "anchor_id": "EVD-0039",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in §XII.V-PLST: §XII.V — Playstudios Governance Comparator (NEW BUNKER) [PENDING]",
+    "source": "MB_v54/§XII.V-PLST",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-XIIVPLST",
+    "legal_standards": "ASC 606; ASC 830; ASC 820; ASC 280; PCAOB AS 2501",
+    "theory": "Six ASC-mapped arguments each with BDO withdrawal trigger. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist."
+  },
+  "EVD-0040": {
+    "anchor_id": "EVD-0040",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in §XII.V-PLST: §XII.V — Playstudios Governance Comparator (NEW BUNKER) [PENDING]",
+    "source": "MB_v54/§XII.V-PLST",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-XIIVPLST",
+    "legal_standards": "ASC 606; ASC 830; ASC 820; ASC 280; PCAOB AS 2501",
+    "theory": "Six ASC-mapped arguments each with BDO withdrawal trigger. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist."
+  },
+  "EVD-0041": {
+    "anchor_id": "EVD-0041",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in §XII.W-APPL: §XII.W — AppLovin Controlled Company Governance Comparator (NEW BUNKER) [PENDING",
+    "source": "MB_v54/§XII.W-APPL",
+    "domain": "governance",
+    "gr_node": "MB-XIIWAPPL",
+    "legal_standards": "Nasdaq §5605; Caremark; Revlon; Delaware DGCL §144",
+    "theory": "AppLovin governance disclosure paradox vs DK 85% Robins Class B control without formal Controlled Company declaration."
+  },
+  "EVD-0042": {
+    "anchor_id": "EVD-0042",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in §XII.W-FX: §XII.W — ASC 830 Foreign Currency Crown CAD Rate Non-Disclosure [PENDING]",
+    "source": "MB_v54/§XII.W-FX",
+    "domain": "governance",
+    "gr_node": "MB-XIIWFX",
+    "legal_standards": "ASC 830; ASC 815; GAAP",
+    "theory": "Crown CAD rate = 1/$0.008 CAD implies 0.80 USD:CAD. Actual rate 0.72-0.74. 8-11% undercompensation of Canadian users."
+  },
+  "EVD-0043": {
+    "anchor_id": "EVD-0043",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in §XII.T-EGC: §XII.T Update — EGC Expiration: New SOX 404(b) BDO Withdrawal Trigger [PENDING]",
+    "source": "MB_v54/§XII.T-EGC",
+    "domain": "governance",
+    "gr_node": "MB-XIITEGC",
+    "legal_standards": "SOX §404(b); PCAOB AS 2201",
+    "theory": "Post-EGC expiration: BDO issued unqualified attestation Dec 31 2023. All five ICFR failure categories present and uncorrected when BDO attested."
+  },
+  "EVD-0044": {
+    "anchor_id": "EVD-0044",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in §XII.T-EGC: §XII.T Update — EGC Expiration: New SOX 404(b) BDO Withdrawal Trigger [PENDING]",
+    "source": "MB_v54/§XII.T-EGC",
+    "domain": "governance",
+    "gr_node": "MB-XIITEGC",
+    "legal_standards": "SOX §404(b); PCAOB AS 2201",
+    "theory": "Post-EGC expiration: BDO issued unqualified attestation Dec 31 2023. All five ICFR failure categories present and uncorrected when BDO attested."
+  },
+  "EVD-0045": {
+    "anchor_id": "EVD-0045",
+    "ev_code": "EV-004",
+    "text": "EV-004 referenced in F01-01: F01-01 — BDO USA Professional Standards Violation Brief",
+    "source": "MB_v54/F01-01",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-F0101",
+    "legal_standards": "PCAOB AS 2501; AS 2201; AS 2401",
+    "theory": "Audit impossibility; professional standards; PCAOB AS 2501; AS 2201"
+  },
+  "EVD-0046": {
+    "anchor_id": "EVD-0046",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in F01-01: F01-01 — BDO USA Professional Standards Violation Brief",
+    "source": "MB_v54/F01-01",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-F0101",
+    "legal_standards": "PCAOB AS 2501; AS 2201; AS 2401",
+    "theory": "Audit impossibility; professional standards; PCAOB AS 2501; AS 2201"
+  },
+  "EVD-0047": {
+    "anchor_id": "EVD-0047",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in F01-01: F01-01 — BDO USA Professional Standards Violation Brief",
+    "source": "MB_v54/F01-01",
+    "domain": "revenue_recognition",
+    "gr_node": "MB-F0101",
+    "legal_standards": "PCAOB AS 2501; AS 2201; AS 2401",
+    "theory": "Audit impossibility; professional standards; PCAOB AS 2501; AS 2201"
+  },
+  "EVD-0048": {
+    "anchor_id": "EVD-0048",
+    "ev_code": "EV-T1-07",
+    "text": "EV-T1-07 referenced in F02-01: F02-01 — Apple Legal Department Brief: Mandatory App Removal",
+    "source": "MB_v54/F02-01",
+    "domain": "privacy_tos",
+    "gr_node": "MB-F0201",
+    "legal_standards": "App Store §3.1.1; ATT §5.1.1",
+    "theory": "App Store §3.1.1; ATT bypass; brand liability; $0 revenue to Apple"
+  },
+  "EVD-0049": {
+    "anchor_id": "EVD-0049",
+    "ev_code": "EV-T1-09",
+    "text": "EV-T1-09 referenced in F02-01: F02-01 — Apple Legal Department Brief: Mandatory App Removal",
+    "source": "MB_v54/F02-01",
+    "domain": "privacy_tos",
+    "gr_node": "MB-F0201",
+    "legal_standards": "App Store §3.1.1; ATT §5.1.1",
+    "theory": "App Store §3.1.1; ATT bypass; brand liability; $0 revenue to Apple"
+  },
+  "EVD-0050": {
+    "anchor_id": "EVD-0050",
+    "ev_code": "EV-093",
+    "text": "EV-093 referenced in F04-01: F04-01 — SEC Enforcement Division Referral: DraftKings ICFR Fraud",
+    "source": "MB_v54/F04-01",
+    "domain": "governance",
+    "gr_node": "MB-F0401",
+    "legal_standards": "SOX §302; SOX §404; Rule 10b-5",
+    "theory": "SOX 302/404 false certs; ASC 606 restatement; PCAOB CAM asymmetry"
+  },
+  "EVD-0051": {
+    "anchor_id": "EVD-0051",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in F04-01: F04-01 — SEC Enforcement Division Referral: DraftKings ICFR Fraud",
+    "source": "MB_v54/F04-01",
+    "domain": "governance",
+    "gr_node": "MB-F0401",
+    "legal_standards": "SOX §302; SOX §404; Rule 10b-5",
+    "theory": "SOX 302/404 false certs; ASC 606 restatement; PCAOB CAM asymmetry"
+  },
+  "EVD-0052": {
+    "anchor_id": "EVD-0052",
+    "ev_code": "EV-091",
+    "text": "EV-091 referenced in F08-01: F08-01 — CFTC Division of Enforcement: Unregistered Derivatives Exchange",
+    "source": "MB_v54/F08-01",
+    "domain": "platform_economics",
+    "gr_node": "MB-F0801",
+    "legal_standards": "CEA §4c(b); CEA §5; CEA §1a(10)",
+    "theory": "GR-002+003+009 three-part case; GPS LLC unregistered; binary settlement"
+  },
+  "EVD-0053": {
+    "anchor_id": "EVD-0053",
+    "ev_code": "EV-BM-02",
+    "text": "EV-BM-02 referenced in F08-01: F08-01 — CFTC Division of Enforcement: Unregistered Derivatives Exchange",
+    "source": "MB_v54/F08-01",
+    "domain": "platform_economics",
+    "gr_node": "MB-F0801",
+    "legal_standards": "CEA §4c(b); CEA §5; CEA §1a(10)",
+    "theory": "GR-002+003+009 three-part case; GPS LLC unregistered; binary settlement"
+  },
+  "EVD-0054": {
+    "anchor_id": "EVD-0054",
+    "ev_code": "EV-281",
+    "text": "EV-281 referenced in §XII.H: §XII.H — Restatement Magnitude and Financial Exposure",
+    "source": "MB_v54/§XII.H",
+    "domain": "governance",
+    "gr_node": "MB-XIIH",
+    "legal_standards": "ASC 815; ASC 405",
+    "theory": "$1.205B derivative liability; $4.95B void contract exposure; $2.165B Crown balance"
+  },
+  "EVD-0055": {
+    "anchor_id": "EVD-0055",
+    "ev_code": "EV-282",
+    "text": "EV-282 referenced in §XII.H: §XII.H — Restatement Magnitude and Financial Exposure",
+    "source": "MB_v54/§XII.H",
+    "domain": "governance",
+    "gr_node": "MB-XIIH",
+    "legal_standards": "ASC 815; ASC 405",
+    "theory": "$1.205B derivative liability; $4.95B void contract exposure; $2.165B Crown balance"
+  },
+  "EVD-0056": {
+    "anchor_id": "EVD-0056",
+    "ev_code": "EV-271",
+    "text": "EV-271 referenced in DISC-GPS: Discovery — GPS Deposition Kill Questions (14-Point Set) [PENDING]",
+    "source": "MB_v54/DISC-GPS",
+    "domain": "litigation_risk",
+    "gr_node": "MB-DISCGPS",
+    "legal_standards": "FRCP 30(b)(6); PCAOB AS 2501",
+    "theory": "14 deposition questions targeting GPS LLC VIE threshold test: catalog selection authority; condition disclosure decisions; ARV determination methodolo"
+  }
+}

@@ -547,6 +547,11 @@ def main():
     # state
     sub.add_parser("state", help="Print current GR nodes and flywheel state")
 
+    # mb54 — structured MasterBrief v54 ingest (no API key needed)
+    mb = sub.add_parser("mb54", help="Ingest MasterBrief v54 CSV (no API key needed)")
+    mb.add_argument("--csv", default=str(DATA_DIR / "masterbrief_v54.csv"), help="CSV path")
+    mb.add_argument("--report", action="store_true", help="Print state report only")
+
     args = parser.parse_args()
 
     if args.command == "serve":
@@ -554,6 +559,13 @@ def main():
 
     elif args.command == "ingest":
         ingest_dataset(args.file, api_key=args.api_key)
+
+    elif args.command == "mb54":
+        import nexus_ingest_mb54 as mb54
+        if args.report:
+            mb54.print_report()
+        else:
+            mb54.ingest_csv(Path(args.csv))
 
     elif args.command == "ask":
         agent = NexusAgent(api_key=args.api_key)
