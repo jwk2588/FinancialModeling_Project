@@ -6,3 +6,4 @@ matplotlib
 xlwings
 fuzzywuzzy
 python-Levenshtein
+anthropic>=0.89.0

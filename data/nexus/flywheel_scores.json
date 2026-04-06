@@ -1,0 +1,47 @@
+{
+  "revenue_recognition": {
+    "score": 72,
+    "rationale": "ASC 606 Step 3 variable consideration analysis (EV-T1-05, Crown/Snappy). GPS VIE ASC 810-10-15-14 three-prong test complete. BDO withdrawal anchor.",
+    "nodes": [
+      "GR-001",
+      "GR-003",
+      "GR-005",
+      "GR-007"
+    ]
+  },
+  "platform_economics": {
+    "score": 68,
+    "rationale": "550:1 Crown-to-MSRP rate documented. Milestone Program binary settlement structure mapped. 3.6M user class quantified.",
+    "nodes": [
+      "GR-003",
+      "GR-007",
+      "GR-009"
+    ]
+  },
+  "privacy_tos": {
+    "score": 65,
+    "rationale": "'Any Reason or No Reason' clause identified x all material policy sections. 'No Monetary Value Whatsoever' phrase x6 contradiction mapped.",
+    "nodes": [
+      "GR-004",
+      "GR-005",
+      "GR-010"
+    ]
+  },
+  "governance": {
+    "score": 71,
+    "rationale": "SOX 302/404 false certification chain (Alex Franks/LemmyExcel off-book). Internal control bypass on DARC substitution documented.",
+    "nodes": [
+      "GR-006",
+      "GR-008"
+    ]
+  },
+  "litigation_risk": {
+    "score": 78,
+    "rationale": "CFTC WB-TCR + SEC F04-01 + F08-01 three-track deployment ready. GR-002+003+009 = complete CFTC case. Unlicensed period gap mapped.",
+    "nodes": [
+      "GR-002",
+      "GR-003",
+      "GR-009"
+    ]
+  }
+}
