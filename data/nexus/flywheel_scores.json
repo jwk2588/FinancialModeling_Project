@@ -1,7 +1,7 @@
 {
   "revenue_recognition": {
     "score": 82.4,
-    "rationale": "§XII.V.2 — GPS LLC VIE Three-Track Definitive Anal; §XII.L — 80.3 Billion Reconciliation Points Revise; §V-A Update — CM-new-01 through CM-new-04: 1/3/202",
+    "rationale": "§XII.V.2 -- GPS LLC VIE Three-Track Definitive Ana; §XII.L -- 80.3 Billion Reconciliation Points Revis; §V-A Update -- CM-new-01 through CM-new-04: 1/3/20",
     "nodes": [
       "MB-XIIV2",
       "MB-XIILREV",
@@ -14,22 +14,30 @@
       "MB-DISCGPS",
       "MB-CASELAW6"
     ],
-    "section_count": 10,
-    "last_updated": "2026-04-06T02:14:01"
+    "section_count": 38,
+    "last_updated": "2026-04-06T02:18:04"
   },
   "platform_economics": {
     "score": 75.0,
-    "rationale": "Section II Insert — Tier Credits as Underlying; Di; F08-01 — CFTC Division of Enforcement: Unregistere",
+    "rationale": "Section II Insert -- Tier Credits as Underlying; D; F08-01 -- CFTC Division of Enforcement: Unregister; Engine 2 -- Tier Credits, Crowns, DK$, Elite State",
     "nodes": [
       "MB-II1",
-      "MB-F0801"
+      "MB-F0801",
+      "MB-ENG2",
+      "MB-IIV52",
+      "MB-VIIIV52",
+      "MB-XIIP",
+      "MB-XIIQ",
+      "MB-XIIR",
+      "MB-EXT",
+      "MB-EXX2"
     ],
-    "section_count": 2,
-    "last_updated": "2026-04-06T02:14:01"
+    "section_count": 13,
+    "last_updated": "2026-04-06T02:18:04"
   },
   "privacy_tos": {
     "score": 79.7,
-    "rationale": "§XII.V.2 — GPS LLC VIE Three-Track Definitive Anal; §V-A/V-C Update — MGCB Two-Prong Framework: Smith/; Section I — Contract Formation and Hidden Economic",
+    "rationale": "§XII.V.2 -- GPS LLC VIE Three-Track Definitive Ana; §V-A/V-C Update -- MGCB Two-Prong Framework: Smith; Section I -- Contract Formation and Hidden Economi",
     "nodes": [
       "MB-I1",
       "MB-I1A",
@@ -39,14 +47,15 @@
       "MB-VIC",
       "MB-XIIV2",
       "MB-VA2PRONG",
-      "MB-F0201"
+      "MB-F0201",
+      "MB-XB3"
     ],
-    "section_count": 9,
-    "last_updated": "2026-04-06T02:14:01"
+    "section_count": 27,
+    "last_updated": "2026-04-06T02:18:04"
   },
   "governance": {
     "score": 81.9,
-    "rationale": "§XII.V.2 — GPS LLC VIE Three-Track Definitive Anal; §V-A Update — CM-new-01 through CM-new-04: 1/3/202; §V-A/V-C Update — MGCB Two-Prong Framework: Smith/",
+    "rationale": "§XII.V.2 -- GPS LLC VIE Three-Track Definitive Ana; §V-A Update -- CM-new-01 through CM-new-04: 1/3/20; §V-A/V-C Update -- MGCB Two-Prong Framework: Smith",
     "nodes": [
       "MB-V0",
       "MB-VA",
@@ -59,12 +68,12 @@
       "MB-VA2PRONG",
       "MB-VFBAY"
     ],
-    "section_count": 15,
-    "last_updated": "2026-04-06T02:14:01"
+    "section_count": 43,
+    "last_updated": "2026-04-06T02:18:04"
   },
   "litigation_risk": {
     "score": 78,
-    "rationale": "§XII.V.2 — GPS LLC VIE Three-Track Definitive Anal; MASTERBRIEF v54 — Klein-Team ADR Framework Cover +; Section I — Contract Formation and Hidden Economic",
+    "rationale": "§XII.V.2 -- GPS LLC VIE Three-Track Definitive Ana; MASTERBRIEF v54 -- Klein-Team ADR Framework Cover ; Section I -- Contract Formation and Hidden Economi",
     "nodes": [
       "MB-I0",
       "MB-I1",
@@ -77,7 +86,7 @@
       "MB-CASELAW6",
       "MB-REDTEAM1"
     ],
-    "section_count": 10,
-    "last_updated": "2026-04-06T02:14:01"
+    "section_count": 22,
+    "last_updated": "2026-04-06T02:18:04"
   }
 }
