@@ -1,0 +1,177 @@
+{
+  "GR-001": {
+    "node_id": "GR-001",
+    "name": "GPS LLC VIE Structure",
+    "nuclear_impact": 9.8,
+    "agents": [
+      "WOLF",
+      "TIGER"
+    ],
+    "ev_codes": "EV-093\u00b7EV-271",
+    "mb_refs": "\u00a7XII.V.1\u00b7\u00a7XII.O",
+    "sb_refs": "SB-34B\u00b7SB-LR-68",
+    "evidence": [
+      "Dynasty Store disclaimer vs actual economic control. VIE consolidation. Arbitration Ground 7."
+    ],
+    "wolf_routing": "Principal-agent class attack + Arb Ground 7 VIE circular disclaimer",
+    "tiger_routing": "ASC 810-10-15-14 three-prong VIE test. DK meets primary beneficiary both tests.",
+    "suits_routing": "GPS VIE \u2192 restatement \u2192 BDO withdrawal \u2192 SEC exposure \u2192 settlement compression."
+  },
+  "GR-002": {
+    "node_id": "GR-002",
+    "name": "Gus II to III NFA Timeline",
+    "nuclear_impact": 9.5,
+    "agents": [
+      "WOLF"
+    ],
+    "ev_codes": "EV-BM-02",
+    "mb_refs": "\u00a7XII.P\u00b7F08-01",
+    "sb_refs": "SB-APP-03",
+    "evidence": [
+      "Gus II July 2024 \u2192 withdrawal March 2025 \u2192 Gus III June 2025 \u2192 NFA approval Dec 2025. Unlicensed gap."
+    ],
+    "wolf_routing": "CFTC WB-TCR + 30-day pre-suit simultaneously. Consciousness of guilt.",
+    "tiger_routing": "Timeline maps unlicensed period. CEA \u00a76c element classification.",
+    "suits_routing": "F08-01 deployment timing anchor. Consciousness of guilt documentation."
+  },
+  "GR-003": {
+    "node_id": "GR-003",
+    "name": "Binary Settlement Structure",
+    "nuclear_impact": 9.7,
+    "agents": [
+      "WOLF",
+      "TIGER"
+    ],
+    "ev_codes": "EV-004\u00b7EV-055",
+    "mb_refs": "Engine XII\u00b7F08-01",
+    "sb_refs": "SB-LR-70",
+    "evidence": [
+      "Crown OR Snappy physical delivery = binary payoff on notional instrument = commodity option CEA \u00a76c."
+    ],
+    "wolf_routing": "Primary CFTC enforcement. GR-002+003+009 = three-part case.",
+    "tiger_routing": "CEA \u00a71a(10) element-by-element. Crown = notional. GPS = unregistered exchange.",
+    "suits_routing": "CFTC F08-01 anchors regulatory deployment track."
+  },
+  "GR-004": {
+    "node_id": "GR-004",
+    "name": "\"Any Reason or No Reason\"",
+    "nuclear_impact": 9.2,
+    "agents": [
+      "WOLF"
+    ],
+    "ev_codes": "EV-T1-04",
+    "mb_refs": "\u00a7V-C\u00b7\u00a7V-E",
+    "sb_refs": "SB-23",
+    "evidence": [
+      "DK reserves right to modify without notice for any reason or no reason \u2014 every material policy section."
+    ],
+    "wolf_routing": "Class action standing: 3.6M users identical terms = certified class definition.",
+    "tiger_routing": "Contra Proferentum. Consistent administration defeats disclaimer.",
+    "suits_routing": "MCPA demand foundation. 483% TC inflation + this clause = illusory consideration."
+  },
+  "GR-005": {
+    "node_id": "GR-005",
+    "name": "\"No Monetary Value Whatsoever\"",
+    "nuclear_impact": 8.8,
+    "agents": [
+      "TIGER"
+    ],
+    "ev_codes": "EV-T1-05",
+    "mb_refs": "\u00a7V-D\u00b7\u00a7XII.V.1",
+    "sb_refs": "SB-LR-71",
+    "evidence": [
+      "Phrase repeated 6+ times. Contradicted by wagering redemption architecture."
+    ],
+    "wolf_routing": "Contradiction: if no value, why does Crown redemption enable site credit wagering?",
+    "tiger_routing": "ASC 606 Step 3 variable consideration. Six repetitions = six liability acknowledgments.",
+    "suits_routing": "Core deceptive trade practice. MCPA pyramid fraud foundation."
+  },
+  "GR-006": {
+    "node_id": "GR-006",
+    "name": "MacBook Pro DARC Substitution",
+    "nuclear_impact": 8.4,
+    "agents": [
+      "WOLF",
+      "TIGER"
+    ],
+    "ev_codes": "EV-006\u00b7EV-083",
+    "mb_refs": "\u00a7VI-C\u00b7Exhibit V",
+    "sb_refs": "SB-06",
+    "evidence": [
+      "2024 DARC specific item substituted without notice. Documented internal control bypass."
+    ],
+    "wolf_routing": "Magnuson-Moss Act. Opening damages event in consumer harm narrative.",
+    "tiger_routing": "Internal controls gap. No audit traceability in reward fulfillment.",
+    "suits_routing": "Exhibit anchor for ADR demand. Specific dollar value. Personalizes fraud."
+  },
+  "GR-007": {
+    "node_id": "GR-007",
+    "name": "550:1 Crown-to-MSRP Rate",
+    "nuclear_impact": 8.1,
+    "agents": [
+      "TIGER"
+    ],
+    "ev_codes": "EV-256",
+    "mb_refs": "Pillar 9\u00b7Exhibit W",
+    "sb_refs": "SB-46",
+    "evidence": [
+      "Garmin Venu 3: Snappy +11.1% + RDARC +3.8% = 15.4% total. Apple Watch +71.5%. iPad +75%."
+    ],
+    "wolf_routing": "CEA \u00a79 price manipulation. Catalog-wide damages quantification.",
+    "tiger_routing": "MSRP comparison dataset x 3.6M users = restitution baseline.",
+    "suits_routing": "Damages floor for settlement band modeling."
+  },
+  "GR-008": {
+    "node_id": "GR-008",
+    "name": "Alex Franks / LemmyExcel Channel",
+    "nuclear_impact": 7.8,
+    "agents": [
+      "WOLF",
+      "TIGER"
+    ],
+    "ev_codes": "EV-004\u00b7EV-T2-03",
+    "mb_refs": "\u00a7XII.T\u00b7EV-004",
+    "sb_refs": "SB-44",
+    "evidence": [
+      "VIP host Alex Franks + LemmyExcel off-book remediation. $1,250 IOC credits outside GL."
+    ],
+    "wolf_routing": "Silent fraud: DK remediated harm secretly. Institutional awareness of injury.",
+    "tiger_routing": "Material weakness. SOX 302/404 false certification chain.",
+    "suits_routing": "Silent fraud in ADR demand. Systemic concealment pattern."
+  },
+  "GR-009": {
+    "node_id": "GR-009",
+    "name": "2024 Milestone Program",
+    "nuclear_impact": 9.3,
+    "agents": [
+      "WOLF",
+      "TIGER"
+    ],
+    "ev_codes": "EV-091",
+    "mb_refs": "\u00a7XII.P\u00b7F08-01\u00b7Engine XII",
+    "sb_refs": "SB-LR-70",
+    "evidence": [
+      "Binary settlement + milestone stages mirroring options strike prices + GPS LLC + NFA timeline overlap."
+    ],
+    "wolf_routing": "Named instrument in CFTC WB-TCR. GR-002+003+009 = complete three-part case.",
+    "tiger_routing": "Each Milestone = options strike price. Crown = notional. GPS = unregistered exchange.",
+    "suits_routing": "Lead vehicle F08-01 + SEC F04-01. Prisoner Dilemma deployment trigger."
+  },
+  "GR-010": {
+    "node_id": "GR-010",
+    "name": "Dynasty Store 3P Disclaimer Paradox",
+    "nuclear_impact": 8.6,
+    "agents": [
+      "TIGER"
+    ],
+    "ev_codes": "EV-094",
+    "mb_refs": "\u00a7XII.N\u00b7\u00a7XII.O",
+    "sb_refs": "SB-LR-68",
+    "evidence": [
+      "\"DraftKings is not the auctioneer\" \u2014 yet DK sets what can be auctioned at what Crown prices to which customers."
+    ],
+    "wolf_routing": "Principal-agent attack. Disclaimer dismantled by operational control evidence.",
+    "tiger_routing": "VIE primary beneficiary. DK meets both ASC 810 tests for GPS LLC.",
+    "suits_routing": "GPS consolidation \u2192 restatement \u2192 BDO withdrawal \u2192 four-track cascade."
+  }
+}

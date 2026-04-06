@@ -2429,9 +2429,24 @@ function saveAPIKey(){
 function syncFromBackend(){
   if(!NEXUS_BACKEND_URL){addFetty('No backend URL set','fw2');return;}
   fetch(NEXUS_BACKEND_URL+'/api/state').then(function(r){return r.json();}).then(function(d){
-    if(d.gr_nodes) Object.assign(PROJ.gr=PROJ.gr||{},d.gr_nodes);
-    addFetty('BACKEND SYNC: '+Object.keys(d.gr_nodes||{}).length+' GR nodes, flywheel updated','fe');
-  }).catch(function(e){addFetty('Backend sync error: '+e.message,'fw2');});
+    // Merge GR nodes
+    if(d.gr_nodes){PROJ.gr=PROJ.gr||{};Object.assign(PROJ.gr,d.gr_nodes);}
+    // Merge flywheel scores into PROJ
+    if(d.flywheel&&PROJ.flywheel&&PROJ.flywheel.domain_skillset){
+      var ms=PROJ.flywheel.domain_skillset.mastery_scores;
+      var domMap={revenue_recognition:'accounting',platform_economics:'platform',privacy_tos:'platform',governance:'governance',litigation_risk:'litigation'};
+      Object.keys(d.flywheel).forEach(function(k){
+        var mk=domMap[k];
+        if(mk&&d.flywheel[k].score) ms[mk]=Math.max(ms[mk]||0, d.flywheel[k].score/100);
+      });
+    }
+    var gnCount=Object.keys(d.gr_nodes||{}).length;
+    var evCount=Object.keys(d.evidence||{}).length;
+    addFetty('BACKEND SYNC: '+gnCount+' GR nodes | '+evCount+' evidence anchors | flywheel updated','fe');
+    // Re-render views that show live data
+    try{renderFW();}catch(e){}
+    try{renderGR();}catch(e){}
+  }).catch(function(e){addFetty('Backend sync error: '+e.message+' — run: python nexus_ai.py serve','fw2');});
 }
 
 // ── CLAUDE API INTEGRATION ──────────────────────────────
