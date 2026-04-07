@@ -458,8 +458,7 @@ def serve(port: int = 7433, api_key: str | None = None):
                 try:
                     with agent.client.messages.stream(
                         model=MODEL,
-                        max_tokens=1024,
-                        thinking={"type": "adaptive"},
+                        max_tokens=4096,
                         system=system,
                         messages=[{"role": "user", "content": prompt}],
                     ) as stream:
@@ -498,13 +497,36 @@ def serve(port: int = 7433, api_key: str | None = None):
                 t.start()
                 self._send_json({"status": "ingestion started", "source": source})
 
+            elif self.path == "/api/ingest_csv":
+                # Structured CSV ingest — runs nexus_ingest_mb54 pipeline (no API key needed)
+                body = self._read_body()
+                csv_text = body.get("csv", "")
+                if not csv_text:
+                    self._send_json({"error": "no csv provided"}, 400)
+                    return
+                import tempfile
+                import nexus_ingest_mb54 as mb54mod
+                with tempfile.NamedTemporaryFile(
+                    mode="w", suffix=".csv", delete=False, encoding="utf-8"
+                ) as f:
+                    f.write(csv_text)
+                    tmp = f.name
+                try:
+                    result = mb54mod.ingest_csv(tmp)
+                    os.unlink(tmp)
+                    self._send_json({"status": "ok", "nodes": result.get("nodes_added", 0)})
+                except Exception as e:
+                    os.unlink(tmp)
+                    self._send_json({"error": str(e)}, 500)
+
             else:
                 self._send_json({"error": "not found"}, 404)
 
-    server = http.server.HTTPServer(("127.0.0.1", port), Handler)
-    print(f"NEXUS AI Bridge running at http://127.0.0.1:{port}/")
-    print(f"  NEXUS App:  http://127.0.0.1:{port}/")
-    print(f"  API state:  http://127.0.0.1:{port}/api/state")
+    host = os.environ.get("NEXUS_HOST", "127.0.0.1")
+    server = http.server.HTTPServer((host, port), Handler)
+    print(f"NEXUS AI Bridge running at http://{host}:{port}/")
+    print(f"  NEXUS App:  http://{host}:{port}/")
+    print(f"  API state:  http://{host}:{port}/api/state")
     print(f"  Press Ctrl+C to stop\n")
     try:
         server.serve_forever()
@@ -528,6 +550,7 @@ def main():
     # serve
     sp = sub.add_parser("serve", help="Start HTTP bridge server")
     sp.add_argument("--port", type=int, default=7433, help="Port (default: 7433)")
+    sp.add_argument("--host", default=None, help="Bind host (default: 127.0.0.1, use 0.0.0.0 for LAN)")
 
     # ingest
     ip = sub.add_parser("ingest", help="Ingest a dataset file into GR nodes")
@@ -555,6 +578,8 @@ def main():
     args = parser.parse_args()
 
     if args.command == "serve":
+        if args.host:
+            os.environ["NEXUS_HOST"] = args.host
         serve(port=args.port, api_key=args.api_key)
 
     elif args.command == "ingest":
