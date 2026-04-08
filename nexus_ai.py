@@ -519,6 +519,53 @@ def serve(port: int = 7433, api_key: str | None = None):
                     os.unlink(tmp)
                     self._send_json({"error": str(e)}, 500)
 
+            elif self.path == "/api/domains":
+                # Domain hierarchy + objective scores (DDF + DSB views)
+                try:
+                    import nexus_domain_schema as nds
+                    data = nds.get_domain_hierarchy(load_gr_nodes(), load_evidence())
+                    self._send_json(data)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+
+            elif self.path == "/api/chess":
+                # Chess Framework: POST {objective, project_id} → workspace config
+                body = self._read_body()
+                objective = body.get("objective", "").strip()
+                if not objective:
+                    self._send_json({"error": "no objective provided"}, 400)
+                    return
+                try:
+                    import sys, os as _os
+                    sys.path.insert(0, str(Path(__file__).parent))
+                    from chess_framework.mapper import map_objective, config_to_dict
+                    cfg = map_objective(objective, project_id=body.get("project_id", "nexus"))
+                    self._send_json(config_to_dict(cfg))
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+
+            elif self.path == "/api/layer2/chatgpt":
+                # Layer 2B: POST {export_path or csv_text, project_id} → ingest ChatGPT export
+                body = self._read_body()
+                export_path = body.get("export_path", "")
+                if not export_path:
+                    self._send_json({"error": "export_path required"}, 400)
+                    return
+                try:
+                    from ingestion.layer2_chatgpt import ingest_chatgpt_export
+                    stats = ingest_chatgpt_export(export_path, body.get("project_id", "nexus"))
+                    self._send_json(stats)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
+
+            elif self.path == "/api/layer2/status":
+                # Status of Layer 2B corpus
+                try:
+                    from ingestion.layer2_chatgpt import get_corpus_summary
+                    self._send_json(get_corpus_summary())
+                except Exception as e:
+                    self._send_json({"status": "unavailable", "error": str(e)})
+
             else:
                 self._send_json({"error": "not found"}, 404)
 

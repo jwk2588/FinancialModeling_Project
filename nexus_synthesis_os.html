@@ -347,6 +347,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--white);f
     <div class="ctab on" id="t-home" onclick="setV('home')">◈ CORPUS</div>
     <div class="ctab" id="t-gr" onclick="setV('gr')">◉ GHOST RECON</div>
     <div class="ctab" id="t-fw" onclick="setV('fw')">⟁ FLYWHEELS</div>
+    <div class="ctab" id="t-ddf" onclick="setV('ddf')" style="color:var(--cyan)">◈ DOMAIN DFW</div>
+    <div class="ctab" id="t-dsb" onclick="setV('dsb')" style="color:var(--fetty)">⬡ DOMAIN BRIDGE</div>
+    <div class="ctab" id="t-chess" onclick="setV('chess')" style="color:var(--gold)">♟ CHESS MAP</div>
     <div class="ctab" id="t-sim" onclick="setV('sim')">▶ SIM</div>
     <div class="ctab" id="t-judge" onclick="setV('judge')">⚖ JUDGE MODE</div>
     <div class="ctab" id="t-angels" onclick="setV('angels')">↓ FALLEN ANGELS</div>
@@ -415,6 +418,43 @@ html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--white);f
   </div>
 </div>
   <div class="cview sp" id="v-fw"><div class="sh"><div class="st" style="color:var(--cyan)">DATA FLYWHEELS</div><div class="ss">6 Domain Mastery Tracks · Tool Activations · Corpus Coverage · Bridge Density 0.44</div></div><div id="fw-body" class="pad"></div></div>
+  <!-- DOMAIN DATA FLYWHEEL VIEW (DDF) -->
+  <div class="cview sp" id="v-ddf" style="display:none">
+    <div class="sh"><div class="st" style="color:var(--cyan)">DOMAIN DATA FLYWHEEL</div>
+    <div class="ss">3-Level Drill-Down · Domain → Subdomain → Granular · Objective Scoring · Agent Routing</div></div>
+    <div style="display:flex;gap:8px;padding:8px;height:calc(100% - 48px);overflow:hidden">
+      <!-- Level 1: Domain Cards -->
+      <div id="ddf-l1" style="width:200px;flex-shrink:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+      <!-- Level 2: Subdomain List -->
+      <div id="ddf-l2" style="width:220px;flex-shrink:0;overflow-y:auto;display:flex;flex-direction:column;gap:5px"></div>
+      <!-- Level 3: Granular Detail Panel -->
+      <div id="ddf-l3" style="flex:1;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- DOMAIN SKILL BRIDGE VIEW (DSB) -->
+  <div class="cview sp" id="v-dsb" style="display:none">
+    <div class="sh"><div class="st" style="color:var(--fetty)">DOMAIN SKILL BRIDGE</div>
+    <div class="ss">Cross-Domain Intelligence Map · Bridge Strength · Compound Attack Vectors · DSB DFW</div></div>
+    <div id="dsb-body" class="pad" style="overflow-y:auto;height:calc(100% - 48px)"></div>
+  </div>
+
+  <!-- CHESS FRAMEWORK VIEW -->
+  <div class="cview sp" id="v-chess" style="display:none">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+      <div><div class="st" style="color:var(--gold)">CHESS FRAMEWORK</div>
+      <div class="ss">Objective → Workspace · Posture Classification · Agent Routing · Opening Moves</div></div>
+    </div>
+    <div class="pad" style="overflow-y:auto;height:calc(100% - 60px)">
+      <div style="margin-bottom:12px">
+        <div style="font-family:var(--fmono);font-size:9px;color:var(--dim);margin-bottom:4px;letter-spacing:1px">ENTER YOUR PROJECT OBJECTIVE</div>
+        <textarea id="chess-objective" rows="3" style="width:100%;background:var(--bg1);border:1px solid var(--border);color:var(--white);font-family:var(--fmono);font-size:10px;padding:8px;border-radius:3px;resize:vertical" placeholder="e.g. Build a litigation strategy against DraftKings for MCPA violations and CFTC commodity classification failures..."></textarea>
+        <button class="btn bc" onclick="runChessMap()" style="margin-top:6px;padding:5px 14px;font-size:10px">♟ RUN CHESS FRAMEWORK</button>
+      </div>
+      <div id="chess-output"></div>
+    </div>
+  </div>
+
   <div class="cview sp" id="v-sim">
     <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
       <div><div class="st">7-TURN CONVERGENCE SIMULATION</div><div class="ss">FettyFM Orchestrated · Live Rule Engine · Bridge Penalty · Contagion Math</div></div>
@@ -1147,6 +1187,8 @@ function setV(v){
     else{vEl.classList.add('on');vEl.style.display='';}
   }
   if(tEl) tEl.classList.add('on');
+  if(v==='ddf') renderDDFL1();
+  if(v==='dsb') renderDSB();
   if(v==='diag') renderDiag();
   if(v==='obs') renderObs();
   if(v==='wfr') renderWFR();
@@ -2406,6 +2448,278 @@ function setSimLabTab(t){
 }
 
 // ── SETTINGS PANEL ─────────────────────────────────────
+
+// ── DOMAIN DATA FLYWHEEL (DDF) ───────────────────────────────────────────────
+var DDF_DATA = null;
+var DDF_ACTIVE_DOM = null;
+var DDF_ACTIVE_SUB = null;
+
+function loadDDFData(cb) {
+  if (DDF_DATA) { if(cb) cb(DDF_DATA); return; }
+  if (NEXUS_BACKEND_URL) {
+    fetch(NEXUS_BACKEND_URL + '/api/domains').then(function(r){return r.json();}).then(function(d){
+      DDF_DATA = d; if(cb) cb(d);
+    }).catch(function(e){ addFetty('DDF load error: ' + e.message, 'fw2'); });
+  } else {
+    // Fallback: build from local PROJ flywheel data
+    var ms = PROJ.flywheel.domain_skillset.mastery_scores;
+    var domains = {};
+    var dkeys = Object.keys(ms);
+    dkeys.forEach(function(k) {
+      domains[k] = {
+        label: (DOM_LABELS[k] || k).toUpperCase(),
+        color: DOM_COLORS[k] || 'cyan',
+        score: ms[k],
+        score_pct: Math.round(ms[k]*100),
+        node_count: 0,
+        subdomain_count: 2,
+        subdomains: {},
+        suggested_prompts: ['Connect backend (/api/domains) for full domain data']
+      };
+    });
+    DDF_DATA = { domains: domains, bridges: [], total_nodes: 0, total_evidence: 0 };
+    if(cb) cb(DDF_DATA);
+  }
+}
+
+function renderDDFL1() {
+  loadDDFData(function(data) {
+    var h = '';
+    Object.keys(data.domains).forEach(function(domId) {
+      var dom = data.domains[domId];
+      var col = dom.hex || dom.color || '#00d4ff';
+      var active = domId === DDF_ACTIVE_DOM ? 'border-color:'+col+';background:rgba(0,212,255,.07)' : '';
+      h += '<div class="fwd" style="cursor:pointer;border:1px solid var(--border);padding:10px 10px 8px;border-radius:4px;' + active + '" onclick="ddfDrillDomain(\'' + domId + '\')">'
+        + '<div style="font-family:var(--fhead);font-size:9px;font-weight:700;letter-spacing:1.5px;color:' + col + ';margin-bottom:4px">' + dom.label + '</div>'
+        + '<div style="font-size:18px;font-weight:900;font-family:var(--fmono);color:' + col + '">' + dom.score_pct + '%</div>'
+        + '<div class="mt" style="margin:4px 0 5px"><div class="mf" style="background:' + col + ';width:' + dom.score_pct + '%"></div></div>'
+        + '<div style="font-size:8px;color:var(--dim);font-family:var(--fmono)">' + dom.subdomain_count + ' subdomains · ' + dom.node_count + ' nodes</div>'
+        + '</div>';
+    });
+    var el1 = el('ddf-l1'); if(el1) el1.innerHTML = h;
+    var el2 = el('ddf-l2'); if(el2) el2.innerHTML = '<div style="color:var(--dim);font-family:var(--fmono);font-size:9px;padding:12px">← Select a domain</div>';
+    var el3 = el('ddf-l3'); if(el3) el3.innerHTML = '';
+    addFetty('DDF LOADED: ' + Object.keys(data.domains).length + ' domains · ' + data.total_nodes + ' nodes', 'fe');
+  });
+}
+
+function ddfDrillDomain(domId) {
+  DDF_ACTIVE_DOM = domId;
+  DDF_ACTIVE_SUB = null;
+  loadDDFData(function(data) {
+    var dom = data.domains[domId];
+    if (!dom) return;
+    var col = dom.hex || dom.color || '#00d4ff';
+    var h = '<div style="font-family:var(--fhead);font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:8px">SUBDOMAINS · ' + dom.label + '</div>';
+    var subs = dom.subdomains || {};
+    if (Object.keys(subs).length === 0) {
+      h += '<div style="color:var(--dim);font-family:var(--fmono);font-size:9px;padding:8px">No subdomains loaded — connect backend</div>';
+    }
+    Object.keys(subs).forEach(function(subId) {
+      var sub = subs[subId];
+      var active = subId === DDF_ACTIVE_SUB ? 'background:rgba(0,212,255,.07);border-color:' + col : '';
+      h += '<div style="cursor:pointer;border:1px solid var(--border);border-radius:3px;padding:8px 10px;' + active + '" onclick="ddfDrillSubdomain(\'' + domId + '\',\'' + subId + '\')">'
+        + '<div style="font-family:var(--fhead);font-size:8.5px;font-weight:700;letter-spacing:1px;color:' + col + '">' + sub.label + '</div>'
+        + '<div style="font-size:7.5px;color:var(--dim);font-family:var(--fmono);margin-top:3px">' + (sub.standards || []).slice(0,2).join(' · ') + '</div>'
+        + '<div style="font-size:7.5px;color:var(--dim);margin-top:2px">' + (sub.granular || []).length + ' drill nodes</div>'
+        + '</div>';
+    });
+    var l2 = el('ddf-l2'); if(l2) l2.innerHTML = h;
+    // Show domain overview in L3
+    var prompts = dom.suggested_prompts || [];
+    var ph = '<div style="padding:10px">'
+      + '<div style="font-family:var(--fhead);font-size:12px;font-weight:900;letter-spacing:2px;color:' + col + ';margin-bottom:6px">' + dom.label + '</div>'
+      + '<div style="font-family:var(--fmono);font-size:8.5px;color:var(--dim);margin-bottom:12px">SUGGESTED PROMPTS · ' + dom.agent.toUpperCase() + ' AGENT LEAD</div>';
+    prompts.forEach(function(p) {
+      ph += '<div style="background:var(--bg1);border:1px solid var(--border);border-radius:3px;padding:8px 10px;margin-bottom:6px;cursor:pointer" onclick="ddfRunPrompt(this,\'' + dom.agent + '\')">'
+        + '<div style="font-family:var(--fmono);font-size:8.5px;color:var(--white);line-height:1.5">' + p + '</div>'
+        + '<div style="font-size:7px;color:var(--dim);margin-top:4px">▶ click to send to ' + dom.agent + ' agent</div>'
+        + '</div>';
+    });
+    ph += '</div>';
+    var l3 = el('ddf-l3'); if(l3) l3.innerHTML = ph;
+    renderDDFL1(); // re-render to highlight active
+  });
+}
+
+function ddfDrillSubdomain(domId, subId) {
+  DDF_ACTIVE_SUB = subId;
+  loadDDFData(function(data) {
+    var dom = data.domains[domId];
+    if (!dom) return;
+    var sub = (dom.subdomains || {})[subId];
+    if (!sub) return;
+    var col = dom.hex || dom.color || '#00d4ff';
+    var granular = sub.granular || [];
+    var standards = sub.standards || [];
+    var h = '<div style="padding:10px">'
+      + '<div style="font-family:var(--fhead);font-size:10px;font-weight:900;letter-spacing:1.5px;color:' + col + ';margin-bottom:3px">' + sub.label + '</div>'
+      + '<div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);margin-bottom:10px">▸ ' + standards.join(' · ') + '</div>'
+      + '<div style="font-family:var(--fhead);font-size:8px;letter-spacing:1.5px;color:var(--dim);margin-bottom:8px">GRANULAR DRILL NODES</div>';
+    if (granular.length === 0) {
+      h += '<div style="color:var(--dim);font-family:var(--fmono);font-size:9px">No granular nodes defined</div>';
+    }
+    granular.forEach(function(node) {
+      var nstds = node.standards || [];
+      h += '<div style="background:var(--bg1);border:1px solid var(--border2);border-left:2px solid ' + col + ';border-radius:3px;padding:9px 11px;margin-bottom:6px">'
+        + '<div style="font-family:var(--fhead);font-size:9px;font-weight:700;letter-spacing:1px;color:' + col + ';margin-bottom:3px">' + node.label + '</div>'
+        + (nstds.length ? '<div style="font-family:var(--fmono);font-size:7px;color:var(--dim)">' + nstds.join(' · ') + '</div>' : '')
+        + '<div style="display:flex;gap:6px;margin-top:6px">'
+        + '<button class="btn bc" style="font-size:7.5px;padding:2px 7px" onclick="ddfQueryNode(\'' + node.label + '\',\'' + dom.agent + '\')">▶ QUERY</button>'
+        + '<button class="btn bc" style="font-size:7.5px;padding:2px 7px" onclick="ddfFindGRNodes(\'' + node.id + '\')">◉ GR NODES</button>'
+        + '</div></div>';
+    });
+    h += '</div>';
+    var l3 = el('ddf-l3'); if(l3) l3.innerHTML = h;
+  });
+}
+
+function ddfRunPrompt(btn, persona) {
+  var text = btn.querySelector('div').innerText;
+  var inp = el('nexus-input');
+  if(inp) { inp.value = text; }
+  setV('home');
+  addFetty('DDF → ' + persona.toUpperCase() + ' agent: ' + text.slice(0,60) + '...', 'fe');
+}
+
+function ddfQueryNode(label, agent) {
+  var inp = el('nexus-input');
+  if(inp) inp.value = 'Analyze: ' + label;
+  setV('home');
+  addFetty('DDF drill → ' + agent + ': ' + label, 'fe');
+}
+
+function ddfFindGRNodes(nodeId) {
+  addFetty('DDF → GR search: ' + nodeId, 'fe');
+  setV('gr');
+}
+
+// ── DOMAIN SKILL BRIDGE (DSB) ─────────────────────────────────────────────────
+
+function renderDSB() {
+  loadDDFData(function(data) {
+    var bridges = data.bridges || [];
+    var doms = data.domains || {};
+    var h = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
+    // Summary stats
+    h += '<div class="fwd" style="grid-column:1/-1;display:flex;gap:20px;flex-wrap:wrap">'
+      + '<div><div class="ct">DOMAIN BRIDGES</div><div style="font-size:24px;font-weight:900;color:var(--fetty)">' + bridges.length + '</div><div style="font-size:8px;color:var(--dim)">Active cross-domain edges</div></div>'
+      + '<div><div class="ct">TOTAL NODES</div><div style="font-size:24px;font-weight:900;color:var(--cyan)">' + data.total_nodes + '</div><div style="font-size:8px;color:var(--dim)">GR nodes ingested</div></div>'
+      + '<div><div class="ct">EVIDENCE ANCHORS</div><div style="font-size:24px;font-weight:900;color:var(--gold)">' + data.total_evidence + '</div><div style="font-size:8px;color:var(--dim)">EV code mappings</div></div>'
+      + '</div>';
+    h += '</div>';
+    h += '<div class="ct" style="margin-bottom:8px">CROSS-DOMAIN BRIDGE MAP</div>';
+    bridges.forEach(function(b) {
+      var fromDom = doms[b.from] || {};
+      var toDom = doms[b.to] || {};
+      var fromCol = fromDom.hex || fromDom.color || '#00d4ff';
+      var toCol = toDom.hex || toDom.color || '#00ffcc';
+      var strength = Math.round((b.strength || 0.7) * 100);
+      h += '<div style="background:var(--bg1);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:12px">'
+        + '<div style="flex:0 0 auto;text-align:center">'
+        + '<div style="font-family:var(--fhead);font-size:8px;font-weight:700;color:' + fromCol + ';letter-spacing:1px">' + (fromDom.label || b.from) + '</div>'
+        + '</div>'
+        + '<div style="flex:1;text-align:center">'
+        + '<div style="font-family:var(--fmono);font-size:8px;color:var(--dim)">' + b.label + '</div>'
+        + '<div class="mt" style="margin:4px auto;width:80%"><div class="mf" style="background:linear-gradient(to right,' + fromCol + ',' + toCol + ');width:' + strength + '%"></div></div>'
+        + '<div style="font-size:8px;font-weight:700;color:var(--fetty)">' + strength + '% bridge strength</div>'
+        + '</div>'
+        + '<div style="flex:0 0 auto;text-align:center">'
+        + '<div style="font-family:var(--fhead);font-size:8px;font-weight:700;color:' + toCol + ';letter-spacing:1px">' + (toDom.label || b.to) + '</div>'
+        + '</div>'
+        + '</div>';
+    });
+    if(bridges.length === 0) {
+      h += '<div style="color:var(--dim);font-family:var(--fmono);font-size:9px;padding:12px">Connect backend (/api/domains) to load domain bridges</div>';
+    }
+    var db = el('dsb-body'); if(db) db.innerHTML = h;
+    addFetty('DSB LOADED: ' + bridges.length + ' bridges across ' + Object.keys(doms).length + ' domains', 'fe');
+  });
+}
+
+// ── CHESS FRAMEWORK ───────────────────────────────────────────────────────────
+
+function runChessMap() {
+  var objective = (el('chess-objective') || {}).value || '';
+  if (!objective.trim()) { addFetty('Chess Framework: enter an objective first', 'fw2'); return; }
+  var out = el('chess-output');
+  if(out) out.innerHTML = '<div style="color:var(--gold);font-family:var(--fmono);font-size:9px;padding:10px">CHESS FRAMEWORK PROCESSING...</div>';
+
+  if (NEXUS_BACKEND_URL) {
+    fetch(NEXUS_BACKEND_URL + '/api/chess', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({objective: objective, project_id: 'nexus'})
+    }).then(function(r){return r.json();}).then(function(cfg){
+      renderChessOutput(cfg);
+    }).catch(function(e){
+      if(out) out.innerHTML = '<div style="color:var(--wolf);font-family:var(--fmono);font-size:9px;padding:10px">Error: ' + e.message + ' — start Python backend</div>';
+    });
+  } else {
+    // Client-side fallback: basic classification
+    var posture = 'adversarial';
+    var lower = objective.toLowerCase();
+    if(lower.includes('regulatory') || lower.includes('mgcb') || lower.includes('cftc')) posture='regulatory';
+    else if(lower.includes('analyze') || lower.includes('model')) posture='analytical';
+    var cfg = {
+      posture: posture, posture_confidence: 0.7, agent_lead: posture==='regulatory'?'suits':'wolf',
+      primary_domains: ['corp_accountability','forensic_accounting'],
+      opening_moves: ['Map all GR nodes by nuclear_impact','Run arbitration kill chain','Build authenticated evidence chain'],
+      knight_theories: ['Dual-regulator pincer strategy','VIE Circular Disclaimer unconscionability'],
+      king_objective: objective.split('.')[0]
+    };
+    renderChessOutput(cfg);
+  }
+}
+
+function renderChessOutput(cfg) {
+  var out = el('chess-output');
+  if(!out) return;
+  var postureCol = {adversarial:'var(--wolf)',regulatory:'var(--gold)',analytical:'var(--tiger)',investigatory:'var(--cyan)',governance:'var(--suits)'}[cfg.posture] || 'var(--cyan)';
+  var agentCol = {wolf:'var(--wolf)',tiger:'var(--tiger)',suits:'var(--suits)',nexus_master:'var(--fetty)'}[cfg.agent_lead] || 'var(--fetty)';
+  var h = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'
+    + '<div class="fwd"><div class="ct" style="color:var(--gold)">♔ KING — OBJECTIVE</div><div style="font-family:var(--fmono);font-size:9px;color:var(--white);line-height:1.6;margin-top:4px">' + (cfg.king_objective||'').slice(0,200) + '</div></div>'
+    + '<div class="fwd"><div class="ct" style="color:' + postureCol + '">POSTURE: ' + (cfg.posture||'').toUpperCase() + '</div>'
+    + '<div style="font-size:22px;font-weight:900;font-family:var(--fmono);color:' + postureCol + '">' + Math.round((cfg.posture_confidence||0.7)*100) + '%</div>'
+    + '<div style="font-size:8px;color:var(--dim)">confidence · Agent lead: <span style="color:' + agentCol + '">' + (cfg.agent_lead||'nexus_master').toUpperCase() + '</span></div></div>'
+    + '</div>';
+
+  if(cfg.chess_board) {
+    h += '<div class="ct" style="margin-bottom:8px">CHESS BOARD ASSIGNMENT</div>';
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin-bottom:12px">';
+    var pieceGold = {king:'♔',queen:'♛',rook_1:'♖',rook_2:'♖',bishop_1:'♗',bishop_2:'♗',knight_1:'♘',knight_2:'♘',pawns:'♙'};
+    Object.keys(cfg.chess_board).forEach(function(piece){
+      var sym = pieceGold[piece]||'◈';
+      h += '<div style="background:var(--bg1);border:1px solid var(--border);border-radius:3px;padding:7px 9px">'
+        + '<div style="font-size:16px;color:var(--gold)">' + sym + ' <span style="font-family:var(--fhead);font-size:8px;letter-spacing:1px;color:var(--dim)">' + piece.replace(/_/g,' ').toUpperCase() + '</span></div>'
+        + '<div style="font-family:var(--fmono);font-size:8px;color:var(--white);margin-top:3px;line-height:1.4">' + cfg.chess_board[piece] + '</div>'
+        + '</div>';
+    });
+    h += '</div>';
+  }
+
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+  h += '<div class="fwd"><div class="ct">OPENING MOVES</div>';
+  (cfg.opening_moves||[]).forEach(function(m,i){
+    h += '<div style="display:flex;gap:8px;margin-bottom:6px;align-items:start">'
+      + '<div style="font-family:var(--fmono);font-size:10px;font-weight:700;color:var(--gold);flex-shrink:0">' + (i+1) + '.</div>'
+      + '<div style="font-family:var(--fmono);font-size:8.5px;color:var(--white);line-height:1.5">' + m + '</div></div>';
+  });
+  h += '</div>';
+  h += '<div class="fwd"><div class="ct" style="color:var(--tiger)">♞ KNIGHT THEORIES</div>';
+  (cfg.knight_theories||[]).forEach(function(t){
+    h += '<div style="font-family:var(--fmono);font-size:8.5px;color:var(--tiger);margin-bottom:5px;line-height:1.5">♞ ' + t + '</div>';
+  });
+  h += '<div style="margin-top:10px"><div class="ct">PRIMARY DOMAINS</div>';
+  (cfg.primary_domains||[]).forEach(function(d){
+    h += '<div style="font-family:var(--fmono);font-size:8.5px;color:var(--cyan);margin-bottom:3px">◈ ' + d.replace(/_/g,' ').toUpperCase() + '</div>';
+  });
+  h += '</div></div></div>';
+
+  out.innerHTML = h;
+  addFetty('CHESS MAP: ' + (cfg.posture||'').toUpperCase() + ' · ' + (cfg.agent_lead||'').toUpperCase() + ' lead · ' + (cfg.primary_domains||[]).length + ' primary domains', 'fe');
+}
+
 var NEXUS_API_KEY='';
 var NEXUS_BACKEND_URL=''; // e.g. http://127.0.0.1:7433 when Python bridge is running
 function toggleSettings(){
