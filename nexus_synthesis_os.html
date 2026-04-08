@@ -1334,14 +1334,14 @@ function selectGRNode(id){
     +'</div>'
     +'</div>'
     +'<div style="margin-top:10px;display:flex;gap:5px">'
-    +'<button class="btn bc" onclick="askNexus('gr',''+n.id+'')">ASK NEXUS AGENT ▶</button>'
+    +'<button class="btn bc" onclick="askNexus(\'gr\',\''+n.id+'\')">ASK NEXUS AGENT ▶</button>'
     +'</div>';
   var det=el('gr-node-detail'); if(det) det.innerHTML=h;
 }
 function renderGRM(){
   var h='';
   GR_NODES.forEach(function(n){
-    h+='<div id="grb-'+n.id+'" class="gr-node-btn" onclick="selectGRNode(''+n.id+'')">'
+    h+='<div id="grb-'+n.id+'" class="gr-node-btn" onclick="selectGRNode(\''+n.id+'\')">'
       +'<span style="font-family:var(--fmono);font-size:8px;color:var(--cyan);font-weight:600;min-width:48px">'+n.id+'</span>'
       +'<span style="font-size:8.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+n.name+'</span>'
       +'<span style="font-family:var(--fmono);font-size:10px;font-weight:700;color:var(--wolf)">'+n.impact+'</span>'
