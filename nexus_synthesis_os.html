@@ -541,26 +541,106 @@ html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--white);f
     <div id="diag-body" class="pad g2" style="gap:7px"></div>
   </div>
   <div class="cview sp" id="v-ingest">
-    <div class="sh"><div class="st">DATA INGESTION ENGINE</div><div class="ss">Post-Hoc Append · EV-292+ Auto-Numbering · ChatGPT Export Merge · Domain Auto-Detection · GR Node Routing</div></div>
-    <div class="pad" style="display:flex;flex-direction:column;gap:9px">
-      <div class="card"><div class="ct">PRE-LOAD PACKAGES</div><div id="preload-btns" style="display:flex;gap:5px;flex-wrap:wrap"></div></div>
-      <div class="card">
-        <div class="ct">DROP OR PASTE</div>
-        <div class="idrop" id="idz" onclick="document.getElementById('fi').click()" ondragover="handleDO(event)" ondrop="handleDr(event)" ondragleave="this.classList.remove('drag')">
-          <div style="font-size:22px;margin-bottom:5px">⬇</div>
-          <div style="font-family:var(--fhead);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim)">DROP FILE · CLICK TO UPLOAD</div>
-          <div style="font-size:8px;color:var(--gray);font-family:var(--fmono);margin-top:2px">PDF · DOCX · TXT · JSON · ChatGPT conversations.json</div>
+    <div class="sh"><div class="st" style="color:var(--cyan)">DATA INGESTION ENGINE</div><div class="ss">Two-Layer Architecture · L1 Deterministic Parse · L2 Claude API Enrichment · ChatGPT Export · CSV · Free-text</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:9px;overflow-y:auto;height:calc(100% - 48px)">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+
+        <!-- Layer Architecture Explainer -->
+        <div class="card" style="border-color:var(--cyan2)">
+          <div class="ct" style="color:var(--cyan)">TWO-LAYER INGEST ARCHITECTURE</div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <div style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:8px">
+              <div style="font-family:var(--fhead);font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--cyan);margin-bottom:4px">LAYER 1 · DETERMINISTIC</div>
+              <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);line-height:1.6">
+                No API key needed<br>
+                Keyword domain mapping<br>
+                Entity + EV code extraction<br>
+                GR node generation<br>
+                <span style="color:var(--green)">Instant · Always available</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;color:var(--dim);font-size:14px">→</div>
+            <div style="flex:1;background:var(--bg2);border:1px solid var(--fetty2);border-radius:var(--r2);padding:8px">
+              <div style="font-family:var(--fhead);font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--fetty);margin-bottom:4px">LAYER 2 · CLAUDE API</div>
+              <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);line-height:1.6">
+                Requires API key<br>
+                Deep Wolf/Tiger/Suits routing<br>
+                Cross-GR node linkage<br>
+                Flywheel score enrichment<br>
+                <span style="color:var(--fetty)" id="l2-status-line">Status: checking...</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-family:var(--fmono);font-size:8px;color:var(--dim)" id="ingest-corpus-stats">
+            Corpus: loading...
+          </div>
         </div>
-        <input type="file" id="fi" accept=".pdf,.docx,.txt,.json,.xlsx,.md,.html" onchange="handleFU(event)" multiple>
-        <textarea class="iinput" id="ipa" placeholder="Paste document text, DK-Snappy analysis, or ChatGPT JSON export..." rows="4" style="margin-top:7px"></textarea>
-        <div style="display:flex;gap:5px;margin-top:6px;align-items:center">
-          <input style="flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8.5px;padding:4px 7px;border-radius:var(--r);outline:none" type="text" id="ilbl" placeholder="Document label">
-          <button class="btn bc" onclick="ingestPaste()">INGEST →</button>
-          <button class="btn bg2" onclick="mergeCGPT()">CHATGPT MERGE</button>
+
+        <!-- ChatGPT Export -->
+        <div class="card" style="border-color:var(--tiger2)">
+          <div class="ct" style="color:var(--tiger)">CHATGPT / LLM EXPORT MERGE</div>
+          <div style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);margin-bottom:7px">
+            Paste <span style="color:var(--white)">conversations.json</span> from ChatGPT Settings → Export · or Claude project JSON
+          </div>
+          <textarea class="iinput" id="ipa-chatgpt" placeholder='[{"title":"DraftKings VIE Analysis","mapping":{...}}]' rows="4"></textarea>
+          <div style="display:flex;gap:5px;margin-top:6px;align-items:center;flex-wrap:wrap">
+            <label style="font-family:var(--fmono);font-size:7.5px;color:var(--dim);display:flex;align-items:center;gap:4px;cursor:pointer">
+              <input type="checkbox" id="ingest-l2-toggle" style="accent-color:var(--fetty)">
+              <span>Layer 2 enrichment (Claude API)</span>
+            </label>
+            <button class="btn" style="background:var(--tiger3);color:var(--tiger);border-color:var(--tiger2);margin-left:auto" onclick="runChatGPTIngest()">MERGE + INGEST ▶</button>
+          </div>
+          <div id="ingest-chatgpt-progress" style="display:none;margin-top:7px">
+            <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);margin-bottom:4px" id="ingest-progress-l1">L1: waiting...</div>
+            <div class="mt"><div class="mf" id="ingest-bar-l1" style="background:var(--cyan);width:0%;transition:width .4s"></div></div>
+            <div style="font-family:var(--fmono);font-size:8px;color:var(--dim);margin-top:5px" id="ingest-progress-l2">L2: idle</div>
+            <div class="mt"><div class="mf" id="ingest-bar-l2" style="background:var(--fetty);width:0%;transition:width .4s"></div></div>
+          </div>
         </div>
+
+        <!-- Free-text / Document paste -->
+        <div class="card">
+          <div class="ct">DROP FILE · FREE-TEXT INGEST</div>
+          <div class="idrop" id="idz" onclick="document.getElementById(\'fi\').click()" ondragover="handleDO(event)" ondrop="handleDr(event)" ondragleave="this.classList.remove(\'drag\')">
+            <div style="font-size:18px;margin-bottom:4px">⬇</div>
+            <div style="font-family:var(--fhead);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim)">DROP · CLICK TO UPLOAD</div>
+            <div style="font-size:7.5px;color:var(--gray);font-family:var(--fmono);margin-top:2px">TXT · JSON · CSV · ChatGPT conversations.json</div>
+          </div>
+          <input type="file" id="fi" accept=".txt,.json,.csv,.md" onchange="handleFU(event)" multiple>
+          <textarea class="iinput" id="ipa" placeholder="Paste document text, DK analysis, evidence excerpt..." rows="3" style="margin-top:6px"></textarea>
+          <div style="display:flex;gap:5px;margin-top:5px;align-items:center">
+            <input style="flex:1;background:var(--bg2);border:1px solid var(--border2);color:var(--white);font-family:var(--fmono);font-size:8px;padding:4px 7px;border-radius:var(--r);outline:none" type="text" id="ilbl" placeholder="Label">
+            <button class="btn bc" onclick="ingestPaste()">INGEST →</button>
+          </div>
+        </div>
+
+        <!-- Pre-loads -->
+        <div class="card"><div class="ct">PRE-LOAD PACKAGES</div><div id="preload-btns" style="display:flex;gap:5px;flex-wrap:wrap"></div></div>
       </div>
-      <div class="card"><div class="ct">INGESTION LOG · <span id="icnt">0</span> ITEMS · NEXT: <span id="inev">EV-292</span></div><div id="ilog" style="max-height:160px;overflow-y:auto"><div style="text-align:center;padding:12px;font-family:var(--fmono);font-size:8.5px;color:var(--dim)">No items ingested yet.</div></div></div>
-      <div class="card"><div class="ct">FETTY FM CONSOLE</div><div class="fettycon" id="fcon"></div></div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+
+        <!-- Flywheel Live Impact -->
+        <div class="card" id="ingest-fw-panel">
+          <div class="ct" style="color:var(--fetty)">FLYWHEEL IMPACT · LIVE</div>
+          <div id="ingest-fw-bars"></div>
+        </div>
+
+        <!-- Ingestion Log -->
+        <div class="card" style="flex:1">
+          <div class="ct">INGESTION LOG · <span id="icnt">0</span> ITEMS · NEXT EV: <span id="inev">EV-292</span></div>
+          <div id="ilog" style="max-height:280px;overflow-y:auto">
+            <div style="text-align:center;padding:12px;font-family:var(--fmono);font-size:8.5px;color:var(--dim)">No items ingested yet.</div>
+          </div>
+        </div>
+
+        <!-- FettyFM Console -->
+        <div class="card"><div class="ct">FETTY FM CONSOLE</div><div class="fettycon" id="fcon" style="max-height:120px;overflow-y:auto"></div></div>
+      </div>
+
     </div>
   </div>
 
@@ -1189,6 +1269,7 @@ function setV(v){
   if(tEl) tEl.classList.add('on');
   if(v==='ddf') renderDDFL1();
   if(v==='dsb') renderDSB();
+  if(v==='ingest') initIngestView();
   if(v==='diag') renderDiag();
   if(v==='obs') renderObs();
   if(v==='wfr') renderWFR();
@@ -1957,16 +2038,171 @@ function ingestPaste(){
   if(el('ilbl')) el('ilbl').value='';
 }
 function mergeCGPT(){
-  var c=el('ipa')&&el('ipa').value||'';
-  var l=el('ilbl')&&el('ilbl').value||'ChatGPT Export';
-  if(!c.trim()){alert('Paste ChatGPT conversations.json content first.');return;}
+  // Legacy alias — redirect to new two-layer ingest
+  var src=el('ipa')&&el('ipa').value||'';
+  if(src.trim()) { if(el('ipa-chatgpt')) el('ipa-chatgpt').value=src; }
+  runChatGPTIngest();
+}
+
+function runChatGPTIngest(){
+  var raw=(el('ipa-chatgpt')&&el('ipa-chatgpt').value||'').trim();
+  if(!raw){addFetty('ChatGPT Merge: No JSON pasted','fw2');return;}
+
+  var runL2=el('ingest-l2-toggle')&&el('ingest-l2-toggle').checked;
+  var prog=el('ingest-chatgpt-progress');
+  if(prog) prog.style.display='block';
+
+  function setBar(layer,pct,msg){
+    var bar=el('ingest-bar-'+layer), lbl=el('ingest-progress-'+layer);
+    if(bar) bar.style.width=pct+'%';
+    if(lbl) lbl.textContent=msg;
+  }
+
+  // Layer 1 — always runs client-side first (instant domain detection)
+  setBar('l1',20,'L1: parsing...');
+  var l1Result = clientL1Parse(raw);
+  setBar('l1',100,'L1: complete · '+l1Result.nodes+' nodes · '+l1Result.evCodes+' EV codes');
+  addFetty('L1 INGEST: '+l1Result.nodes+' nodes extracted · domains: '+l1Result.domains.join('/'),'fe');
+
+  // Refresh flywheel display
+  refreshIngestFlywheel(l1Result.flywheelDeltas);
+
+  // If backend connected, also push to backend for persistence + optional L2
+  if(NEXUS_BACKEND_URL){
+    setBar('l2', runL2?10:0, runL2?'L2: sending to backend...':'L2: backend sync (no enrichment)');
+    fetch(NEXUS_BACKEND_URL+'/api/ingest_chatgpt',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({json:raw, layer2:runL2})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.error){
+        setBar('l2',0,'L2: error — '+d.error);
+        addFetty('INGEST BACKEND ERROR: '+d.error,'fw2');
+      } else {
+        setBar('l2',100,'L2: '+(runL2?'enriched ':'synced · ')+d.new_nodes+' new nodes');
+        addFetty('BACKEND INGEST: +'+d.new_nodes+' nodes · +'+d.new_evidence+' EV anchors · total: '+d.total_nodes,'fe');
+        if(d.flywheel_deltas) refreshIngestFlywheel(d.flywheel_deltas);
+        // Sync state to pull updated GR nodes
+        setTimeout(syncFromBackend, 800);
+      }
+    }).catch(function(e){
+      setBar('l2',0,'L2: backend unreachable');
+      addFetty('Backend ingest failed: '+e.message,'fw2');
+    });
+  } else {
+    setBar('l2',0,'L2: no backend (run python nexus_ai.py serve)');
+    addFetty('Tip: connect backend for persistent L1 storage + L2 enrichment','fd');
+  }
+
+  if(el('ipa-chatgpt')) el('ipa-chatgpt').value='';
+}
+
+function clientL1Parse(raw){
+  // Client-side Layer 1 approximation — extracts titles, domain keywords, EV codes
+  var result={nodes:0, evCodes:0, domains:[], flywheelDeltas:{}};
+  var domainKw={
+    'accounting':/(asc.?606|icfr|restatement|tier.credit|breakage)/i,
+    'regulatory':/(cftc|mgcb|michigan gaming|crowey|cea|material.change)/i,
+    'governance':/(caremark|fiduciary|vie|asc.?810|consolidat|arbitration)/i,
+    'platform':/(privacy|tos|terms.of.service|gdpr|ccpa|section.230)/i,
+    'litigation':/(rico|mcpa|class.action|hermalyn|settlement|damages)/i
+  };
   try{
-    var parsed=JSON.parse(c);
-    var items=Array.isArray(parsed)?parsed:[parsed];
-    items.forEach(function(item){ingest(item.title||l,JSON.stringify(item),'chatgpt_export','chatgpt',true);});
-    addFetty('CHATGPT MERGE: '+items.length+' conversations ingested → EV-'+(nextEV-items.length)+'→EV-'+(nextEV-1),'fe');
-  } catch(err){ingest(l,c,'chatgpt_text','chatgpt',true);addFetty('CHATGPT MERGE: Text ingested (non-JSON)','fw2');}
-  if(el('ipa')) el('ipa').value='';
+    var parsed=JSON.parse(raw);
+    var convs=Array.isArray(parsed)?parsed:[parsed];
+    result.nodes=convs.length;
+    var text=JSON.stringify(parsed).toLowerCase();
+    var evMatches=text.match(/\bev-[a-z0-9\-]+\b/gi)||[];
+    result.evCodes=[...new Set(evMatches)].length;
+    Object.keys(domainKw).forEach(function(d){
+      if(domainKw[d].test(text)){
+        result.domains.push(d);
+        result.flywheelDeltas[d]=(result.flywheelDeltas[d]||0)+1.5;
+      }
+    });
+    // Log each conversation as an ingest entry
+    convs.forEach(function(c){
+      var title=c.title||c.name||'ChatGPT Export';
+      ingest(title,JSON.stringify(c),'chatgpt_export','chatgpt',true);
+    });
+  } catch(e){
+    // Not JSON — treat as free text
+    result.nodes=1;
+    ingest('ChatGPT Text Export',raw,'chatgpt_text','chatgpt',true);
+    result.domains=['litigation'];
+    result.flywheelDeltas.litigation=1.0;
+    addFetty('L1: Non-JSON text ingested (plain format)','fw2');
+  }
+  return result;
+}
+
+function refreshIngestFlywheel(deltas){
+  // Update PROJ flywheel scores and refresh the ingest panel bars
+  if(!deltas) return;
+  var ms=PROJ.flywheel&&PROJ.flywheel.domain_skillset&&PROJ.flywheel.domain_skillset.mastery_scores;
+  var fw=el('ingest-fw-bars');
+  if(!fw) return;
+  var h='';
+  // Apply deltas to mastery_scores
+  if(ms){
+    var aliasMap={'forensic_accounting':'accounting','regulatory_cftc':'regulatory',
+                  'corp_accountability':'governance','privacy_tech':'platform',
+                  'harm_reduction':'litigation','litigation_risk':'litigation'};
+    Object.keys(deltas).forEach(function(dom){
+      var key=aliasMap[dom]||dom;
+      if(ms[key]!==undefined) ms[key]=Math.min(1,(ms[key]||0)+deltas[dom]/100);
+    });
+  }
+  // Show delta bars
+  Object.keys(deltas).forEach(function(dom){
+    var delta=deltas[dom];
+    var col=dom.indexOf('account')>-1?'cyan':dom.indexOf('reg')>-1?'gold':dom.indexOf('gov')>-1?'suits':dom.indexOf('priv')>-1?'wolf':'fetty';
+    h+='<div style="margin-bottom:6px">'
+      +'<div style="display:flex;justify-content:space-between;font-family:var(--fmono);font-size:8px;margin-bottom:2px">'
+      +'<span style="color:var(--'+col+')">'+dom.replace(/_/g,' ').toUpperCase()+'</span>'
+      +'<span style="color:var(--green)">+'+delta.toFixed(1)+'</span>'
+      +'</div>'
+      +'<div class="mt"><div class="mf" style="background:var(--'+col+');width:'+Math.min(100,delta*20)+'%;transition:width .5s"></div></div>'
+      +'</div>';
+  });
+  fw.innerHTML = h || '<div style="font-family:var(--fmono);font-size:8px;color:var(--dim)">No domain signals detected</div>';
+}
+
+function initIngestView(){
+  // Called when ingest view opens — load corpus stats + L2 status
+  var fw=el('ingest-fw-bars');
+  if(fw && PROJ.flywheel && PROJ.flywheel.domain_skillset){
+    var ms=PROJ.flywheel.domain_skillset.mastery_scores;
+    var h='';
+    Object.keys(ms).forEach(function(dom){
+      var score=Math.round((ms[dom]||0)*100);
+      var col=DOM_COLORS[dom]||'cyan';
+      h+='<div style="margin-bottom:5px">'
+        +'<div style="display:flex;justify-content:space-between;font-family:var(--fmono);font-size:8px;margin-bottom:2px">'
+        +'<span style="color:var(--'+col+')">'+((DOM_LABELS[dom]||dom).toUpperCase())+'</span>'
+        +'<span style="color:var(--'+col+')">'+score+'%</span>'
+        +'</div>'
+        +'<div class="mt"><div class="mf" style="background:var(--'+col+');width:'+score+'%"></div></div>'
+        +'</div>';
+    });
+    fw.innerHTML=h;
+  }
+  // Check backend status
+  var statsEl=el('ingest-corpus-stats');
+  var l2El=el('l2-status-line');
+  if(NEXUS_BACKEND_URL){
+    fetch(NEXUS_BACKEND_URL+'/api/layer2/status').then(function(r){return r.json();}).then(function(d){
+      if(statsEl) statsEl.textContent='Corpus: '+d.total_nodes+' GR nodes · '+d.chatgpt_nodes+' ChatGPT nodes · mode: '+d.mode;
+      if(l2El) l2El.textContent='Status: '+(d.layer2_available?'READY (API key set)':'no API key — L1 only');
+      if(l2El) l2El.style.color=d.layer2_available?'var(--fetty)':'var(--dim)';
+    }).catch(function(){
+      if(statsEl) statsEl.textContent='Backend not connected';
+      if(l2El){l2El.textContent='Status: backend offline';l2El.style.color='var(--dim)';}
+    });
+  } else {
+    if(statsEl) statsEl.textContent='No backend — local mode (set Python Bridge URL in Settings)';
+    if(l2El){l2El.textContent='Status: no backend';l2El.style.color='var(--dim)';}
+  }
 }
 function initPreloads(){
   var pb=el('preload-btns'); if(!pb) return;

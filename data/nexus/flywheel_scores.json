@@ -15,7 +15,7 @@
       "MB-CASELAW6"
     ],
     "section_count": 38,
-    "last_updated": "2026-04-08T09:18:43"
+    "last_updated": "2026-04-08T09:52:05"
   },
   "platform_economics": {
     "score": 75.0,
@@ -33,7 +33,7 @@
       "MB-EXX2"
     ],
     "section_count": 13,
-    "last_updated": "2026-04-08T09:18:43"
+    "last_updated": "2026-04-08T09:52:05"
   },
   "privacy_tos": {
     "score": 79.7,
@@ -51,7 +51,7 @@
       "MB-XB3"
     ],
     "section_count": 27,
-    "last_updated": "2026-04-08T09:18:43"
+    "last_updated": "2026-04-08T09:52:05"
   },
   "governance": {
     "score": 81.9,
@@ -69,10 +69,10 @@
       "MB-VFBAY"
     ],
     "section_count": 43,
-    "last_updated": "2026-04-08T09:18:43"
+    "last_updated": "2026-04-08T09:52:05"
   },
   "litigation_risk": {
-    "score": 78,
+    "score": 79.2,
     "rationale": "§XII.V.2 -- GPS LLC VIE Three-Track Definitive Ana; MASTERBRIEF v54 -- Klein-Team ADR Framework Cover ; Section I -- Contract Formation and Hidden Economi",
     "nodes": [
       "MB-I0",
@@ -87,6 +87,6 @@
       "MB-REDTEAM1"
     ],
     "section_count": 22,
-    "last_updated": "2026-04-08T09:18:43"
+    "last_updated": "2026-04-08T09:52:05"
   }
 }

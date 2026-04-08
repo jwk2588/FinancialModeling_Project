@@ -204,7 +204,7 @@
       "--"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-I1": {
     "node_id": "MB-I1",
@@ -231,15 +231,15 @@
       "AutoZone"
     ],
     "domains": [
-      "privacy_tos",
-      "litigation_risk"
+      "litigation_risk",
+      "privacy_tos"
     ],
     "tissue": [
       "MCPA",
       "AutoZone"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-I1A": {
     "node_id": "MB-I1A",
@@ -266,15 +266,15 @@
       "RICO"
     ],
     "domains": [
-      "privacy_tos",
-      "litigation_risk"
+      "litigation_risk",
+      "privacy_tos"
     ],
     "tissue": [
       "MCPA",
       "RICO"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-II1": {
     "node_id": "MB-II1",
@@ -306,7 +306,7 @@
       "CFTC F08-01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-V0": {
     "node_id": "MB-V0",
@@ -333,15 +333,15 @@
       "MCPA"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VA": {
     "node_id": "MB-VA",
@@ -374,7 +374,7 @@
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VB": {
     "node_id": "MB-VB",
@@ -406,7 +406,7 @@
       "All fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VC": {
     "node_id": "MB-VC",
@@ -421,8 +421,8 @@
     ],
     "evidence": [
       "Smith v. Globe Life defeat; MCPA §445.903 applicability despite licensed status",
-      "NOTE: AG v. Eli Lilly pending -- expected June/July 2026 opinion",
-      "NOTE: AG v. Eli Lilly pending — expected June/July 2026 opinion"
+      "NOTE: AG v. Eli Lilly pending — expected June/July 2026 opinion",
+      "NOTE: AG v. Eli Lilly pending -- expected June/July 2026 opinion"
     ],
     "ev_codes": "EV-T1-04 | EV-017",
     "sb_codes": "SB-23 | SB-08",
@@ -440,7 +440,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VD": {
     "node_id": "MB-VD",
@@ -454,8 +454,8 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: Ground 7 (VIE circular disclaimer) = most novel; not yet in MB",
-      "7 arbitration kill grounds; AutoZone illusory consideration precedent; forum collapse"
+      "7 arbitration kill grounds; AutoZone illusory consideration precedent; forum collapse",
+      "NOTE: Ground 7 (VIE circular disclaimer) = most novel; not yet in MB"
     ],
     "ev_codes": "EV-T1-04 | EV-017 | EV-094",
     "sb_codes": "SB-08 | SB-LR-52",
@@ -473,7 +473,7 @@
       "All fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VE": {
     "node_id": "MB-VE",
@@ -500,15 +500,15 @@
       "MCPA"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VF": {
     "node_id": "MB-VF",
@@ -540,7 +540,7 @@
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VIB": {
     "node_id": "MB-VIB",
@@ -574,7 +574,7 @@
       "ESG"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VIC": {
     "node_id": "MB-VIC",
@@ -608,7 +608,7 @@
       "Apple F02"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VII": {
     "node_id": "MB-VII",
@@ -642,7 +642,7 @@
       "SEC"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIV2": {
     "node_id": "MB-XIIV2",
@@ -658,10 +658,10 @@
       "SUITS"
     ],
     "evidence": [
-      "PENDING: Full three-track analysis completed Apr5a. Arbitration Ground 7 (VIE circular disclaimer) is most novel argument in corpus.",
-      "NOTE: 6 new case law citations required: Lernout & Hauspie; Lucent; Williams v. Walker-Thomas; TSC Industries; Stac Electronics; SEC v. Raytheon",
+      "Three-track VIE analysis: (1) DK as principal obligor; (2) Absent ARV/BoL/condition = SM-new-01 audit-testability defect; (3) GPS LLC probable VIE under ASC 810-10-15-14; 10-K disclosure failure; Arbitration Ground 7 circular disclaimer",
       "PENDING: Full three-track analysis completed Apr5a. Arbitration Ground 7 (VIE circular disclaimer) is most novel argument in corpus. Williams v. Walker-Thomas precedent key.",
-      "Three-track VIE analysis: (1) DK as principal obligor; (2) Absent ARV/BoL/condition = SM-new-01 audit-testability defect; (3) GPS LLC probable VIE under ASC 810-10-15-14; 10-K disclosure failure; Arbitration Ground 7 circular disclaimer"
+      "NOTE: 6 new case law citations required: Lernout & Hauspie; Lucent; Williams v. Walker-Thomas; TSC Industries; Stac Electronics; SEC v. Raytheon",
+      "PENDING: Full three-track analysis completed Apr5a. Arbitration Ground 7 (VIE circular disclaimer) is most novel argument in corpus."
     ],
     "ev_codes": "EV-271 | EV-094",
     "sb_codes": "SB-34B | SB-LR-68",
@@ -676,10 +676,10 @@
       "AutoZone Arb Ground 7"
     ],
     "domains": [
-      "governance",
-      "privacy_tos",
       "litigation_risk",
-      "revenue_recognition"
+      "revenue_recognition",
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
@@ -688,7 +688,7 @@
       "AutoZone Arb Ground 7"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIILREV": {
     "node_id": "MB-XIILREV",
@@ -704,8 +704,8 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: Critical: replaces existing reconciliation point calculation entirely",
       "Six new audit complexity dimensions: sportsbook odds-bracket boundary; DFS/Pick6 split; DK Horse 400% TC rate cut (CM-new-01); CAD 0.8x FX scalar (vs actual 0.72-0.74); NJ geographic exclusion; four-vertical timing asymmetry. Five BDO withdrawal triggers incl. Trigger 5 (cross-vertical timing).",
+      "NOTE: Critical: replaces existing reconciliation point calculation entirely",
       "PENDING: Prior figure: ~10.8B. Revised: 80.3B (7.4x increase). Trigger 5 = new BDO withdrawal trigger not in any prior version."
     ],
     "ev_codes": "EV-271 | EV-119 | EV-120",
@@ -726,7 +726,7 @@
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VANEW": {
     "node_id": "MB-VANEW",
@@ -741,12 +741,12 @@
       "WOLF"
     ],
     "evidence": [
-      "NOTE: AG v. Eli Lilly pending -- expected June/July 2026 opinion may affect Smith defense",
-      "CM-new-01: DK Horse TC rate 1/$4 to 1/$20 (400% cut, silent). CM-new-02: Loyalty-year boundary shifted to Jan 3. CM-new-03: Override-tier exclusion codified. CM-new-04: Elite Rewards Credits forfeiture deadline hardcoded.",
       "NOTE: AG v. Eli Lilly pending — expected June/July 2026 opinion",
-      "PENDING: Source: Dynasty_Rewards_Rules-2.pdf and -3.pdf dated 1/3/2025.",
+      "CM-new-01: DK Horse TC rate 1/$4 to 1/$20 (400% cut, silent). CM-new-02: Loyalty-year boundary shifted to Jan 3. CM-new-03: Override-tier exclusion codified. CM-new-04: Elite Rewards Credits forfeiture deadline hardcoded.",
       "CM-new-01: DK Horse TC rate 1/$4→1/$20 (400% cut, silent). CM-new-02: Loyalty-year boundary shifted to Jan 3. CM-new-03: Override-tier exclusion codified. CM-new-04: Elite Rewards Credits forfeiture deadline hardcoded. + Onyx/Diamond stagger conflict (Diamond opens 1/1 before Onyx 1/3).",
-      "PENDING: Source: Dynasty_Rewards_Rules-2.pdf and -3.pdf dated 1/3/2025. Post-period-end Jan 1-3 tail = ASC 450 contingent liability at Dec 31."
+      "PENDING: Source: Dynasty_Rewards_Rules-2.pdf and -3.pdf dated 1/3/2025. Post-period-end Jan 1-3 tail = ASC 450 contingent liability at Dec 31.",
+      "PENDING: Source: Dynasty_Rewards_Rules-2.pdf and -3.pdf dated 1/3/2025.",
+      "NOTE: AG v. Eli Lilly pending -- expected June/July 2026 opinion may affect Smith defense"
     ],
     "ev_codes": "EV-119 | EV-120",
     "sb_codes": "SB-LR-52 | SB-23",
@@ -759,15 +759,15 @@
       "BDO F01"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VA2PRONG": {
     "node_id": "MB-VA2PRONG",
@@ -782,12 +782,12 @@
       "WOLF"
     ],
     "evidence": [
-      "PENDING: Most important jurisdictional improvement to Michigan claims package.",
       "NOTE: AG v. Eli Lilly — framework survives both Smith standing/falling outcomes",
-      "PENDING: Most important jurisdictional improvement to Michigan claims package. Converts MCPA claims from consumer complaints to documented regulatory violations.",
       "R 432.206(2) Prong 1 mandatory disclosure; R 432.632a(9) Prong 2 prior written approval; R 432.663(1) IC submit-and-approve cycle.",
       "R 432.206(2) Prong 1 mandatory disclosure; R 432.632a(9) Prong 2 prior written approval; R 432.663(1) IC submit-and-approve cycle. Each of 8 challenged changes = never submitted to MGCB = no ‘specific authorization’ = Smith exemption defeated.",
-      "NOTE: AG v. Eli Lilly -- framework survives both Smith standing/falling outcomes"
+      "PENDING: Most important jurisdictional improvement to Michigan claims package. Converts MCPA claims from consumer complaints to documented regulatory violations.",
+      "NOTE: AG v. Eli Lilly -- framework survives both Smith standing/falling outcomes",
+      "PENDING: Most important jurisdictional improvement to Michigan claims package."
     ],
     "ev_codes": "",
     "sb_codes": "SB-APP-03",
@@ -800,15 +800,15 @@
       "MCPA"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VFBAY": {
     "node_id": "MB-VFBAY",
@@ -823,11 +823,11 @@
       "WOLF"
     ],
     "evidence": [
-      "NOTE: Bilateral leverage: neither Bay Mills nor DK can represent adequate compliance while 5 siloes remain",
-      "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation. Five failure siloes: Customer Support disconnection; VIP host IOC undocumented; 483% TC change non-filing; Alex Franks off-book; 2025 as-is disclaimer.",
-      "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation eliminates willful blindness. Five failure siloes: Customer Support disconnection; VIP host IOC undocumented; 483% TC change non-filing; Alex Franks off-book; 2025 as-is disclaimer. Bilateral license suspension risk = settlement compression.",
       "PENDING: Created Apr3, developed Apr4a as full doctrine.",
-      "PENDING: Created Apr3 as initial theory, developed Apr4a as full doctrine. Already partially in MB but needs expansion of five-silo analysis."
+      "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation. Five failure siloes: Customer Support disconnection; VIP host IOC undocumented; 483% TC change non-filing; Alex Franks off-book; 2025 as-is disclaimer.",
+      "NOTE: Bilateral leverage: neither Bay Mills nor DK can represent adequate compliance while 5 siloes remain",
+      "PENDING: Created Apr3 as initial theory, developed Apr4a as full doctrine. Already partially in MB but needs expansion of five-silo analysis.",
+      "Bay Mills/Crown MI Gaming LLC tribal anchor. R 432.639 joint compliance obligation eliminates willful blindness. Five failure siloes: Customer Support disconnection; VIP host IOC undocumented; 483% TC change non-filing; Alex Franks off-book; 2025 as-is disclaimer. Bilateral license suspension risk = settlement compression."
     ],
     "ev_codes": "EV-BM-01 | EV-BM-02",
     "sb_codes": "SB-BM-01",
@@ -845,7 +845,7 @@
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIVPLST": {
     "node_id": "MB-XIIVPLST",
@@ -861,12 +861,12 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: 6 discrete arguments — each independently supports BDO withdrawal",
-      "Six ASC-mapped arguments each with BDO withdrawal trigger: CM-01 ASC 606 principal-agent (Playstudios p.86 controls test); CM-02 free vs. earned TC segregation; CM-03 breakage unauditability (player behavior standard); CM-04 ASC 830 FX non-disclosure; CM-05 ASC 820 fair value collapse; CM-06 ASC 280 segment reporting omission. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist.",
       "NOTE: 6 discrete arguments -- each independently supports BDO withdrawal",
       "PENDING: Playstudios 10-K p.86 direct comparator. Deloitte no CAM on loyalty = EGC exemption. BDO unqualified ICFR opinion covers period where all 6 failures were present. Devastating asymmetry.",
-      "Six ASC-mapped arguments each with BDO withdrawal trigger. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist.",
-      "PENDING: Playstudios 10-K p.86 direct comparator. Devastating asymmetry."
+      "NOTE: 6 discrete arguments — each independently supports BDO withdrawal",
+      "PENDING: Playstudios 10-K p.86 direct comparator. Devastating asymmetry.",
+      "Six ASC-mapped arguments each with BDO withdrawal trigger: CM-01 ASC 606 principal-agent (Playstudios p.86 controls test); CM-02 free vs. earned TC segregation; CM-03 breakage unauditability (player behavior standard); CM-04 ASC 830 FX non-disclosure; CM-05 ASC 820 fair value collapse; CM-06 ASC 280 segment reporting omission. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist.",
+      "Six ASC-mapped arguments each with BDO withdrawal trigger. Key asymmetry: DK has unqualified BDO ICFR opinion certifying failures dont exist."
     ],
     "ev_codes": "EV-271 | EV-093",
     "sb_codes": "SB-34B | SB-LR-52",
@@ -886,7 +886,7 @@
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIWAPPL": {
     "node_id": "MB-XIIWAPPL",
@@ -902,12 +902,12 @@
       "SUITS"
     ],
     "evidence": [
-      "AppLovin governance disclosure paradox vs DK 85% Robins Class B control without formal Controlled Company declaration.",
-      "PENDING: AppLovin Lead Independent Director Craig Billings. DK governance disclosure paradox. Entire Fairness Standard triggered without formal declaration.",
-      "NOTE: Governance disclosure paradox = Entire Fairness Standard exposure",
-      "PENDING: Entire Fairness Standard triggered without formal declaration.",
       "NOTE: Governance disclosure paradox = Entire Fairness Standard exposure without formal controlled company protection",
-      "AppLovin governance disclosure paradox: ~93% voting control formally declared as Controlled Company, exemption formally invoked but voluntarily maintains full independent committees anyway. DK: 85% Robins Class B control, never formally declares Controlled Company status, implicitly commits to full independence standards it then violates."
+      "NOTE: Governance disclosure paradox = Entire Fairness Standard exposure",
+      "PENDING: AppLovin Lead Independent Director Craig Billings. DK governance disclosure paradox. Entire Fairness Standard triggered without formal declaration.",
+      "AppLovin governance disclosure paradox: ~93% voting control formally declared as Controlled Company, exemption formally invoked but voluntarily maintains full independent committees anyway. DK: 85% Robins Class B control, never formally declares Controlled Company status, implicitly commits to full independence standards it then violates.",
+      "PENDING: Entire Fairness Standard triggered without formal declaration.",
+      "AppLovin governance disclosure paradox vs DK 85% Robins Class B control without formal Controlled Company declaration."
     ],
     "ev_codes": "EV-093",
     "sb_codes": "SB-APP-01",
@@ -927,7 +927,7 @@
       "Delaware governance"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIWFX": {
     "node_id": "MB-XIIWFX",
@@ -944,11 +944,11 @@
     ],
     "evidence": [
       "PENDING: Identified Apr5b as buried uranium rod — forensic catch that changes litigation chessboard.",
-      "Crown CAD rate = 1/$0.008 CAD implies 0.80 USD:CAD. Actual rate 0.72-0.74. 8-11% undercompensation of Canadian users.",
-      "PENDING: Identified Apr5b as ‘buried uranium rod’ -- forensic catch that changes litigation chessboard. No prior mention in any MB version.",
       "NOTE: Strongest when combined with Playstudios comparator",
+      "PENDING: Identified Apr5b as ‘buried uranium rod’ -- forensic catch that changes litigation chessboard. No prior mention in any MB version.",
+      "NOTE: Strongest when combined with Playstudios comparator (Playstudios discloses FX; DK does not)",
       "Crown CAD rate = 1 Crown / $0.008 CAD implies 0.80 USD:CAD. Actual rate 0.72-0.74. 8-11% undercompensation of Canadian users. No ASC 830 hedge accounting. No translation methodology disclosure. Cross-border vendor sourcing (GPS/Snappy) + App Store CAD settlement = additional undisclosed FX exposure layers. Valuation impossible.",
-      "NOTE: Strongest when combined with Playstudios comparator (Playstudios discloses FX; DK does not)"
+      "Crown CAD rate = 1/$0.008 CAD implies 0.80 USD:CAD. Actual rate 0.72-0.74. 8-11% undercompensation of Canadian users."
     ],
     "ev_codes": "EV-271",
     "sb_codes": "",
@@ -961,15 +961,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIITEGC": {
     "node_id": "MB-XIITEGC",
@@ -985,12 +985,12 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: SOX 404(b) attestation dates: BDO unqualified opinion issued for year ended December 31 2023",
-      "PENDING: New BDO withdrawal trigger independent of audit impossibility argument. BDO attested to effectiveness of controls that demonstrably failed.",
-      "NOTE: SOX 404(b) attestation: BDO unqualified opinion for year ended Dec 31 2023",
-      "Post-EGC expiration: DK required to have BDO independently attest ICFR under SOX 404(b). BDO issued unqualified attestation December 31 2023. All five ICFR failure categories (IOC credits; VIP host override; TC inflation; Calendar Bleed; GPS opaque fulfillment) were present and uncorrected when BDO attested. PCAOB AS 2201 requires withdrawal/revision upon material weakness identification post-issuance.",
+      "Post-EGC expiration: BDO issued unqualified attestation Dec 31 2023. All five ICFR failure categories present and uncorrected when BDO attested.",
       "PENDING: New BDO withdrawal trigger independent of audit impossibility.",
-      "Post-EGC expiration: BDO issued unqualified attestation Dec 31 2023. All five ICFR failure categories present and uncorrected when BDO attested."
+      "PENDING: New BDO withdrawal trigger independent of audit impossibility argument. BDO attested to effectiveness of controls that demonstrably failed.",
+      "NOTE: SOX 404(b) attestation dates: BDO unqualified opinion issued for year ended December 31 2023",
+      "NOTE: SOX 404(b) attestation: BDO unqualified opinion for year ended Dec 31 2023",
+      "Post-EGC expiration: DK required to have BDO independently attest ICFR under SOX 404(b). BDO issued unqualified attestation December 31 2023. All five ICFR failure categories (IOC credits; VIP host override; TC inflation; Calendar Bleed; GPS opaque fulfillment) were present and uncorrected when BDO attested. PCAOB AS 2201 requires withdrawal/revision upon material weakness identification post-issuance."
     ],
     "ev_codes": "EV-093 | EV-004",
     "sb_codes": "SB-34B",
@@ -1003,15 +1003,15 @@
       "PCAOB F07"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0101": {
     "node_id": "MB-F0101",
@@ -1026,8 +1026,8 @@
       "TIGER"
     ],
     "evidence": [
-      "Audit impossibility; professional standards; PCAOB AS 2501; AS 2201",
-      "NOTE: First-strike mechanism"
+      "NOTE: First-strike mechanism",
+      "Audit impossibility; professional standards; PCAOB AS 2501; AS 2201"
     ],
     "ev_codes": "EV-004 | EV-093 | EV-271",
     "sb_codes": "SB-34B | SB-LR-52",
@@ -1045,7 +1045,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0201": {
     "node_id": "MB-F0201",
@@ -1078,7 +1078,7 @@
       "Apple F02"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0401": {
     "node_id": "MB-F0401",
@@ -1111,7 +1111,7 @@
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0801": {
     "node_id": "MB-F0801",
@@ -1144,7 +1144,7 @@
       "CFTC F08"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIH": {
     "node_id": "MB-XIIH",
@@ -1173,15 +1173,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIM": {
     "node_id": "MB-XIIM",
@@ -1215,7 +1215,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-DISCGPS": {
     "node_id": "MB-DISCGPS",
@@ -1229,11 +1229,11 @@
       "WOLF"
     ],
     "evidence": [
+      "NOTE: Cross-reference to §XII.V.2 three-track analysis",
+      "PENDING: 14 specific questions developed Apr5a targeting GPS primary beneficiary test.",
       "PENDING: 14 specific questions developed Apr5a targeting GPS primary beneficiary test. Each question maps to an element of ASC 810-10-15-14 three-prong test.",
       "14 deposition questions targeting GPS LLC VIE threshold test: catalog selection authority; condition disclosure decisions; ARV determination methodology; Bill of Lading documentation; BDO records provided to auditors; VIE relationship test (DK approval authority over GPS vendor selection; DK ability to direct GPS item substitution; DK margin differential capture).",
-      "PENDING: 14 specific questions developed Apr5a targeting GPS primary beneficiary test.",
-      "14 deposition questions targeting GPS LLC VIE threshold test: catalog selection authority; condition disclosure decisions; ARV determination methodology; Bill of Lading documentation.",
-      "NOTE: Cross-reference to §XII.V.2 three-track analysis"
+      "14 deposition questions targeting GPS LLC VIE threshold test: catalog selection authority; condition disclosure decisions; ARV determination methodology; Bill of Lading documentation."
     ],
     "ev_codes": "EV-271",
     "sb_codes": "SB-34B",
@@ -1254,7 +1254,7 @@
       "All fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-CASELAW6": {
     "node_id": "MB-CASELAW6",
@@ -1268,12 +1268,12 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: Williams v. Walker-Thomas is key precedent for Arbitration Ground 7",
-      "(1) In re Lernout & Hauspie Sec. Litig. 2003 -- auditor withdrawal when audit impossible. (2) In re Lucent Technologies Sec. Act Release No. 8506 (2005) -- side arrangements = undisclosed liabilities. (3) Williams v. Walker-Thomas Furniture Co. 350 F.2d 445 (D.C. Cir. 1965) -- disclaimer + operational control = unconscionable. (4) TSC Industries v. Northway 426 U.S. 438 (1976) -- materiality standard. (5) In re Stac Electronics Sec. Litig. 89 F.3d 1399 (9th Cir. 1996) -- collective complex structure assessment. (6) SEC v. Raytheon Co. No. 1:19-cv-00291 (D.D.C. 2019) -- revenue manipulation through contractual complexity.",
       "NOTE: Williams v. Walker-Thomas is the key precedent for Arbitration Ground 7 circular disclaimer",
-      "(1) In re Lernout & Hauspie — auditor withdrawal when audit impossible. (2) In re Lucent — side arrangements = undisclosed liabilities. (3) Williams v. Walker-Thomas — disclaimer + operational control = unconscionable. (4) TSC Industries — materiality standard. (5) In re Stac Electronics — collective complex structure assessment. (6) SEC v. Raytheon — revenue manipulation.",
+      "PENDING: All 6 citations developed Apr5a for GPS VIE three-track analysis. Required before §XII.V.2 insertion.",
       "PENDING: All 6 citations developed Apr5a for GPS VIE three-track analysis.",
-      "PENDING: All 6 citations developed Apr5a for GPS VIE three-track analysis. Required before §XII.V.2 insertion."
+      "NOTE: Williams v. Walker-Thomas is key precedent for Arbitration Ground 7",
+      "(1) In re Lernout & Hauspie — auditor withdrawal when audit impossible. (2) In re Lucent — side arrangements = undisclosed liabilities. (3) Williams v. Walker-Thomas — disclaimer + operational control = unconscionable. (4) TSC Industries — materiality standard. (5) In re Stac Electronics — collective complex structure assessment. (6) SEC v. Raytheon — revenue manipulation.",
+      "(1) In re Lernout & Hauspie Sec. Litig. 2003 -- auditor withdrawal when audit impossible. (2) In re Lucent Technologies Sec. Act Release No. 8506 (2005) -- side arrangements = undisclosed liabilities. (3) Williams v. Walker-Thomas Furniture Co. 350 F.2d 445 (D.C. Cir. 1965) -- disclaimer + operational control = unconscionable. (4) TSC Industries v. Northway 426 U.S. 438 (1976) -- materiality standard. (5) In re Stac Electronics Sec. Litig. 89 F.3d 1399 (9th Cir. 1996) -- collective complex structure assessment. (6) SEC v. Raytheon Co. No. 1:19-cv-00291 (D.D.C. 2019) -- revenue manipulation through contractual complexity."
     ],
     "ev_codes": "",
     "sb_codes": "",
@@ -1292,7 +1292,7 @@
       "All fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-REDTEAM1": {
     "node_id": "MB-REDTEAM1",
@@ -1306,11 +1306,11 @@
       "SUITS"
     ],
     "evidence": [
-      "Critical fixes: AutoZone = persuasive COA not binding MSC. GNUG VIE — remove consolidation needed language (acquired May 2022). Diamond nullification event — remove as proven harm. Klapp = binding MSC — preserve for contra proferentem only.",
-      "NOTE: Corrections affect: §V-D (AutoZone characterization); §X-B (GNUG VIE language); §XII.U (Diamond nullification + GNUG capacity)",
-      "PENDING: Fresh counsel eyes review Apr4b. All five corrections are surgical removals/reframings only -- do not weaken core arguments.",
-      "Critical fixes: (1) AutoZone = persuasive COA not binding MSC -- do not overstate as automatic voidance. (2) GNUG VIE -- remove consolidation needed language -- GNUG acquired May 2022 already consolidated. (3) Diamond nullification event -- remove as proven harm -- no documented instance. (4) Staggered window GNUG capacity inference -- speculation not fact. (5) Klapp = binding MSC -- preserve and apply only for contra proferentem. CONFIRMED VALID: Michigan legal framework; BDO impossibility; Hermalyn lock; Calendar Bleed; integrated architecture argument.",
       "PENDING: Corrections affect §V-D; §X-B; §XII.U",
+      "PENDING: Fresh counsel eyes review Apr4b. All five corrections are surgical removals/reframings only -- do not weaken core arguments.",
+      "NOTE: Corrections affect: §V-D (AutoZone characterization); §X-B (GNUG VIE language); §XII.U (Diamond nullification + GNUG capacity)",
+      "Critical fixes: (1) AutoZone = persuasive COA not binding MSC -- do not overstate as automatic voidance. (2) GNUG VIE -- remove consolidation needed language -- GNUG acquired May 2022 already consolidated. (3) Diamond nullification event -- remove as proven harm -- no documented instance. (4) Staggered window GNUG capacity inference -- speculation not fact. (5) Klapp = binding MSC -- preserve and apply only for contra proferentem. CONFIRMED VALID: Michigan legal framework; BDO impossibility; Hermalyn lock; Calendar Bleed; integrated architecture argument.",
+      "Critical fixes: AutoZone = persuasive COA not binding MSC. GNUG VIE — remove consolidation needed language (acquired May 2022). Diamond nullification event — remove as proven harm. Klapp = binding MSC — preserve for contra proferentem only.",
       "NOTE: Surgical removals/reframings only — do not weaken core arguments"
     ],
     "ev_codes": "",
@@ -1329,7 +1329,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XA": {
     "node_id": "MB-XA",
@@ -1363,7 +1363,7 @@
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XB": {
     "node_id": "MB-XB",
@@ -1389,14 +1389,14 @@
       "MGCB"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XB3": {
     "node_id": "MB-XB3",
@@ -1410,8 +1410,8 @@
       "SUITS"
     ],
     "evidence": [
-      "NJ geographic exclusion; TC suppression; loyalty fracture",
-      "NOTE: NJ audit population failure -- also affects §XII.L 80.3B calc"
+      "NOTE: NJ audit population failure -- also affects §XII.L 80.3B calc",
+      "NJ geographic exclusion; TC suppression; loyalty fracture"
     ],
     "ev_codes": "EV-094",
     "sb_codes": "SB-LR-68",
@@ -1424,15 +1424,15 @@
       "MCPA"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG1": {
     "node_id": "MB-ENG1",
@@ -1466,7 +1466,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG2": {
     "node_id": "MB-ENG2",
@@ -1500,7 +1500,7 @@
       "CFTC F08"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG3X": {
     "node_id": "MB-ENG3X",
@@ -1527,14 +1527,14 @@
       "IRS F05"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "IRS F05"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG3Y": {
     "node_id": "MB-ENG3Y",
@@ -1561,14 +1561,14 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG4": {
     "node_id": "MB-ENG4",
@@ -1596,15 +1596,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG5": {
     "node_id": "MB-ENG5",
@@ -1637,7 +1637,7 @@
       "All 8 fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-ENG6": {
     "node_id": "MB-ENG6",
@@ -1671,7 +1671,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IV52": {
     "node_id": "MB-IV52",
@@ -1698,15 +1698,15 @@
       "AutoZone"
     ],
     "domains": [
-      "privacy_tos",
-      "litigation_risk"
+      "litigation_risk",
+      "privacy_tos"
     ],
     "tissue": [
       "MCPA",
       "AutoZone"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IIV52": {
     "node_id": "MB-IIV52",
@@ -1738,7 +1738,7 @@
       "CFTC F08"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IIIV52": {
     "node_id": "MB-IIIV52",
@@ -1752,8 +1752,8 @@
       "SUITS"
     ],
     "evidence": [
-      "ASC 606 misclassification; 7.3B+ reconciliation points; BDO CAM omission",
-      "NOTE: Original 7.3B figure -- superseded by 80.3B pending integration"
+      "NOTE: Original 7.3B figure -- superseded by 80.3B pending integration",
+      "ASC 606 misclassification; 7.3B+ reconciliation points; BDO CAM omission"
     ],
     "ev_codes": "EV-004 | EV-055 | EV-271",
     "sb_codes": "SB-34B | SB-LR-52",
@@ -1773,7 +1773,7 @@
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IVV52": {
     "node_id": "MB-IVV52",
@@ -1800,15 +1800,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "litigation_risk"
+      "litigation_risk",
+      "governance"
     ],
     "tissue": [
       "DOJ",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VV52": {
     "node_id": "MB-VV52",
@@ -1840,7 +1840,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VIV52": {
     "node_id": "MB-VIV52",
@@ -1872,7 +1872,7 @@
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VIIV52": {
     "node_id": "MB-VIIV52",
@@ -1904,7 +1904,7 @@
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-VIIIV52": {
     "node_id": "MB-VIIIV52",
@@ -1936,7 +1936,7 @@
       "FinCEN F06"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IXV52": {
     "node_id": "MB-IXV52",
@@ -1963,15 +1963,15 @@
       "PCAOB F07"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "IRS F05",
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XV52": {
     "node_id": "MB-XV52",
@@ -1998,15 +1998,15 @@
       "Google F03"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "Apple F02",
       "Google F03"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIV52": {
     "node_id": "MB-XIV52",
@@ -2038,7 +2038,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG1": {
     "node_id": "MB-XIIENG1",
@@ -2053,8 +2053,8 @@
       "SUITS"
     ],
     "evidence": [
-      "Most vs. Select game ambiguity; 130-220+ games undefined; ASC 820 per-customer FV",
-      "NOTE: ASC 820 individual FV = 300 FTE-year audit impossibility; table games section"
+      "NOTE: ASC 820 individual FV = 300 FTE-year audit impossibility; table games section",
+      "Most vs. Select game ambiguity; 130-220+ games undefined; ASC 820 per-customer FV"
     ],
     "ev_codes": "EV-004 | EV-017",
     "sb_codes": "SB-34B",
@@ -2072,7 +2072,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG2": {
     "node_id": "MB-XIIENG2",
@@ -2107,7 +2107,7 @@
       "CFTC"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG3": {
     "node_id": "MB-XIIENG3",
@@ -2136,15 +2136,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG4": {
     "node_id": "MB-XIIENG4",
@@ -2179,7 +2179,7 @@
       "IRS"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG5": {
     "node_id": "MB-XIIENG5",
@@ -2215,7 +2215,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIENG6": {
     "node_id": "MB-XIIENG6",
@@ -2248,7 +2248,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIID2": {
     "node_id": "MB-XIID2",
@@ -2277,15 +2277,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIID3": {
     "node_id": "MB-XIID3",
@@ -2319,7 +2319,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIE": {
     "node_id": "MB-XIIE",
@@ -2335,8 +2335,8 @@
       "SUITS"
     ],
     "evidence": [
-      "GPS LLC VIE consolidation; DK primary beneficiary; disclosure failure",
-      "NOTE: PENDING: Three-track analysis not yet integrated (§XII.V.2)"
+      "NOTE: PENDING: Three-track analysis not yet integrated (§XII.V.2)",
+      "GPS LLC VIE consolidation; DK primary beneficiary; disclosure failure"
     ],
     "ev_codes": "EV-271",
     "sb_codes": "SB-34B",
@@ -2349,15 +2349,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIF": {
     "node_id": "MB-XIIF",
@@ -2391,7 +2391,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIG": {
     "node_id": "MB-XIIG",
@@ -2425,7 +2425,7 @@
       "All 8 fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIN": {
     "node_id": "MB-XIIN",
@@ -2459,7 +2459,7 @@
       "MGCB"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIO": {
     "node_id": "MB-XIIO",
@@ -2488,15 +2488,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIP": {
     "node_id": "MB-XIIP",
@@ -2530,7 +2530,7 @@
       "CFTC F08"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIQ": {
     "node_id": "MB-XIIQ",
@@ -2559,15 +2559,15 @@
       "FinCEN F06"
     ],
     "domains": [
-      "privacy_tos",
-      "platform_economics"
+      "platform_economics",
+      "privacy_tos"
     ],
     "tissue": [
       "Apple F02",
       "FinCEN F06"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIQRICO": {
     "node_id": "MB-XIIQRICO",
@@ -2596,15 +2596,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "litigation_risk"
+      "litigation_risk",
+      "governance"
     ],
     "tissue": [
       "DOJ",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIR": {
     "node_id": "MB-XIIR",
@@ -2633,15 +2633,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "platform_economics"
+      "platform_economics",
+      "governance"
     ],
     "tissue": [
       "FinCEN F06",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIS": {
     "node_id": "MB-XIIS",
@@ -2677,7 +2677,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIT": {
     "node_id": "MB-XIIT",
@@ -2706,15 +2706,15 @@
       "IRS F05"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "IRS F05"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIU": {
     "node_id": "MB-XIIU",
@@ -2744,15 +2744,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIV": {
     "node_id": "MB-XIIV",
@@ -2768,8 +2768,8 @@
       "SUITS"
     ],
     "evidence": [
-      "Multi-front convergence; prisoner’s dilemma; GPS VIE v1 analysis",
-      "NOTE: §XII.V.2 GPS three-track analysis PENDING"
+      "NOTE: §XII.V.2 GPS three-track analysis PENDING",
+      "Multi-front convergence; prisoner’s dilemma; GPS VIE v1 analysis"
     ],
     "ev_codes": "EV-271 | EV-281",
     "sb_codes": "SB-34B",
@@ -2788,7 +2788,7 @@
       "All 8 fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXB": {
     "node_id": "MB-EXB",
@@ -2820,7 +2820,7 @@
       "Apple F02"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXC": {
     "node_id": "MB-EXC",
@@ -2854,7 +2854,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXD": {
     "node_id": "MB-EXD",
@@ -2881,15 +2881,15 @@
       "BDO F01"
     ],
     "domains": [
-      "privacy_tos",
-      "revenue_recognition"
+      "revenue_recognition",
+      "privacy_tos"
     ],
     "tissue": [
       "MCPA",
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXT": {
     "node_id": "MB-EXT",
@@ -2916,15 +2916,15 @@
       "MCPA"
     ],
     "domains": [
-      "privacy_tos",
-      "platform_economics"
+      "platform_economics",
+      "privacy_tos"
     ],
     "tissue": [
       "CFTC F08",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXU": {
     "node_id": "MB-EXU",
@@ -2956,7 +2956,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXV": {
     "node_id": "MB-EXV",
@@ -2982,14 +2982,14 @@
       "Apple F02"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "Apple F02"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXW": {
     "node_id": "MB-EXW",
@@ -3021,7 +3021,7 @@
       "All 8 fronts"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXX1": {
     "node_id": "MB-EXX1",
@@ -3053,7 +3053,7 @@
       "IRS F05"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXX2": {
     "node_id": "MB-EXX2",
@@ -3080,15 +3080,15 @@
       "FinCEN F06"
     ],
     "domains": [
-      "governance",
-      "platform_economics"
+      "platform_economics",
+      "governance"
     ],
     "tissue": [
       "IRS F05",
       "FinCEN F06"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXX3": {
     "node_id": "MB-EXX3",
@@ -3115,15 +3115,15 @@
       "MCPA"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "MGCB",
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXAC": {
     "node_id": "MB-EXAC",
@@ -3155,7 +3155,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXAB": {
     "node_id": "MB-EXAB",
@@ -3189,7 +3189,7 @@
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-EXR1": {
     "node_id": "MB-EXR1",
@@ -3221,7 +3221,7 @@
       "DOJ"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0102": {
     "node_id": "MB-F0102",
@@ -3249,15 +3249,15 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "revenue_recognition"
+      "revenue_recognition",
+      "governance"
     ],
     "tissue": [
       "BDO F01",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0202": {
     "node_id": "MB-F0202",
@@ -3284,14 +3284,14 @@
       "Apple F02"
     ],
     "domains": [
-      "governance",
-      "privacy_tos"
+      "privacy_tos",
+      "governance"
     ],
     "tissue": [
       "Apple F02"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0501": {
     "node_id": "MB-F0501",
@@ -3324,7 +3324,7 @@
       "IRS F05"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F06": {
     "node_id": "MB-F06",
@@ -3357,7 +3357,7 @@
       "FinCEN F06"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-F0701": {
     "node_id": "MB-F0701",
@@ -3390,7 +3390,7 @@
       "PCAOB F07"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIIUSURG": {
     "node_id": "MB-XIIUSURG",
@@ -3426,7 +3426,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XIILDIM": {
     "node_id": "MB-XIILDIM",
@@ -3442,9 +3442,9 @@
       "SUITS"
     ],
     "evidence": [
-      "Timing asymmetry: Sportsbook accrues at settlement; Casino accrues at game entry; DFS at contest lock; DK Horse at settlement. Cross-vertical single-patron journey creates timing conflicts defeating period-end reconciliation. NJ geographic exclusion: per-customer dynamic geo condition changes eligible audit population.",
       "NOTE: Part of P1-B 80.3B total -- listed separately for surgical insertion flexibility",
-      "PENDING: Two of the six new dimensions for the 80.3B revised calculation. Can be added as standalone sub-paragraphs within §XII.L."
+      "PENDING: Two of the six new dimensions for the 80.3B revised calculation. Can be added as standalone sub-paragraphs within §XII.L.",
+      "Timing asymmetry: Sportsbook accrues at settlement; Casino accrues at game entry; DFS at contest lock; DK Horse at settlement. Cross-vertical single-patron journey creates timing conflicts defeating period-end reconciliation. NJ geographic exclusion: per-customer dynamic geo condition changes eligible audit population."
     ],
     "ev_codes": "EV-119",
     "sb_codes": "SB-LR-52",
@@ -3462,7 +3462,7 @@
       "BDO F01"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-CASEELIL": {
     "node_id": "MB-CASEELIL",
@@ -3476,8 +3476,8 @@
       "SUITS"
     ],
     "evidence": [
-      "NOTE: Framework is Smith-outcome-agnostic by design",
       "PENDING: Decision expected within MB v54 deployment window. Track through June/July 2026.",
+      "NOTE: Framework is Smith-outcome-agnostic by design",
       "Michigan Supreme Court oral arguments November 2025. Expected opinion June/July 2026. Could redefine Smith v. Globe Life MCPA exemption scope. MGCB two-prong framework structured to survive either outcome: (a) Smith survives = MGCB non-filing defeats ‘specifically authorized’ prong; (b) Smith narrowed = MCPA claims viable independently. Add monitoring note to §V-C."
     ],
     "ev_codes": "",
@@ -3496,7 +3496,7 @@
       "MCPA"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IFRAME": {
     "node_id": "MB-IFRAME",
@@ -3511,8 +3511,8 @@
     ],
     "evidence": [
       "NOTE: One paragraph insert only -- plug-and-play",
-      "PENDING: Identified Apr4b as the brief’s greatest structural strength -- establishes why standard gaming defenses do not apply.",
-      "DraftKings is the only vertically integrated online gambling operator controlling: technology stack (SBTech); loyalty/promotional architecture (Dynasty Rewards); data infrastructure (BigCommerce/FullStory); fulfillment layer (GPS/Snappy); warranty layer (Extend); consumer brand -- all within single operating perimeter. GNOG adds second licensed casino brand through same Crown/Dynasty infrastructure. No direct comparable exists."
+      "DraftKings is the only vertically integrated online gambling operator controlling: technology stack (SBTech); loyalty/promotional architecture (Dynasty Rewards); data infrastructure (BigCommerce/FullStory); fulfillment layer (GPS/Snappy); warranty layer (Extend); consumer brand -- all within single operating perimeter. GNOG adds second licensed casino brand through same Crown/Dynasty infrastructure. No direct comparable exists.",
+      "PENDING: Identified Apr4b as the brief’s greatest structural strength -- establishes why standard gaming defenses do not apply."
     ],
     "ev_codes": "",
     "sb_codes": "",
@@ -3530,7 +3530,7 @@
       "All"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-XISTAKE": {
     "node_id": "MB-XISTAKE",
@@ -3544,9 +3544,9 @@
       "SUITS"
     ],
     "evidence": [
-      "PENDING: Partial analysis only from Apr5a. Needs additional development before integration -- do not integrate until complete.",
       "Stake.us dual-currency (Gold Coins/Stake Cash) parallel to Crown/DK$ architecture. Missouri Killham v. Stake + NM parallel actions = class action template. Drake celebrity endorsement chain parallels Jordan/Hart/Ripken. Key distinction: DraftKings multi-path redemption (Crown→DK$+Casino Credits+RDARC+Milestone binary options) creates exponentially greater exposure than Stake’s two-path system. Estimated Stake exposure $700M-$3B vs DK $37B+.",
-      "NOTE: PARTIAL -- requires additional research on Killham v. Stake case status before integration"
+      "NOTE: PARTIAL -- requires additional research on Killham v. Stake case status before integration",
+      "PENDING: Partial analysis only from Apr5a. Needs additional development before integration -- do not integrate until complete."
     ],
     "ev_codes": "",
     "sb_codes": "",
@@ -3559,15 +3559,15 @@
       "CFTC F08"
     ],
     "domains": [
-      "privacy_tos",
-      "platform_economics"
+      "platform_economics",
+      "privacy_tos"
     ],
     "tissue": [
       "MCPA",
       "CFTC F08"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
   },
   "MB-IIDUFOE": {
     "node_id": "MB-IIDUFOE",
@@ -3581,9 +3581,9 @@
       "SUITS"
     ],
     "evidence": [
+      "NOTE: Strengthen existing §II rather than replace -- additive enhancement</command-args>",
       "PENDING: Dufoe precedent is in MB but not fully mapped to TC/Crown structure. Mapping completed Apr4b + Apr5a.",
-      "Dufoe held DraftKings NFTs = unregistered securities under Howey. TCs have zero consumptive use (unlike NFTs which had gameplay utility) -- Howey applies with greater force to TCs than NFTs. Three-layer derivative structure: TCs as binary options; Crowns as standalone derivatives; nested derivatives when Crowns settle TC milestones. Auto-enrollment 51.5 weeks non-disclosure = extreme procedural unconscionability. ASC 820 per-customer FV requirement for table game ambiguity (130-220+ games) = 300 FTE-year audit impossibility.",
-      "NOTE: Strengthen existing §II rather than replace -- additive enhancement</command-args>"
+      "Dufoe held DraftKings NFTs = unregistered securities under Howey. TCs have zero consumptive use (unlike NFTs which had gameplay utility) -- Howey applies with greater force to TCs than NFTs. Three-layer derivative structure: TCs as binary options; Crowns as standalone derivatives; nested derivatives when Crowns settle TC milestones. Auto-enrollment 51.5 weeks non-disclosure = extreme procedural unconscionability. ASC 820 per-customer FV requirement for table game ambiguity (130-220+ games) = 300 FTE-year audit impossibility."
     ],
     "ev_codes": "EV-004 | EV-055 | EV-091",
     "sb_codes": "SB-LR-70 | SB-LR-71",
@@ -3596,14 +3596,77 @@
       "SEC F04"
     ],
     "domains": [
-      "governance",
-      "platform_economics"
+      "platform_economics",
+      "governance"
     ],
     "tissue": [
       "CFTC F08",
       "SEC F04"
     ],
     "source": "MB_v54",
-    "ingested_at": "2026-04-08T09:18:43"
+    "ingested_at": "2026-04-08T09:52:05"
+  },
+  "CGT-804C64": {
+    "node_id": "CGT-804C64",
+    "name": "DraftKings GPS LLC VIE Analysis",
+    "nuclear_impact": 85,
+    "agents": [
+      "SUITS",
+      "TIGER",
+      "WOLF"
+    ],
+    "flywheel_domains": [
+      "forensic_accounting",
+      "regulatory_cftc",
+      "corp_accountability"
+    ],
+    "ev_codes": "EV-093 | EV-271",
+    "mb_refs": "",
+    "sb_refs": "",
+    "evidence": [
+      "Under ASC 810-10-15-14 three-prong VIE test: GPS LLC qualifies as a VIE. DraftKings meets both power criteria and economic exposure criteria. The Dynasty Store disclaimer (any reason or no reason) creates a circular disclaimer that constitutes evidence of control rather than independence. Evidence codes EV-093, EV-271 confirm the ASC 810 consolidation requirement. This triggers ICFR material weakn"
+    ],
+    "wolf_routing": "Layer-1 regulatory: gps_llc, vie, mgcb, evidence | domains: forensic_accounting, regulatory_cftc, corp_accountability",
+    "tiger_routing": "Layer-1 quant signal: 2 EV codes | impact=85",
+    "suits_routing": "Layer-1 extract: Under ASC 810-10-15-14 three-prong VIE test: GPS LLC qualifies as a VIE. DraftKings meets both power criteria and economic exposure criteria. The Dynasty Store disclaimer (any reason or no reason) cre",
+    "source": "chatgpt_export",
+    "entities": [
+      "gps_llc",
+      "vie",
+      "mgcb",
+      "evidence"
+    ]
+  },
+  "CGT-9F7812": {
+    "node_id": "CGT-9F7812",
+    "name": "MCPA 445.903 Michigan Consumer Protection Analysis",
+    "nuclear_impact": 90,
+    "agents": [
+      "SUITS",
+      "TIGER",
+      "WOLF"
+    ],
+    "flywheel_domains": [
+      "forensic_accounting",
+      "regulatory_cftc",
+      "corp_accountability",
+      "harm_reduction",
+      "litigation_risk"
+    ],
+    "ev_codes": "EV-017 | EV-T1-04",
+    "mb_refs": "",
+    "sb_refs": "",
+    "evidence": [
+      "Smith v. Globe Life, 460 Mich 446 (1999) defeats the licensed-status exemption. Under MCL 445.903, the 483% TC inflation combined with the any-reason-or-no-reason modification clause constitutes an unfair or deceptive act. The anti-exemption framing under MCL 445.903(1)(cc) applies because DraftKings is not specifically authorized to inflate tier credits without notice. Evidence: EV-T1-04, EV-017."
+    ],
+    "wolf_routing": "Layer-1 regulatory: tier_credits, arbitration, evidence | domains: forensic_accounting, regulatory_cftc, corp_accountability, harm_reduction, litigation_risk",
+    "tiger_routing": "Layer-1 quant signal: 2 EV codes | impact=90",
+    "suits_routing": "Layer-1 extract: Smith v. Globe Life, 460 Mich 446 (1999) defeats the licensed-status exemption. Under MCL 445.903, the 483% TC inflation combined with the any-reason-or-no-reason modification clause constitutes an un",
+    "source": "chatgpt_export",
+    "entities": [
+      "tier_credits",
+      "arbitration",
+      "evidence"
+    ]
   }
 }

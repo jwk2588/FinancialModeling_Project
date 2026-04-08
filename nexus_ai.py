@@ -756,27 +756,53 @@ def serve(port: int = 7433, api_key: str | None = None):
                 except Exception as e:
                     self._send_json({"error": str(e)}, 500)
 
-            elif self.path == "/api/layer2/chatgpt":
-                # Layer 2B: POST {export_path or csv_text, project_id} → ingest ChatGPT export
+            elif self.path in ("/api/ingest_chatgpt", "/api/layer2/chatgpt"):
+                # Two-layer ChatGPT/LLM export ingest
+                # Body: {json: "<raw conversations.json string>", layer2: bool}
                 body = self._read_body()
-                export_path = body.get("export_path", "")
-                if not export_path:
-                    self._send_json({"error": "export_path required"}, 400)
+                raw_json = body.get("json", body.get("text", ""))
+                run_l2 = body.get("layer2", False)
+
+                if not raw_json:
+                    self._send_json({"error": "json field required (raw conversations.json content)"}, 400)
                     return
-                try:
-                    from ingestion.layer2_chatgpt import ingest_chatgpt_export
-                    stats = ingest_chatgpt_export(export_path, body.get("project_id", "nexus"))
-                    self._send_json(stats)
-                except Exception as e:
-                    self._send_json({"error": str(e)}, 500)
+
+                def run_ingest():
+                    import nexus_ingest_chatgpt as cgpt
+                    return cgpt.ingest_chatgpt(
+                        raw_json,
+                        run_layer2=run_l2 and bool(api_key or os.environ.get("ANTHROPIC_API_KEY")),
+                        api_key=api_key,
+                    )
+
+                if run_l2:
+                    # Background for Layer 2 (can take a while)
+                    import threading
+                    result_holder = {}
+                    def bg():
+                        try:
+                            result_holder["result"] = run_ingest()
+                        except Exception as e:
+                            result_holder["error"] = str(e)
+                    threading.Thread(target=bg, daemon=True).start()
+                    self._send_json({"status": "layer1_started", "layer2": "queued"})
+                else:
+                    try:
+                        result = run_ingest()
+                        self._send_json({"status": "ok", **result})
+                    except Exception as e:
+                        self._send_json({"error": str(e)}, 500)
 
             elif self.path == "/api/layer2/status":
-                # Status of Layer 2B corpus
-                try:
-                    from ingestion.layer2_chatgpt import get_corpus_summary
-                    self._send_json(get_corpus_summary())
-                except Exception as e:
-                    self._send_json({"status": "unavailable", "error": str(e)})
+                nodes = load_gr_nodes()
+                cgt_nodes = [n for n in nodes.values() if n.get("source") == "chatgpt_export"]
+                self._send_json({
+                    "status": "active",
+                    "total_nodes": len(nodes),
+                    "chatgpt_nodes": len(cgt_nodes),
+                    "mode": mode,
+                    "layer2_available": bool(api_key or os.environ.get("ANTHROPIC_API_KEY")),
+                })
 
             else:
                 self._send_json({"error": "not found"}, 404)
