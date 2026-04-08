@@ -32,6 +32,11 @@ GR_NODES_FILE = DATA_DIR / "gr_nodes.json"
 FLYWHEEL_FILE = DATA_DIR / "flywheel_scores.json"
 EVIDENCE_FILE = DATA_DIR / "evidence_anchors.json"
 
+# ONLINE: calls Claude API (requires ANTHROPIC_API_KEY)
+# OFFLINE: rule-based responses from ingested dataset only (no API key needed)
+NEXUS_MODE = os.environ.get("NEXUS_MODE", "online").lower()
+CONTEXT_TOP_N = int(os.environ.get("NEXUS_CONTEXT_NODES", "12"))  # GR nodes injected as context
+
 # ---------------------------------------------------------------------------
 # Agent personas — system prompts for each NEXUS character
 # ---------------------------------------------------------------------------
@@ -217,14 +222,170 @@ def execute_tool(tool_name: str, tool_input: dict) -> str:
     return json.dumps({"error": f"Unknown tool: {tool_name}"})
 
 # ---------------------------------------------------------------------------
+# Dataset context injection — grounds every Claude call in ingested data
+# ---------------------------------------------------------------------------
+
+def build_context_block(persona: str = "nexus_master", top_n: int = CONTEXT_TOP_N) -> str:
+    """
+    Build a structured intelligence context block from the live dataset.
+    Injected into every Claude API call so agents are grounded in actual ingested data.
+
+    Returns a multi-section string:
+      - Corpus summary (node count, evidence, flywheel)
+      - Top-N GR nodes ranked by nuclear_impact with agent routings
+      - Flywheel domain scores
+      - Dataset provenance note
+    """
+    from datetime import datetime, timezone
+
+    nodes = load_gr_nodes()
+    flywheel = load_flywheel()
+    evidence = load_evidence()
+
+    if not nodes:
+        return ""
+
+    # Sort nodes by nuclear_impact descending; pick top N
+    ranked = sorted(nodes.values(), key=lambda n: float(n.get("nuclear_impact", 0)), reverse=True)
+    top = ranked[:top_n]
+
+    # Persona-specific node filter: wolf → adversarial nodes, tiger → quant nodes, suits → legal/gov
+    persona_filter = {
+        "wolf": lambda n: "WOLF" in [a.upper() for a in (n.get("agents") or [])],
+        "tiger": lambda n: "TIGER" in [a.upper() for a in (n.get("agents") or [])],
+        "suits": lambda n: "SUITS" in [a.upper() for a in (n.get("agents") or [])],
+    }
+    if persona in persona_filter:
+        filtered = [n for n in ranked if persona_filter[persona](n)]
+        if len(filtered) >= top_n // 2:
+            # Blend: half persona-specific, half highest-impact
+            top = (filtered[:top_n // 2] + ranked[:top_n // 2])[:top_n]
+
+    # Flywheel summary
+    fw_lines = []
+    for domain, data in flywheel.items():
+        score = data.get("score", 0) if isinstance(data, dict) else data
+        fw_lines.append(f"  {domain}: {score}/100")
+
+    # Build context block
+    lines = [
+        "═══ NEXUS INTELLIGENCE CONTEXT ═══",
+        f"Dataset: {len(nodes)} GR nodes | {len(evidence)} evidence anchors | {len(flywheel)} flywheel domains",
+        f"Context built: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
+        f"Active persona: {persona.upper()}",
+        "",
+        "FLYWHEEL DOMAIN SCORES:",
+    ] + fw_lines + ["", f"TOP {len(top)} GHOSTRECON NODES (ranked by nuclear impact):"]
+
+    for n in top:
+        nid = n.get("node_id", "?")
+        name = n.get("name", "")
+        impact = n.get("nuclear_impact", 0)
+        agents = ", ".join(n.get("agents") or [])
+        ev = n.get("ev_codes", "")
+        mb = n.get("mb_refs", "")
+        evidence_text = n.get("evidence", "")
+        if isinstance(evidence_text, list):
+            evidence_text = " ".join(evidence_text)
+
+        lines.append(f"[{nid}] {name} | Impact: {impact}/10 | Agents: {agents}")
+        if ev:
+            lines.append(f"  Evidence codes: {ev} | Refs: {mb}")
+        if evidence_text:
+            lines.append(f"  Evidence: {str(evidence_text)[:200]}")
+
+        # Persona-specific routing
+        routing_key = f"{persona}_routing" if persona in ("wolf", "tiger", "suits") else None
+        if routing_key and n.get(routing_key):
+            lines.append(f"  {persona.upper()} routing: {n[routing_key][:200]}")
+        lines.append("")
+
+    lines += [
+        "When answering, reference specific GR node IDs, evidence codes, and flywheel domains.",
+        "Use the above corpus as ground truth. Cite nodes as [GR-NNN].",
+        "═══════════════════════════════════",
+    ]
+
+    return "\n".join(lines)
+
+
+def offline_response(prompt: str, persona: str = "nexus_master") -> str:
+    """
+    Rule-based offline response when no API key is available.
+    Pulls directly from ingested GR nodes and evidence to produce a structured brief.
+    No Claude API calls — fully deterministic from dataset.
+    """
+    nodes = load_gr_nodes()
+    flywheel = load_flywheel()
+
+    # Find relevant nodes by keyword match against prompt
+    prompt_lower = prompt.lower()
+    keywords = set(re.findall(r'\b\w{4,}\b', prompt_lower))
+
+    scored = []
+    for nid, n in nodes.items():
+        name_lower = (n.get("name") or "").lower()
+        ev_str = str(n.get("evidence", "")).lower()
+        routing = str(n.get(f"{persona}_routing", n.get("wolf_routing", ""))).lower()
+        score = 0
+        for kw in keywords:
+            if kw in name_lower: score += 3
+            if kw in ev_str: score += 1
+            if kw in routing: score += 2
+        score += float(n.get("nuclear_impact", 0)) * 0.1
+        scored.append((score, n))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    relevant = [n for _, n in scored[:6] if _ > 0]
+    if not relevant:
+        relevant = sorted(nodes.values(), key=lambda n: float(n.get("nuclear_impact", 0)), reverse=True)[:4]
+
+    lines = [
+        f"NEXUS {persona.upper()} — OFFLINE INTELLIGENCE BRIEF",
+        f"Query: {prompt[:200]}",
+        f"Mode: OFFLINE (dataset-only, no API call)",
+        f"Corpus: {len(nodes)} GR nodes | Dataset: MasterBrief v54",
+        "",
+        "RELEVANT GHOSTRECON NODES:",
+    ]
+    for n in relevant:
+        nid = n.get("node_id", "?")
+        name = n.get("name", "")
+        impact = n.get("nuclear_impact", 0)
+        ev = n.get("ev_codes", "")
+        routing_key = f"{persona}_routing" if persona in ("wolf","tiger","suits") else "wolf_routing"
+        routing = n.get(routing_key, n.get("wolf_routing", ""))
+        lines.append(f"  [{nid}] {name} | Impact: {impact}/10")
+        if ev:
+            lines.append(f"    Evidence: {ev}")
+        if routing:
+            lines.append(f"    Analysis: {routing[:300]}")
+        lines.append("")
+
+    lines += [
+        "FLYWHEEL STATUS:",
+        *[f"  {d}: {v.get('score', v) if isinstance(v, dict) else v}/100" for d, v in flywheel.items()],
+        "",
+        "[OFFLINE MODE] Connect API key for full Claude-powered analysis.",
+        "Run: python nexus_ai.py serve --api-key sk-ant-...",
+    ]
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Core agent call — streaming with tool loop
 # ---------------------------------------------------------------------------
 
 class NexusAgent:
-    """NEXUS multi-persona agent with GhostRecon tool use and streaming."""
+    """NEXUS multi-persona agent with GhostRecon tool use and dataset-grounded context."""
 
-    def __init__(self, api_key: str | None = None):
-        self.client = anthropic.Anthropic(api_key=api_key or os.environ.get("ANTHROPIC_API_KEY"))
+    def __init__(self, api_key: str | None = None, mode: str | None = None):
+        self._api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        self.mode = mode or NEXUS_MODE  # "online" | "offline"
+        if self.mode == "online":
+            self.client = anthropic.Anthropic(api_key=self._api_key)
+        else:
+            self.client = None
 
     def ask(
         self,
@@ -232,12 +393,32 @@ class NexusAgent:
         persona: str = "nexus_master",
         use_tools: bool = True,
         stream_print: bool = True,
+        inject_context: bool = True,
     ) -> str:
         """
         Send a prompt to the specified NEXUS persona.
-        Runs the tool loop automatically. Returns final text response.
+
+        inject_context=True (default): prepends the live GR node corpus to the
+        system prompt so Claude's response is grounded in the actual dataset.
+
+        Falls back to offline_response() if mode is "offline" or no API key.
+        Runs tool loop automatically. Returns final text.
         """
-        system = PERSONAS.get(persona, PERSONAS["nexus_master"])
+        # Offline / no-key fallback
+        if self.mode == "offline" or not self._api_key:
+            result = offline_response(prompt, persona)
+            if stream_print:
+                print(result)
+            return result
+
+        # Build dataset-grounded system prompt
+        base_system = PERSONAS.get(persona, PERSONAS["nexus_master"])
+        if inject_context:
+            ctx = build_context_block(persona)
+            system = f"{base_system}\n\n{ctx}" if ctx else base_system
+        else:
+            system = base_system
+
         messages = [{"role": "user", "content": prompt}]
         tools = GR_TOOLS if use_tools else []
 
@@ -249,8 +430,7 @@ class NexusAgent:
 
             with self.client.messages.stream(
                 model=MODEL,
-                max_tokens=2048,
-                thinking={"type": "adaptive"},
+                max_tokens=4096,
                 system=system,
                 messages=messages,
                 tools=tools if tools else anthropic.NOT_GIVEN,
@@ -389,7 +569,9 @@ def serve(port: int = 7433, api_key: str | None = None):
     import urllib.parse
 
     html_file = Path(__file__).parent / "nexus_synthesis_os.html"
-    agent = NexusAgent(api_key=api_key)
+    mode = os.environ.get("NEXUS_MODE", "online" if api_key or os.environ.get("ANTHROPIC_API_KEY") else "offline")
+    agent = NexusAgent(api_key=api_key, mode=mode)
+    print(f"  Mode:       {mode.upper()} ({'API key set' if (api_key or os.environ.get('ANTHROPIC_API_KEY')) else 'no API key — offline only'})")
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def log_message(self, fmt, *args):
@@ -436,7 +618,18 @@ def serve(port: int = 7433, api_key: str | None = None):
                     "gr_nodes": load_gr_nodes(),
                     "flywheel": load_flywheel(),
                     "evidence": load_evidence(),
+                    "mode": mode,
+                    "model": MODEL,
+                    "corpus_size": len(load_gr_nodes()),
                 })
+
+            elif self.path == "/api/domains":
+                try:
+                    import nexus_domain_schema as nds
+                    data = nds.get_domain_hierarchy(load_gr_nodes(), load_evidence())
+                    self._send_json(data)
+                except Exception as e:
+                    self._send_json({"error": str(e)}, 500)
             else:
                 self._send_json({"error": "not found"}, 404)
 
@@ -446,6 +639,7 @@ def serve(port: int = 7433, api_key: str | None = None):
                 prompt = body.get("prompt", "")
                 persona = body.get("persona", "nexus_master")
                 use_tools = body.get("use_tools", False)
+                inject_ctx = body.get("inject_context", True)
 
                 # SSE streaming response
                 self.send_response(200)
@@ -454,8 +648,28 @@ def serve(port: int = 7433, api_key: str | None = None):
                 self._cors()
                 self.end_headers()
 
-                system = PERSONAS.get(persona, PERSONAS["nexus_master"])
+                def _sse(obj):
+                    self.wfile.write(f"data: {json.dumps(obj)}\n\n".encode())
+                    self.wfile.flush()
+
                 try:
+                    # Offline mode — return dataset-derived response immediately
+                    if mode == "offline" or not (api_key or os.environ.get("ANTHROPIC_API_KEY")):
+                        result = offline_response(prompt, persona)
+                        for line in result.split("\n"):
+                            _sse({"text": line + "\n"})
+                        self.wfile.write(b"data: [DONE]\n\n")
+                        self.wfile.flush()
+                        return
+
+                    # Online mode — stream from Claude API with dataset context
+                    base_system = PERSONAS.get(persona, PERSONAS["nexus_master"])
+                    if inject_ctx:
+                        ctx = build_context_block(persona)
+                        system = f"{base_system}\n\n{ctx}" if ctx else base_system
+                    else:
+                        system = base_system
+
                     with agent.client.messages.stream(
                         model=MODEL,
                         max_tokens=4096,
@@ -463,14 +677,12 @@ def serve(port: int = 7433, api_key: str | None = None):
                         messages=[{"role": "user", "content": prompt}],
                     ) as stream:
                         for text in stream.text_stream:
-                            chunk = json.dumps({"text": text})
-                            self.wfile.write(f"data: {chunk}\n\n".encode())
-                            self.wfile.flush()
+                            _sse({"text": text})
                     self.wfile.write(b"data: [DONE]\n\n")
                     self.wfile.flush()
                 except Exception as e:
-                    err = json.dumps({"error": str(e)})
-                    self.wfile.write(f"data: {err}\n\n".encode())
+                    _sse({"error": str(e)})
+                    self.wfile.write(b"data: [DONE]\n\n")
                     self.wfile.flush()
 
             elif self.path == "/api/ingest":
