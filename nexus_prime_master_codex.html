@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NEXUS PRIME — Master Codex</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#050a14;color:#c9d8e8;font-family:'Courier New',monospace;font-size:13px;line-height:1.6}
+  .header{text-align:center;padding:24px 20px 12px;border-bottom:1px solid #0ff3}
+  .header h1{font-size:1.3rem;letter-spacing:.2em;color:#00f5ff;text-shadow:0 0 16px #00f5ff66}
+  .header p{font-size:.65rem;color:#3a6a8a;letter-spacing:.15em;margin-top:4px}
+  .tab-bar{display:flex;flex-wrap:wrap;gap:4px;padding:10px 16px;background:#020810;border-bottom:1px solid #0a2040}
+  .tab{padding:5px 12px;border:1px solid #1a3a5c;background:#0a1628;color:#4a7a9b;border-radius:3px;cursor:pointer;font-family:inherit;font-size:.62rem;letter-spacing:.08em;transition:all .15s}
+  .tab:hover,.tab.active{border-color:#00f5ff;color:#00f5ff;background:#001a2e}
+  .content{display:none;padding:16px 20px;max-width:1200px;margin:0 auto}
+  .content.active{display:block}
+  .section-title{font-size:.8rem;color:#00f5ff;letter-spacing:.2em;margin-bottom:4px;padding-bottom:6px;border-bottom:1px solid #0a2040}
+  .section-sub{font-size:.62rem;color:#3a6a8a;margin-bottom:14px;letter-spacing:.1em}
+  pre{background:#020810;border:1px solid #0a2040;border-radius:5px;padding:14px 16px;overflow-x:auto;font-size:.7rem;line-height:1.65;color:#8ab8d4;margin-bottom:14px;white-space:pre-wrap}
+  .index-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px;margin-bottom:16px}
+  .index-card{background:#020c1a;border:1px solid #0a2040;border-radius:5px;padding:10px 12px}
+  .index-card .ic-title{font-size:.72rem;color:#00f5ff;margin-bottom:4px}
+  .index-card .ic-files{font-size:.62rem;color:#4a7a9b;line-height:1.8}
+  .index-card .ic-files span{color:#66ff88}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>⬡ NEXUS PRIME — CLAUDE DRAFTKINGS NEXUS CODEX v1.0</h1>
+  <p>AUTHORITATIVE MASTER CODEBLOCK · ALL BUILDS · ALL INTEGRATIONS · KLEIN-TEAM PERSONAS</p>
+</div>
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab active" data-target="index">00 INDEX</button>
+  <button class="tab" data-target="s01">01 main.py</button>
+  <button class="tab" data-target="s02">02 engine_main.py</button>
+</div>
+
+<div class="content active" id="tab-index">
+  <div class="section-title">NEXUS PRIME — MASTER CODEX FILE INDEX</div>
+  <div class="section-sub">All builds consolidated · FinancialModeling_Project integrated · Klein-Team personas wired</div>
+  <div class="index-grid">
+    <div class="index-card">
+      <div class="ic-title">⬡ ENTRY POINTS</div>
+      <div class="ic-files"><span>main.py</span> — Scanner + DataMatrix writer<br><span>engine_main.py</span> — Full engine driver + persona dispatch</div>
+    </div>
+  </div>
+</div>
+
+<div class="content" id="tab-s01">
+  <div class="section-title">SECTION 01 — main.py</div>
+  <div class="section-sub">File scanner + DataMatrix writer</div>
+  <pre>Paste your SECTION 01 codeblock here.</pre>
+</div>
+
+<div class="content" id="tab-s02">
+  <div class="section-title">SECTION 02 — engine_main.py</div>
+  <div class="section-sub">Full engine driver</div>
+  <pre>Paste your SECTION 02 codeblock here.</pre>
+</div>
+
+<script>
+  function show(tabId) {
+    const tabs = document.querySelectorAll('.tab');
+    const panes = document.querySelectorAll('.content');
+
+    tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.target === tabId));
+    panes.forEach(pane => pane.classList.toggle('active', pane.id === `tab-${tabId}`));
+
+    const activePane = document.getElementById(`tab-${tabId}`);
+    if (activePane) {
+      activePane.setAttribute('tabindex', '-1');
+      activePane.focus({ preventScroll: true });
+    }
+  }
+
+  document.getElementById('tabBar').addEventListener('click', (event) => {
+    const btn = event.target.closest('.tab');
+    if (!btn) return;
+    show(btn.dataset.target);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const currentIndex = tabs.findIndex(t => t.classList.contains('active'));
+    if (event.key === 'ArrowRight') {
+      const next = tabs[(currentIndex + 1) % tabs.length];
+      show(next.dataset.target);
+      next.focus();
+    }
+    if (event.key === 'ArrowLeft') {
+      const prev = tabs[(currentIndex - 1 + tabs.length) % tabs.length];
+      show(prev.dataset.target);
+      prev.focus();
+    }
+  });
+
+  show('index');
+</script>
+</body>
+</html>
