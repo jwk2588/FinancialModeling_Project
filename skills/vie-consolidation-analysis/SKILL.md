@@ -41,5 +41,6 @@ To deploy this skill, the `SKILL.md` file, along with any supporting scripts or 
 ## Bundled Resources
 
 -   `scripts/`: Contains Python scripts for data analysis, regulatory checks, or financial modeling related to VIEs.
+    -   `execute_research.py`: Orchestrates the parallel research for VIE consolidation analysis.
 -   `references/`: Includes detailed documentation on ASC 810, relevant SEC/PCAOB guidance, and legal precedents.
 -   `templates/`: Provides templates for structured output reports or compliance checklists.
