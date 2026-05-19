@@ -22,11 +22,17 @@ from typing import Iterator
 
 import anthropic
 
+try:
+    from google import genai
+except ImportError:
+    genai = None
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 
-MODEL = "claude-opus-4-6"
+ANTHROPIC_MODEL = "claude-opus-4-6"
+GEMINI_MODEL = "gemini-2.5-pro"
 DATA_DIR = Path(__file__).parent / "data" / "nexus"
 GR_NODES_FILE = DATA_DIR / "gr_nodes.json"
 FLYWHEEL_FILE = DATA_DIR / "flywheel_scores.json"
@@ -223,8 +229,16 @@ def execute_tool(tool_name: str, tool_input: dict) -> str:
 class NexusAgent:
     """NEXUS multi-persona agent with GhostRecon tool use and streaming."""
 
-    def __init__(self, api_key: str | None = None):
-        self.client = anthropic.Anthropic(api_key=api_key or os.environ.get("ANTHROPIC_API_KEY"))
+    def __init__(self, api_key: str | None = None, provider: str = "anthropic"):
+        self.provider = provider
+        if provider == "anthropic":
+            self.client = anthropic.Anthropic(api_key=api_key or os.environ.get("ANTHROPIC_API_KEY"))
+        elif provider == "gemini":
+            if genai is None:
+                raise ImportError("google-genai is not installed. Run: pip install google-genai")
+            self.client = genai.Client(api_key=api_key or os.environ.get("GEMINI_API_KEY"))
+        else:
+            raise ValueError(f"Unsupported provider: {provider}")
 
     def ask(
         self,
@@ -238,6 +252,19 @@ class NexusAgent:
         Runs the tool loop automatically. Returns final text response.
         """
         system = PERSONAS.get(persona, PERSONAS["nexus_master"])
+
+        if self.provider == "gemini":
+            if use_tools:
+                raise NotImplementedError("GhostRecon tool loop is currently only supported with Anthropic provider.")
+            response = self.client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=f"{system}\n\nUser prompt:\n{prompt}",
+            )
+            text = getattr(response, "text", "") or ""
+            if stream_print and text:
+                print(text)
+            return text
+
         messages = [{"role": "user", "content": prompt}]
         tools = GR_TOOLS if use_tools else []
 
@@ -248,7 +275,7 @@ class NexusAgent:
             iteration += 1
 
             with self.client.messages.stream(
-                model=MODEL,
+                model=ANTHROPIC_MODEL,
                 max_tokens=2048,
                 thinking={"type": "adaptive"},
                 system=system,
@@ -257,7 +284,6 @@ class NexusAgent:
             ) as stream:
                 response = stream.get_final_message()
 
-            # Collect text from response
             text_parts = []
             tool_uses = []
 
@@ -266,7 +292,6 @@ class NexusAgent:
                     text_parts.append(block.text)
                 elif block.type == "tool_use":
                     tool_uses.append(block)
-                # thinking blocks are silently consumed
 
             text = "\n".join(text_parts)
             if text:
@@ -274,11 +299,9 @@ class NexusAgent:
                     print(text)
                 full_response += text
 
-            # If no tool calls or stop reason is end_turn, we're done
             if not tool_uses or response.stop_reason == "end_turn":
                 break
 
-            # Execute tools and continue loop
             messages.append({"role": "assistant", "content": response.content})
             tool_results = []
             for tu in tool_uses:
@@ -310,7 +333,7 @@ class NexusAgent:
 # Data ingestion pipeline
 # ---------------------------------------------------------------------------
 
-def ingest_dataset(filepath: str, api_key: str | None = None):
+def ingest_dataset(filepath: str, api_key: str | None = None, provider: str = "anthropic"):
     """
     Ingest a text/JSON dataset file into NEXUS GhostRecon nodes.
 
@@ -332,7 +355,7 @@ def ingest_dataset(filepath: str, api_key: str | None = None):
     print(f"NEXUS INGEST: {path.name} ({size_kb}KB)")
     print("Extracting GhostRecon intelligence...\n")
 
-    agent = NexusAgent(api_key=api_key)
+    agent = NexusAgent(api_key=api_key, provider=provider)
 
     ingest_prompt = f"""\
 You are processing a new dataset for the NEXUS Klein-Team GhostRecon intelligence graph.
@@ -375,7 +398,7 @@ Begin analysis and tool execution now.
 # HTTP bridge server for HTML frontend
 # ---------------------------------------------------------------------------
 
-def serve(port: int = 7433, api_key: str | None = None):
+def serve(port: int = 7433, api_key: str | None = None, provider: str = "anthropic"):
     """
     Local HTTP server that bridges the NEXUS HTML app to the Python Claude backend.
     Endpoints:
@@ -389,7 +412,7 @@ def serve(port: int = 7433, api_key: str | None = None):
     import urllib.parse
 
     html_file = Path(__file__).parent / "nexus_synthesis_os.html"
-    agent = NexusAgent(api_key=api_key)
+    agent = NexusAgent(api_key=api_key, provider=provider)
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def log_message(self, fmt, *args):
@@ -456,19 +479,29 @@ def serve(port: int = 7433, api_key: str | None = None):
 
                 system = PERSONAS.get(persona, PERSONAS["nexus_master"])
                 try:
-                    with agent.client.messages.stream(
-                        model=MODEL,
-                        max_tokens=1024,
-                        thinking={"type": "adaptive"},
-                        system=system,
-                        messages=[{"role": "user", "content": prompt}],
-                    ) as stream:
-                        for text in stream.text_stream:
-                            chunk = json.dumps({"text": text})
-                            self.wfile.write(f"data: {chunk}\n\n".encode())
-                            self.wfile.flush()
-                    self.wfile.write(b"data: [DONE]\n\n")
-                    self.wfile.flush()
+                    if agent.provider == "gemini":
+                        response = agent.client.models.generate_content(
+                            model=GEMINI_MODEL,
+                            contents=f"{system}\n\nUser prompt:\n{prompt}",
+                        )
+                        chunk = json.dumps({"text": getattr(response, "text", "") or ""})
+                        self.wfile.write(f"data: {chunk}\n\n".encode())
+                        self.wfile.write(b"data: [DONE]\n\n")
+                        self.wfile.flush()
+                    else:
+                        with agent.client.messages.stream(
+                            model=ANTHROPIC_MODEL,
+                            max_tokens=1024,
+                            thinking={"type": "adaptive"},
+                            system=system,
+                            messages=[{"role": "user", "content": prompt}],
+                        ) as stream:
+                            for text in stream.text_stream:
+                                chunk = json.dumps({"text": text})
+                                self.wfile.write(f"data: {chunk}\n\n".encode())
+                                self.wfile.flush()
+                        self.wfile.write(b"data: [DONE]\n\n")
+                        self.wfile.flush()
                 except Exception as e:
                     err = json.dumps({"error": str(e)})
                     self.wfile.write(f"data: {err}\n\n".encode())
@@ -491,7 +524,7 @@ def serve(port: int = 7433, api_key: str | None = None):
                     ) as f:
                         f.write(text)
                         tmp = f.name
-                    ingest_dataset(tmp, api_key=api_key)
+                    ingest_dataset(tmp, api_key=api_key, provider=provider)
                     os.unlink(tmp)
 
                 t = threading.Thread(target=run, daemon=True)
@@ -521,7 +554,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    parser.add_argument("--api-key", help="Anthropic API key (overrides ANTHROPIC_API_KEY env var)")
+    parser.add_argument("--provider", choices=["anthropic", "gemini"], default="anthropic", help="LLM provider")
+    parser.add_argument("--api-key", help="Provider API key (overrides environment variables)")
 
     sub = parser.add_subparsers(dest="command")
 
@@ -550,13 +584,13 @@ def main():
     args = parser.parse_args()
 
     if args.command == "serve":
-        serve(port=args.port, api_key=args.api_key)
+        serve(port=args.port, api_key=args.api_key, provider=args.provider)
 
     elif args.command == "ingest":
-        ingest_dataset(args.file, api_key=args.api_key)
+        ingest_dataset(args.file, api_key=args.api_key, provider=args.provider)
 
     elif args.command == "ask":
-        agent = NexusAgent(api_key=args.api_key)
+        agent = NexusAgent(api_key=args.api_key, provider=args.provider)
         agent.ask(args.prompt, persona=args.persona, use_tools=args.tools)
 
     elif args.command == "state":
