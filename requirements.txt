@@ -7,3 +7,4 @@ xlwings
 fuzzywuzzy
 python-Levenshtein
 anthropic>=0.89.0
+google-genai>=0.7.0
