@@ -1,0 +1,180 @@
+{
+    "version": "0.1.0",
+    "sourceOfTruth": {
+        "provider": "github",
+        "canonicalRepo": "jwk2588/nexus-platform",
+        "protectedIdPrefixes": [
+            "EV-",
+            "SB-"
+        ]
+    },
+    "routingTargets": {
+        "codex": {
+            "provider": "openai",
+            "model": "codex",
+            "allowedScopes": [
+                "repo_maintenance",
+                "react",
+                "fastapi",
+                "schema_validation",
+                "tests",
+                "migration_scripts"
+            ],
+            "blockedScopes": [
+                "legal_theory_generation",
+                "privileged_merits_analysis"
+            ],
+            "costTier": "medium",
+            "notes": "Default implementation agent for deterministic code, tests, schemas, and PRs."
+        },
+        "claude_sonnet": {
+            "provider": "anthropic",
+            "model": "claude-sonnet-4-6",
+            "allowedScopes": [
+                "planning",
+                "summarization",
+                "light_repo_analysis",
+                "drafting_nonlegal_docs"
+            ],
+            "costTier": "medium",
+            "notes": "Fast planning and synthesis target when long-horizon autonomy is unnecessary."
+        },
+        "claude_opus": {
+            "provider": "anthropic",
+            "model": "claude-opus-4-8",
+            "allowedScopes": [
+                "hard_reasoning",
+                "review",
+                "fallback_from_fable_safety_reroute"
+            ],
+            "costTier": "high",
+            "notes": "Use for high-stakes review and as Fable fallback where Anthropic safety routing applies."
+        },
+        "claude_fable": {
+            "provider": "anthropic",
+            "model": "claude-fable-5",
+            "agentHarness": "claude_code_or_managed_agents",
+            "allowedScopes": [
+                "multi_day_repo_migration",
+                "large_codebase_consolidation",
+                "vision_ui_reverse_engineering",
+                "chart_table_extraction",
+                "autonomous_test_repair"
+            ],
+            "blockedScopes": [
+                "privileged_merits_analysis",
+                "cybersecurity_dual_use",
+                "biology_or_chemistry"
+            ],
+            "costTier": "very_high",
+            "notes": "Escalation target only when elapsed-time autonomy, visual reasoning, or million-token context materially reduces risk."
+        },
+        "kimi_swarm": {
+            "provider": "moonshot_or_local_skill_agents",
+            "model": "kimi_skill_agent_swarm",
+            "allowedScopes": [
+                "requirement_extraction",
+                "policy_checklists",
+                "nonlegal_corpus_tagging"
+            ],
+            "blockedScopes": [
+                "source_of_truth_writes_without_codex_pr"
+            ],
+            "costTier": "low",
+            "notes": "Parallel specialist extraction/checklist workers; all repository writes go through GitHub PRs."
+        },
+        "python_scripts": {
+            "provider": "local",
+            "model": "deterministic_python",
+            "allowedScopes": [
+                "monte_carlo",
+                "schema_validation",
+                "csv_json_transform",
+                "regression_tests"
+            ],
+            "costTier": "low",
+            "notes": "Preferred for reproducible quantitative work."
+        }
+    },
+    "routingRules": [
+        {
+            "match": {
+                "taskTypes": [
+                    "schema_validation",
+                    "fastapi_endpoint",
+                    "react_component"
+                ],
+                "maxBudgetTier": "medium"
+            },
+            "target": "codex",
+            "reviewGate": "automated_tests"
+        },
+        {
+            "match": {
+                "taskTypes": [
+                    "multi_day_repo_migration",
+                    "history_preserving_consolidation"
+                ],
+                "signals": [
+                    "large_diff",
+                    "many_repos",
+                    "requires_persistent_memory"
+                ]
+            },
+            "target": "claude_fable",
+            "fallbackTarget": "codex",
+            "reviewGate": "human_review"
+        },
+        {
+            "match": {
+                "taskTypes": [
+                    "vision_ui_audit",
+                    "diagram_chart_table_extraction"
+                ],
+                "signals": [
+                    "screenshot",
+                    "pdf",
+                    "table_heavy"
+                ]
+            },
+            "target": "claude_fable",
+            "fallbackTarget": "claude_opus",
+            "reviewGate": "human_review"
+        },
+        {
+            "match": {
+                "taskTypes": [
+                    "monte_carlo",
+                    "financial_model_regression",
+                    "data_transform"
+                ]
+            },
+            "target": "python_scripts",
+            "reviewGate": "automated_tests"
+        },
+        {
+            "match": {
+                "taskTypes": [
+                    "legal_requirement_extraction"
+                ],
+                "signals": [
+                    "functional_requirements_only"
+                ]
+            },
+            "target": "kimi_swarm",
+            "fallbackTarget": "claude_sonnet",
+            "reviewGate": "privilege_review"
+        }
+    ],
+    "writeBack": {
+        "mode": "pull_request_only",
+        "branchPrefix": "manus/",
+        "commitPolicy": "small_atomic_commits",
+        "idPolicy": {
+            "additiveOnly": true,
+            "noRenumbering": true,
+            "noReuse": true,
+            "appendLedgerPath": "data/id-ledger/append_only_ids.jsonl"
+        }
+    }
+}

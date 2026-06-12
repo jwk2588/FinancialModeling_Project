@@ -1,0 +1,203 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.local/nexus/manus-dispatch.schema.json",
+    "title": "MANUS Dispatch Configuration",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "version",
+        "sourceOfTruth",
+        "routingTargets",
+        "routingRules",
+        "writeBack"
+    ],
+    "properties": {
+        "version": {
+            "type": "string",
+            "description": "Semantic version for the conductor configuration."
+        },
+        "sourceOfTruth": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "provider",
+                "canonicalRepo",
+                "protectedIdPrefixes"
+            ],
+            "properties": {
+                "provider": {
+                    "const": "github"
+                },
+                "canonicalRepo": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+                },
+                "protectedIdPrefixes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[A-Z]{2,4}-$"
+                    },
+                    "uniqueItems": true,
+                    "default": [
+                        "EV-",
+                        "SB-"
+                    ]
+                }
+            }
+        },
+        "routingTargets": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "provider",
+                    "model",
+                    "allowedScopes"
+                ],
+                "properties": {
+                    "provider": {
+                        "type": "string"
+                    },
+                    "model": {
+                        "type": "string"
+                    },
+                    "agentHarness": {
+                        "type": "string"
+                    },
+                    "allowedScopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true
+                    },
+                    "blockedScopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true
+                    },
+                    "costTier": {
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high",
+                            "very_high"
+                        ]
+                    },
+                    "notes": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "routingRules": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "match",
+                    "target",
+                    "reviewGate"
+                ],
+                "properties": {
+                    "match": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "taskTypes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "signals": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "maxBudgetTier": {
+                                "enum": [
+                                    "low",
+                                    "medium",
+                                    "high",
+                                    "very_high"
+                                ]
+                            }
+                        }
+                    },
+                    "target": {
+                        "type": "string"
+                    },
+                    "fallbackTarget": {
+                        "type": "string"
+                    },
+                    "reviewGate": {
+                        "enum": [
+                            "none",
+                            "automated_tests",
+                            "human_review",
+                            "privilege_review"
+                        ]
+                    }
+                }
+            }
+        },
+        "writeBack": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "mode",
+                "branchPrefix",
+                "commitPolicy",
+                "idPolicy"
+            ],
+            "properties": {
+                "mode": {
+                    "enum": [
+                        "pull_request_only",
+                        "direct_push_disabled"
+                    ]
+                },
+                "branchPrefix": {
+                    "type": "string"
+                },
+                "commitPolicy": {
+                    "enum": [
+                        "small_atomic_commits",
+                        "squash_by_task"
+                    ]
+                },
+                "idPolicy": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "additiveOnly",
+                        "noRenumbering",
+                        "noReuse",
+                        "appendLedgerPath"
+                    ],
+                    "properties": {
+                        "additiveOnly": {
+                            "const": true
+                        },
+                        "noRenumbering": {
+                            "const": true
+                        },
+                        "noReuse": {
+                            "const": true
+                        },
+                        "appendLedgerPath": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
