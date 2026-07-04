@@ -13,10 +13,12 @@ Usage:
 """
 
 import json
+import sqlite3
 import sys
 import os
 import re
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator
 
@@ -33,10 +35,15 @@ except ImportError:
 
 ANTHROPIC_MODEL = "claude-opus-4-6"
 GEMINI_MODEL = "gemini-2.5-pro"
-DATA_DIR = Path(__file__).parent / "data" / "nexus"
-GR_NODES_FILE = DATA_DIR / "gr_nodes.json"
-FLYWHEEL_FILE = DATA_DIR / "flywheel_scores.json"
-EVIDENCE_FILE = DATA_DIR / "evidence_anchors.json"
+DB_PATH = Path(__file__).parent / "data" / "nexus" / "nexus_masterdb.db"
+
+FLYWHEEL_DEFAULTS = {
+    "revenue_recognition": {"score": 0, "rationale": ""},
+    "platform_economics": {"score": 0, "rationale": ""},
+    "privacy_tos": {"score": 0, "rationale": ""},
+    "governance": {"score": 0, "rationale": ""},
+    "litigation_risk": {"score": 0, "rationale": ""},
+}
 
 # ---------------------------------------------------------------------------
 # Agent personas — system prompts for each NEXUS character
@@ -145,40 +152,102 @@ GR_TOOLS = [
 ]
 
 # ---------------------------------------------------------------------------
-# Data persistence helpers
+# Data persistence — SQLite (schema mirrors nexus-masterdb-hub)
 # ---------------------------------------------------------------------------
 
-def _ensure_data_dir():
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+def _get_db() -> sqlite3.Connection:
+    """Return an open SQLite connection, bootstrapping the schema on first use."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    _bootstrap_schema(conn)
+    return conn
 
 
-def _load_json(path: Path, default):
-    if path.exists():
-        return json.loads(path.read_text())
-    return default
-
-
-def _save_json(path: Path, data):
-    _ensure_data_dir()
-    path.write_text(json.dumps(data, indent=2))
+def _bootstrap_schema(conn: sqlite3.Connection):
+    """Create tables if they don't exist yet."""
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS gr_nodes (
+            gr_id      TEXT PRIMARY KEY,
+            title      TEXT NOT NULL,
+            health     REAL DEFAULT 0.5,
+            status     TEXT DEFAULT 'ACTIVE',
+            metadata   TEXT DEFAULT '{}',
+            updated_at TEXT DEFAULT (datetime('now','utc'))
+        );
+        CREATE TABLE IF NOT EXISTS evidence (
+            ev_id       TEXT PRIMARY KEY,
+            shortname   TEXT NOT NULL,
+            source_file TEXT,
+            domain      TEXT,
+            gr_links    TEXT DEFAULT '[]',
+            notes       TEXT,
+            created_at  TEXT DEFAULT (datetime('now','utc'))
+        );
+        CREATE TABLE IF NOT EXISTS hub_state (
+            key        TEXT PRIMARY KEY,
+            value      TEXT,
+            updated_at TEXT DEFAULT (datetime('now','utc'))
+        );
+    """)
+    conn.commit()
 
 
 def load_gr_nodes() -> dict:
-    return _load_json(GR_NODES_FILE, {})
+    """Return all GR nodes as {gr_id: node_dict}."""
+    conn = _get_db()
+    rows = conn.execute(
+        "SELECT gr_id, title, health, status, metadata FROM gr_nodes"
+    ).fetchall()
+    conn.close()
+    result = {}
+    for row in rows:
+        meta = json.loads(row["metadata"] or "{}")
+        node = {
+            "node_id": row["gr_id"],
+            "name": row["title"],
+            "nuclear_impact": round((row["health"] or 0.5) * 100),
+            "status": row["status"],
+        }
+        node.update(meta)
+        result[row["gr_id"]] = node
+    return result
 
 
 def load_flywheel() -> dict:
-    return _load_json(FLYWHEEL_FILE, {
-        "revenue_recognition": {"score": 0, "rationale": ""},
-        "platform_economics": {"score": 0, "rationale": ""},
-        "privacy_tos": {"score": 0, "rationale": ""},
-        "governance": {"score": 0, "rationale": ""},
-        "litigation_risk": {"score": 0, "rationale": ""},
-    })
+    """Return flywheel domain scores from hub_state."""
+    conn = _get_db()
+    rows = conn.execute(
+        "SELECT key, value FROM hub_state WHERE key LIKE 'flywheel::%'"
+    ).fetchall()
+    conn.close()
+    result = {k: dict(v) for k, v in FLYWHEEL_DEFAULTS.items()}
+    for row in rows:
+        domain = row["key"].split("::", 1)[1]
+        result[domain] = json.loads(row["value"])
+    return result
 
 
 def load_evidence() -> dict:
-    return _load_json(EVIDENCE_FILE, {})
+    """Return all evidence anchors as {ev_id: anchor_dict}."""
+    conn = _get_db()
+    rows = conn.execute(
+        "SELECT ev_id, shortname, source_file, domain, gr_links, notes FROM evidence"
+    ).fetchall()
+    conn.close()
+    result = {}
+    for row in rows:
+        gr_links = json.loads(row["gr_links"] or "[]")
+        result[row["ev_id"]] = {
+            "anchor_id": row["ev_id"],
+            "text": row["notes"] or "",
+            "source": row["source_file"] or "",
+            "domain": row["domain"] or "",
+            "gr_node": gr_links[0] if gr_links else "",
+        }
+    return result
 
 # ---------------------------------------------------------------------------
 # Tool execution (called when Claude uses a tool)
@@ -186,41 +255,88 @@ def load_evidence() -> dict:
 
 def execute_tool(tool_name: str, tool_input: dict) -> str:
     """Execute a GhostRecon tool call and return a string result."""
-    nodes = load_gr_nodes()
-    flywheel = load_flywheel()
-    evidence = load_evidence()
+    conn = _get_db()
+    now = datetime.now(timezone.utc).isoformat()
 
-    if tool_name == "read_gr_node":
-        nid = tool_input["node_id"]
-        node = nodes.get(nid)
-        if not node:
-            return json.dumps({"error": f"Node {nid} not found"})
-        return json.dumps(node)
+    try:
+        if tool_name == "read_gr_node":
+            nid = tool_input["node_id"]
+            row = conn.execute(
+                "SELECT gr_id, title, health, status, metadata FROM gr_nodes WHERE gr_id = ?",
+                (nid,),
+            ).fetchone()
+            if not row:
+                return json.dumps({"error": f"Node {nid} not found"})
+            meta = json.loads(row["metadata"] or "{}")
+            node = {
+                "node_id": row["gr_id"],
+                "name": row["title"],
+                "nuclear_impact": round((row["health"] or 0.5) * 100),
+                "status": row["status"],
+            }
+            node.update(meta)
+            return json.dumps(node)
 
-    elif tool_name == "update_gr_node":
-        nid = tool_input["node_id"]
-        existing = nodes.get(nid, {"node_id": nid})
-        existing.update({k: v for k, v in tool_input.items() if k != "node_id"})
-        nodes[nid] = existing
-        _save_json(GR_NODES_FILE, nodes)
-        return json.dumps({"status": "updated", "node_id": nid})
+        elif tool_name == "update_gr_node":
+            nid = tool_input["node_id"]
+            title = tool_input.get("name", nid)
+            nuclear_impact = tool_input.get("nuclear_impact", 50)
+            health = float(nuclear_impact) / 100.0
+            # preserve existing metadata and merge new fields
+            row = conn.execute(
+                "SELECT metadata FROM gr_nodes WHERE gr_id = ?", (nid,)
+            ).fetchone()
+            existing_meta = json.loads((row["metadata"] if row else None) or "{}")
+            new_meta = {k: v for k, v in tool_input.items()
+                        if k not in ("node_id", "name", "nuclear_impact")}
+            existing_meta.update(new_meta)
+            conn.execute(
+                """INSERT OR REPLACE INTO gr_nodes (gr_id, title, health, metadata, updated_at)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (nid, title, health, json.dumps(existing_meta), now),
+            )
+            conn.commit()
+            return json.dumps({"status": "updated", "node_id": nid})
 
-    elif tool_name == "update_flywheel":
-        domain = tool_input["domain"]
-        flywheel[domain] = {
-            "score": tool_input["score"],
-            "rationale": tool_input.get("rationale", ""),
-        }
-        _save_json(FLYWHEEL_FILE, flywheel)
-        return json.dumps({"status": "updated", "domain": domain, "score": tool_input["score"]})
+        elif tool_name == "update_flywheel":
+            domain = tool_input["domain"]
+            value = json.dumps({
+                "score": tool_input["score"],
+                "rationale": tool_input.get("rationale", ""),
+            })
+            conn.execute(
+                "INSERT OR REPLACE INTO hub_state (key, value, updated_at) VALUES (?, ?, ?)",
+                (f"flywheel::{domain}", value, now),
+            )
+            conn.commit()
+            return json.dumps({"status": "updated", "domain": domain, "score": tool_input["score"]})
 
-    elif tool_name == "extract_evidence":
-        aid = tool_input["anchor_id"]
-        evidence[aid] = tool_input
-        _save_json(EVIDENCE_FILE, evidence)
-        return json.dumps({"status": "stored", "anchor_id": aid})
+        elif tool_name == "extract_evidence":
+            aid = tool_input["anchor_id"]
+            text = tool_input.get("text", "")
+            shortname = text[:80] if text else aid
+            gr_node = tool_input.get("gr_node", "")
+            conn.execute(
+                """INSERT OR REPLACE INTO evidence
+                   (ev_id, shortname, source_file, domain, gr_links, notes, created_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    aid,
+                    shortname,
+                    tool_input.get("source", ""),
+                    tool_input.get("domain", ""),
+                    json.dumps([gr_node] if gr_node else []),
+                    text,
+                    now,
+                ),
+            )
+            conn.commit()
+            return json.dumps({"status": "stored", "anchor_id": aid})
 
-    return json.dumps({"error": f"Unknown tool: {tool_name}"})
+        return json.dumps({"error": f"Unknown tool: {tool_name}"})
+
+    finally:
+        conn.close()
 
 # ---------------------------------------------------------------------------
 # Core agent call — streaming with tool loop
@@ -392,7 +508,7 @@ Begin analysis and tool execution now.
     print(f"  GR Nodes:        {len(nodes)}")
     print(f"  Evidence Anchors: {len(evidence)}")
     print(f"  Flywheel Domains: {len([d for d,v in flywheel.items() if v['score'] > 0])}/5 active")
-    print(f"  Data saved to:   {DATA_DIR}")
+    print(f"  Data saved to:   {DB_PATH}")
 
 # ---------------------------------------------------------------------------
 # HTTP bridge server for HTML frontend
