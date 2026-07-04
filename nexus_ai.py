@@ -195,13 +195,18 @@ def _bootstrap_schema(conn: sqlite3.Connection):
     conn.commit()
 
 
+_NODE_RESERVED_FIELDS = frozenset(("node_id", "name", "nuclear_impact"))
+
+
 def load_gr_nodes() -> dict:
     """Return all GR nodes as {gr_id: node_dict}."""
     conn = _get_db()
-    rows = conn.execute(
-        "SELECT gr_id, title, health, status, metadata FROM gr_nodes"
-    ).fetchall()
-    conn.close()
+    try:
+        rows = conn.execute(
+            "SELECT gr_id, title, health, status, metadata FROM gr_nodes"
+        ).fetchall()
+    finally:
+        conn.close()
     result = {}
     for row in rows:
         meta = json.loads(row["metadata"] or "{}")
@@ -219,10 +224,12 @@ def load_gr_nodes() -> dict:
 def load_flywheel() -> dict:
     """Return flywheel domain scores from hub_state."""
     conn = _get_db()
-    rows = conn.execute(
-        "SELECT key, value FROM hub_state WHERE key LIKE 'flywheel::%'"
-    ).fetchall()
-    conn.close()
+    try:
+        rows = conn.execute(
+            "SELECT key, value FROM hub_state WHERE key LIKE 'flywheel::%'"
+        ).fetchall()
+    finally:
+        conn.close()
     result = {k: dict(v) for k, v in FLYWHEEL_DEFAULTS.items()}
     for row in rows:
         domain = row["key"].split("::", 1)[1]
@@ -233,10 +240,12 @@ def load_flywheel() -> dict:
 def load_evidence() -> dict:
     """Return all evidence anchors as {ev_id: anchor_dict}."""
     conn = _get_db()
-    rows = conn.execute(
-        "SELECT ev_id, shortname, source_file, domain, gr_links, notes FROM evidence"
-    ).fetchall()
-    conn.close()
+    try:
+        rows = conn.execute(
+            "SELECT ev_id, shortname, source_file, domain, gr_links, notes FROM evidence"
+        ).fetchall()
+    finally:
+        conn.close()
     result = {}
     for row in rows:
         gr_links = json.loads(row["gr_links"] or "[]")
@@ -286,9 +295,9 @@ def execute_tool(tool_name: str, tool_input: dict) -> str:
             row = conn.execute(
                 "SELECT metadata FROM gr_nodes WHERE gr_id = ?", (nid,)
             ).fetchone()
-            existing_meta = json.loads((row["metadata"] if row else None) or "{}")
+            existing_meta = json.loads(row["metadata"] or "{}") if row else {}
             new_meta = {k: v for k, v in tool_input.items()
-                        if k not in ("node_id", "name", "nuclear_impact")}
+                        if k not in _NODE_RESERVED_FIELDS}
             existing_meta.update(new_meta)
             conn.execute(
                 """INSERT OR REPLACE INTO gr_nodes (gr_id, title, health, metadata, updated_at)
