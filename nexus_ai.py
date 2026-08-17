@@ -258,6 +258,28 @@ def load_evidence() -> dict:
         }
     return result
 
+
+def delete_gr_node(node_id: str) -> bool:
+    """Delete a GR node by ID. Returns True if a row was deleted."""
+    conn = _get_db()
+    try:
+        cursor = conn.execute("DELETE FROM gr_nodes WHERE gr_id = ?", (node_id,))
+        conn.commit()
+        return cursor.rowcount > 0
+    finally:
+        conn.close()
+
+
+def delete_evidence(ev_id: str) -> bool:
+    """Delete an evidence anchor by ID. Returns True if a row was deleted."""
+    conn = _get_db()
+    try:
+        cursor = conn.execute("DELETE FROM evidence WHERE ev_id = ?", (ev_id,))
+        conn.commit()
+        return cursor.rowcount > 0
+    finally:
+        conn.close()
+
 # ---------------------------------------------------------------------------
 # Tool execution (called when Claude uses a tool)
 # ---------------------------------------------------------------------------
@@ -402,7 +424,7 @@ class NexusAgent:
             with self.client.messages.stream(
                 model=ANTHROPIC_MODEL,
                 max_tokens=2048,
-                thinking={"type": "adaptive"},
+                thinking={"type": "enabled", "budget_tokens": 8000},
                 system=system,
                 messages=messages,
                 tools=tools if tools else anthropic.NOT_GIVEN,
@@ -453,6 +475,47 @@ class NexusAgent:
 
     def ask_fetty(self, prompt: str, **kw) -> str:
         return self.ask(prompt, persona="fetty", **kw)
+
+    def orchestrate(self, prompt: str, stream_print: bool = True) -> dict:
+        """
+        Multi-agent orchestration: Wolf → Tiger → Suits → NEXUS Master synthesis.
+
+        Each specialist analyses the prompt independently (no tools), then NEXUS Master
+        synthesises their reports using the full GhostRecon tool loop.
+        Returns a dict with keys: wolf, tiger, suits, synthesis.
+        """
+        results: dict[str, str] = {}
+
+        if stream_print:
+            print("\n" + "=" * 60)
+            print("NEXUS ORCHESTRATION — Multi-Agent Analysis")
+            print("=" * 60)
+
+        for persona_key, label in [("wolf", "WOLF"), ("tiger", "TIGER"), ("suits", "SUITS")]:
+            if stream_print:
+                print(f"\n[{label}] Analysis:")
+                print("-" * 40)
+            results[persona_key] = self.ask(
+                prompt, persona=persona_key, use_tools=False, stream_print=stream_print
+            )
+
+        synthesis_prompt = (
+            f"Original prompt: {prompt}\n\n"
+            f"Agent reports:\n"
+            f"WOLF: {results.get('wolf', '')}\n\n"
+            f"TIGER: {results.get('tiger', '')}\n\n"
+            f"SUITS: {results.get('suits', '')}\n\n"
+            "Synthesize the above into a unified NEXUS intelligence brief with "
+            "actionable arbitration recommendations."
+        )
+        if stream_print:
+            print("\n[NEXUS MASTER] Synthesis:")
+            print("-" * 40)
+        results["synthesis"] = self.ask(
+            synthesis_prompt, persona="nexus_master", use_tools=True, stream_print=stream_print
+        )
+
+        return results
 
 # ---------------------------------------------------------------------------
 # Data ingestion pipeline
@@ -567,7 +630,9 @@ def serve(port: int = 7433, api_key: str | None = None, provider: str = "anthrop
             self.wfile.write(body)
 
         def do_GET(self):
-            if self.path == "/" or self.path == "/nexus":
+            path = self.path.split("?")[0].rstrip("/")
+
+            if path in ("", "/nexus"):
                 if html_file.exists():
                     content = html_file.read_bytes()
                     self.send_response(200)
@@ -579,12 +644,43 @@ def serve(port: int = 7433, api_key: str | None = None, provider: str = "anthrop
                 else:
                     self._send_json({"error": "nexus_synthesis_os.html not found"}, 404)
 
-            elif self.path == "/api/state":
+            elif path == "/api/health":
+                self._send_json({
+                    "status": "ok",
+                    "provider": provider,
+                    "db": str(DB_PATH),
+                    "db_exists": DB_PATH.exists(),
+                })
+
+            elif path == "/api/state":
                 self._send_json({
                     "gr_nodes": load_gr_nodes(),
                     "flywheel": load_flywheel(),
                     "evidence": load_evidence(),
                 })
+
+            elif path == "/api/nodes":
+                self._send_json(load_gr_nodes())
+
+            elif path.startswith("/api/nodes/"):
+                node_id = path[len("/api/nodes/"):]
+                nodes = load_gr_nodes()
+                if node_id in nodes:
+                    self._send_json(nodes[node_id])
+                else:
+                    self._send_json({"error": f"Node {node_id} not found"}, 404)
+
+            elif path == "/api/evidence":
+                self._send_json(load_evidence())
+
+            elif path.startswith("/api/evidence/"):
+                ev_id = path[len("/api/evidence/"):]
+                evidence = load_evidence()
+                if ev_id in evidence:
+                    self._send_json(evidence[ev_id])
+                else:
+                    self._send_json({"error": f"Evidence {ev_id} not found"}, 404)
+
             else:
                 self._send_json({"error": "not found"}, 404)
 
@@ -613,11 +709,48 @@ def serve(port: int = 7433, api_key: str | None = None, provider: str = "anthrop
                         self.wfile.write(f"data: {chunk}\n\n".encode())
                         self.wfile.write(b"data: [DONE]\n\n")
                         self.wfile.flush()
+                    elif use_tools:
+                        # Full GhostRecon tool loop with SSE streaming
+                        messages = [{"role": "user", "content": prompt}]
+                        iteration = 0
+                        while iteration < 10:
+                            iteration += 1
+                            with agent.client.messages.stream(
+                                model=ANTHROPIC_MODEL,
+                                max_tokens=2048,
+                                thinking={"type": "enabled", "budget_tokens": 8000},
+                                system=system,
+                                messages=messages,
+                                tools=GR_TOOLS,
+                            ) as stream:
+                                for text in stream.text_stream:
+                                    chunk = json.dumps({"text": text})
+                                    self.wfile.write(f"data: {chunk}\n\n".encode())
+                                    self.wfile.flush()
+                                response = stream.get_final_message()
+                            tool_uses = [b for b in response.content if b.type == "tool_use"]
+                            if not tool_uses or response.stop_reason == "end_turn":
+                                break
+                            messages.append({"role": "assistant", "content": response.content})
+                            tool_results = []
+                            for tu in tool_uses:
+                                result = execute_tool(tu.name, tu.input)
+                                chunk = json.dumps({"tool": tu.name, "result": result[:200]})
+                                self.wfile.write(f"data: {chunk}\n\n".encode())
+                                self.wfile.flush()
+                                tool_results.append({
+                                    "type": "tool_result",
+                                    "tool_use_id": tu.id,
+                                    "content": result,
+                                })
+                            messages.append({"role": "user", "content": tool_results})
+                        self.wfile.write(b"data: [DONE]\n\n")
+                        self.wfile.flush()
                     else:
                         with agent.client.messages.stream(
                             model=ANTHROPIC_MODEL,
                             max_tokens=1024,
-                            thinking={"type": "adaptive"},
+                            thinking={"type": "enabled", "budget_tokens": 8000},
                             system=system,
                             messages=[{"role": "user", "content": prompt}],
                         ) as stream:
@@ -656,6 +789,125 @@ def serve(port: int = 7433, api_key: str | None = None, provider: str = "anthrop
                 t.start()
                 self._send_json({"status": "ingestion started", "source": source})
 
+            elif self.path == "/api/orchestrate":
+                body = self._read_body()
+                prompt = body.get("prompt", "")
+                if not prompt:
+                    self._send_json({"error": "no prompt provided"}, 400)
+                    return
+
+                # SSE streaming orchestration response
+                self.send_response(200)
+                self.send_header("Content-Type", "text/event-stream")
+                self.send_header("Cache-Control", "no-cache")
+                self._cors()
+                self.end_headers()
+
+                def _sse(event_type: str, data: dict):
+                    payload = json.dumps({"event": event_type, **data})
+                    self.wfile.write(f"data: {payload}\n\n".encode())
+                    self.wfile.flush()
+
+                try:
+                    _sse("phase", {"phase": "wolf", "label": "WOLF — Adversarial Analysis"})
+                    wolf_resp = agent.ask(prompt, persona="wolf", use_tools=False, stream_print=False)
+                    _sse("agent", {"agent": "wolf", "text": wolf_resp})
+
+                    _sse("phase", {"phase": "tiger", "label": "TIGER — Quantitative Risk"})
+                    tiger_resp = agent.ask(prompt, persona="tiger", use_tools=False, stream_print=False)
+                    _sse("agent", {"agent": "tiger", "text": tiger_resp})
+
+                    _sse("phase", {"phase": "suits", "label": "SUITS — Governance & Compliance"})
+                    suits_resp = agent.ask(prompt, persona="suits", use_tools=False, stream_print=False)
+                    _sse("agent", {"agent": "suits", "text": suits_resp})
+
+                    synthesis_prompt = (
+                        f"Original prompt: {prompt}\n\n"
+                        f"WOLF: {wolf_resp}\n\nTIGER: {tiger_resp}\n\nSUITS: {suits_resp}\n\n"
+                        "Synthesize into a unified NEXUS intelligence brief with actionable "
+                        "arbitration recommendations. Use GhostRecon tools to persist findings."
+                    )
+                    _sse("phase", {"phase": "synthesis", "label": "NEXUS MASTER — Synthesis"})
+                    synthesis_msgs = [{"role": "user", "content": synthesis_prompt}]
+                    system = PERSONAS["nexus_master"]
+                    iteration = 0
+                    while iteration < 10:
+                        iteration += 1
+                        with agent.client.messages.stream(
+                            model=ANTHROPIC_MODEL,
+                            max_tokens=2048,
+                            thinking={"type": "enabled", "budget_tokens": 8000},
+                            system=system,
+                            messages=synthesis_msgs,
+                            tools=GR_TOOLS,
+                        ) as stream:
+                            for text in stream.text_stream:
+                                _sse("text", {"text": text})
+                            response = stream.get_final_message()
+                        tool_uses = [b for b in response.content if b.type == "tool_use"]
+                        if not tool_uses or response.stop_reason == "end_turn":
+                            break
+                        synthesis_msgs.append({"role": "assistant", "content": response.content})
+                        tool_results = []
+                        for tu in tool_uses:
+                            result = execute_tool(tu.name, tu.input)
+                            _sse("tool", {"tool": tu.name, "result": result[:200]})
+                            tool_results.append({
+                                "type": "tool_result",
+                                "tool_use_id": tu.id,
+                                "content": result,
+                            })
+                        synthesis_msgs.append({"role": "user", "content": tool_results})
+                    self.wfile.write(b"data: [DONE]\n\n")
+                    self.wfile.flush()
+                except Exception as e:
+                    _sse("error", {"error": str(e)})
+
+            elif self.path == "/api/nodes":
+                body = self._read_body()
+                node_id = body.get("node_id")
+                if not node_id:
+                    self._send_json({"error": "node_id required"}, 400)
+                    return
+                result = execute_tool("update_gr_node", body)
+                self._send_json(json.loads(result))
+
+            else:
+                self._send_json({"error": "not found"}, 404)
+
+        def do_PUT(self):
+            path = self.path.rstrip("/")
+            if path.startswith("/api/nodes/"):
+                node_id = path[len("/api/nodes/"):]
+                body = self._read_body()
+                body["node_id"] = node_id
+                result = execute_tool("update_gr_node", body)
+                self._send_json(json.loads(result))
+            elif path.startswith("/api/evidence/"):
+                ev_id = path[len("/api/evidence/"):]
+                body = self._read_body()
+                body["anchor_id"] = ev_id
+                result = execute_tool("extract_evidence", body)
+                self._send_json(json.loads(result))
+            else:
+                self._send_json({"error": "not found"}, 404)
+
+        def do_DELETE(self):
+            path = self.path.rstrip("/")
+            if path.startswith("/api/nodes/"):
+                node_id = path[len("/api/nodes/"):]
+                deleted = delete_gr_node(node_id)
+                if deleted:
+                    self._send_json({"status": "deleted", "node_id": node_id})
+                else:
+                    self._send_json({"error": f"Node {node_id} not found"}, 404)
+            elif path.startswith("/api/evidence/"):
+                ev_id = path[len("/api/evidence/"):]
+                deleted = delete_evidence(ev_id)
+                if deleted:
+                    self._send_json({"status": "deleted", "anchor_id": ev_id})
+                else:
+                    self._send_json({"error": f"Evidence {ev_id} not found"}, 404)
             else:
                 self._send_json({"error": "not found"}, 404)
 
@@ -703,6 +955,10 @@ def main():
     )
     ap.add_argument("--tools", action="store_true", help="Enable GR tool use")
 
+    # orchestrate
+    op = sub.add_parser("orchestrate", help="Run multi-agent orchestration (Wolf+Tiger+Suits→Synthesis)")
+    op.add_argument("prompt", help="The prompt/scenario to analyse")
+
     # state
     sub.add_parser("state", help="Print current GR nodes and flywheel state")
 
@@ -717,6 +973,10 @@ def main():
     elif args.command == "ask":
         agent = NexusAgent(api_key=args.api_key, provider=args.provider)
         agent.ask(args.prompt, persona=args.persona, use_tools=args.tools)
+
+    elif args.command == "orchestrate":
+        agent = NexusAgent(api_key=args.api_key, provider=args.provider)
+        agent.orchestrate(args.prompt)
 
     elif args.command == "state":
         state = {
